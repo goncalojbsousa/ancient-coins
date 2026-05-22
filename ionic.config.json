@@ -1,0 +1,7 @@
+{
+  "name": "ancient-coins",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
