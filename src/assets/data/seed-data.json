@@ -3,6 +3,8 @@
     {
       "id": 1,
       "name": "Goncalo Sousa",
+      "email": "goncalo@gmail.com",
+      "password": "Ancient1!",
       "location": "Viana do Castelo",
       "rating": 4.8,
       "totalReviews": 12
@@ -10,6 +12,8 @@
     {
       "id": 2,
       "name": "Miguel Fonseca",
+      "email": "miguel@gmail.com",
+      "password": "Ancient1!",
       "location": "Viana do Castelo",
       "rating": 4.8,
       "totalReviews": 10
@@ -17,6 +21,8 @@
     {
       "id": 3,
       "name": "Rui Mendonca",
+      "email": "rui@gmail.com",
+      "password": "Ancient1!",
       "location": "Viana do Castelo",
       "rating": 4.8,
       "totalReviews": 11
@@ -24,6 +30,8 @@
     {
       "id": 4,
       "name": "Ricardo Ferreira",
+      "email": "ricardo@gmail.com",
+      "password": "Ancient1!",
       "location": "Braga",
       "rating": 4.9,
       "totalReviews": 23
@@ -31,6 +39,8 @@
     {
       "id": 5,
       "name": "Ana Martins",
+      "email": "ana@gmail.com",
+      "password": "Ancient1!",
       "location": "Porto",
       "rating": 4.7,
       "totalReviews": 8

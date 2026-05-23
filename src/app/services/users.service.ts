@@ -3,8 +3,6 @@ import { Injectable, inject } from '@angular/core';
 import { User } from '../models/ancient-coins.models';
 import { DatabaseService } from './database.service';
 
-const CURRENT_USER_ID = 1;
-
 @Injectable({
   providedIn: 'root',
 })
@@ -25,12 +23,23 @@ export class UsersService {
     return this.users;
   }
 
-  getCurrentUser(): User | undefined {
-    return this.getUserById(CURRENT_USER_ID);
-  }
-
   getUserById(id: number): User | undefined {
     return this.users.find(user => user.id === id);
+  }
+
+  getUserByEmail(email: string): User | undefined {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    return this.users.find(user => user.email.toLowerCase() === normalizedEmail);
+  }
+
+  async insertUser(user: User): Promise<void> {
+    if (!user.id) {
+      user.id = Date.now();
+    }
+
+    this.users.push(user);
+    await this.saveUsers();
   }
 
   async updateUser(user: User): Promise<void> {
@@ -38,7 +47,11 @@ export class UsersService {
 
     if (index >= 0) {
       this.users[index] = user;
-      await this.databaseService.setData('users', this.users);
+      await this.saveUsers();
     }
+  }
+
+  private async saveUsers(): Promise<void> {
+    await this.databaseService.setData('users', this.users);
   }
 }
