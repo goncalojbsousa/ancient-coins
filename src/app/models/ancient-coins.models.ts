@@ -5,9 +5,18 @@ export type ConversationStatus = 'aberta' | 'aceite' | 'concluida';
 export interface User {
   id: number;
   name: string;
+  email: string;
+  password: string;
   location: string;
   rating: number;
   totalReviews: number;
+}
+
+export interface RegisterUser {
+  name: string;
+  email: string;
+  password: string;
+  location: string;
 }
 
 export interface Coin {
