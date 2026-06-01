@@ -45,4 +45,8 @@ export class MarketService {
   sortByPrice(coins: Coin[]): Coin[] {
     return [...coins].sort((a, b) => (a.price || 0) - (b.price || 0));
   }
+
+  getRecentMarketCoins(limit = 2): Coin[] {
+    return this.sortByNewest(this.getMarketCoins()).slice(0, limit);
+  }
 }

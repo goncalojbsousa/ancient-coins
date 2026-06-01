@@ -56,7 +56,9 @@
       "material": "Bimetalica",
       "condition": "Muito Bom",
       "description": "Moeda comemorativa portuguesa duplicada na colecao pessoal.",
-      "photos": [],
+      "photos": [
+        "assets/img/portugal_coin.jpg"
+      ],
       "availableForSale": false,
       "availableForTrade": true,
       "tradePreference": "Moedas estrangeiras em bom estado",
@@ -67,15 +69,17 @@
       "id": 102,
       "ownerId": 2,
       "name": "Denario de Constantino I",
-      "origin": "Roma",
-      "year": "312",
+      "origin": "Império Romano",
+      "year": "310 d.C.",
       "material": "Prata",
       "condition": "Excelente",
-      "description": "Denario romano com bom relevo e sinais minimos de desgaste.",
-      "photos": [],
+      "description": "Moeda romana rara em excelente estado de conservação. Cunhada durante o reinado de Constantino I, apresenta detalhes nítidos.",
+      "photos": [
+        "assets/img/constantino.jfif"
+      ],
       "availableForSale": true,
       "availableForTrade": false,
-      "price": 185,
+      "price": 450,
       "createdAt": "2026-05-15T18:20:00.000Z",
       "updatedAt": "2026-05-15T18:20:00.000Z"
     },
@@ -88,7 +92,9 @@
       "material": "Ouro",
       "condition": "Bom",
       "description": "Moeda antiga portuguesa para apreciadores de numismatica nacional.",
-      "photos": [],
+      "photos": [
+        "assets/img/Dobra_Portuguesa.webp"
+      ],
       "availableForSale": true,
       "availableForTrade": true,
       "price": 420,

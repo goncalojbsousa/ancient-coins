@@ -1,0 +1,158 @@
+.welcome-block,
+.market-highlights {
+    padding: 20px 20px 0;
+}
+
+.welcome-block {
+    margin-top: 10px;
+}
+
+.welcome-block h1,
+.section-header h2,
+.card-top h2,
+.highlight-title-row h3,
+.highlight-footer strong {
+    margin: 0;
+    color: #111;
+    font-weight: 700;
+}
+
+.welcome-block h1 {
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.welcome-block p,
+.section-header p,
+.quick-card p,
+.highlight-title-row p {
+    margin: 0;
+    color: #666;
+    line-height: 1.5;
+}
+
+.welcome-block p,
+.quick-card p {
+    font-size: .875rem;
+}
+
+.quick-cards,
+.highlight-list {
+    display: grid;
+    gap: 10px;
+    padding-top: 5px;
+}
+
+.quick-card,
+.highlight-card {
+    margin: 0;
+    border: 1px solid #eadfd2;
+    border-radius: 16px;
+    box-shadow: none;
+    --background: #fff;
+}
+
+.quick-card ion-card-content,
+.highlight-card ion-card-content {
+    padding: 18px 14px 14px;
+}
+
+.card-top,
+.section-header,
+.highlight-title-row,
+.highlight-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.card-top,
+.highlight-title-row {
+    align-items: flex-start;
+}
+
+.section-header {
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.card-top {
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.card-top h2 {
+    font-size: .85rem;
+}
+
+.card-top ion-icon,
+.highlight-visual ion-icon,
+.highlight-rating ion-icon {
+    color: #f57b25;
+}
+
+.card-top ion-icon {
+    font-size: 1.2rem;
+}
+
+.quick-card p {
+    line-height: 1.4;
+}
+
+.section-header h2 {
+    font-size: 1.15rem;
+}
+
+.section-header p {
+    margin-top: 4px;
+    font-size: .85rem;
+}
+
+.see-all-button {
+    --border-color: #f57b25;
+    --color: #f57b25;
+    --background: #fff;
+    --border-width: 1px;
+    --border-radius: 10px;
+    height: 34px;
+    font-size: .75rem;
+    text-transform: none;
+}
+
+.highlight-visual {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #0f172a 0%, #111111 100%);
+    overflow: hidden;
+}
+
+.highlight-visual ion-icon {
+    font-size: 4rem;
+}
+
+.highlight-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.highlight-title-row h3 {
+    font-size: 1rem;
+}
+
+.highlight-title-row p {
+    margin-top: 6px;
+    font-size: .8rem;
+    color: #7a7a7a;
+}
+
+.highlight-footer {
+    align-items: center;
+}
+
+.highlight-footer strong {
+    font-size: 1rem;
+}

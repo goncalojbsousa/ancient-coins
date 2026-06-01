@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 
-import { AncientCoinsSeedData } from '../models/ancient-coins.models';
+import { AncientCoinsSeedData, Coin } from '../models/ancient-coins.models';
 
 const SEEDED_KEY = 'ancientcoins_seeded';
 const SEED_DATA_URL = 'assets/data/seed-data.json';
@@ -53,13 +53,35 @@ export class DatabaseService {
 
   private async seedDatabase(storage: Storage): Promise<void> {
     const alreadySeeded = await storage.get(SEEDED_KEY);
-
-    if (alreadySeeded) {
-      return;
-    }
-
     const response = await fetch(SEED_DATA_URL);
     const seedData: AncientCoinsSeedData = await response.json();
+
+    if (alreadySeeded) {
+      const coins = (await storage.get('coins')) as Coin[] | null;
+
+      if (!coins) {
+        return;
+      }
+
+      const updatedCoins = coins.map((coin: Coin) => {
+        const seedCoin = seedData.coins.find(item => item.id === coin.id);
+
+        if ((!coin.photos || coin.photos.length === 0) && seedCoin && seedCoin.photos.length > 0) {
+          return {
+            ...coin,
+            photos: seedCoin.photos,
+          };
+        }
+
+        return coin;
+      });
+
+      if (JSON.stringify(updatedCoins) !== JSON.stringify(coins)) {
+        await storage.set('coins', updatedCoins);
+      }
+
+      return;
+    }
 
     await storage.set('users', seedData.users);
     await storage.set('coins', seedData.coins);
