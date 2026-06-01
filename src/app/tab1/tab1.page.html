@@ -13,4 +13,78 @@
     </ion-toolbar>
   </ion-header>
 
+  <div class="welcome-block ion-padding">
+    <h1>Bem-vindo,👋</h1>
+    <p>Gerencie sua coleção e explore o mercado de moedas antiga</p>
+  </div>
+
+  <div class="quick-cards ion-padding">
+    <ion-card class="quick-card">
+      <ion-card-content>
+        <div class="card-top">
+          <h2>Adicionar Moeda</h2>
+          <ion-icon name="add-outline"></ion-icon>
+        </div>
+        <p>Fotografe e adicione à coleção</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="quick-card">
+      <ion-card-content>
+        <div class="card-top">
+          <h2>Minha Coleção</h2>
+          <ion-icon name="cube-outline"></ion-icon>
+        </div>
+        <p>1 moedas cadastradas</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="quick-card">
+      <ion-card-content>
+        <div class="card-top">
+          <h2>Explorar Mercado</h2>
+          <ion-icon name="trending-up-outline"></ion-icon>
+        </div>
+        <p>5 moedas disponíveis</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="market-highlights ion-padding">
+    <div class="section-header">
+      <div>
+        <h2>Destaques do Mercado</h2>
+        <p>Moedas criadas recentemente</p>
+      </div>
+      <ion-button fill="outline" size="small" class="see-all-button">Ver Todas</ion-button>
+    </div>
+
+    <div class="highlight-list">
+      @for (coin of recentCoins; track coin.id) {
+        <ion-card class="highlight-card">
+          <div class="highlight-visual">
+            @if (coin.photos.length > 0) {
+              <img [src]="coin.photos[0]" [alt]="coin.name">
+            } @else {
+              <ion-icon name="cash-outline"></ion-icon>
+            }
+          </div>
+
+          <ion-card-content>
+            <div class="highlight-title-row">
+              <div>
+                <h3>{{ coin.name }}</h3>
+                <p>{{ coin.origin }} • {{ coin.year }}</p>
+              </div>
+            </div>
+
+            <div class="highlight-footer">
+              <strong>€{{ coin.price ?? 0 }}</strong>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  </div>
+
 </ion-content>
