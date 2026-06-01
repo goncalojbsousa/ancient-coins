@@ -17,7 +17,9 @@ export class Tab1Page implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.marketService.init();
 
-    this.recentCoins = this.marketService.getRecentMarketCoins(2);
+    this.recentCoins = this.marketService
+      .sortByNewest(this.marketService.getMarketCoins())
+      .slice(0, 2);
   }
 
 }
