@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 
 import { Coin } from '../models/ancient-coins.models';
 import { MarketService } from '../services/market.service';
@@ -10,9 +10,9 @@ import { MarketService } from '../services/market.service';
   standalone: false,
 })
 export class Tab1Page implements OnInit {
-  recentCoins: Coin[] = [];
+  private marketService = inject(MarketService);
 
-  constructor(private marketService: MarketService) {}
+  recentCoins: Coin[] = [];
 
   async ngOnInit(): Promise<void> {
     await this.marketService.init();

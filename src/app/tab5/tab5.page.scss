@@ -1,0 +1,42 @@
+.profile-section {
+	padding-top: 16px;
+}
+
+.profile-card {
+	margin: 0;
+	border: 1px solid #eadfd2;
+	border-radius: 16px;
+	box-shadow: none;
+	--background: #fff;
+}
+
+.profile-card ion-card-header {
+	padding-bottom: 8px;
+}
+
+.profile-card ion-card-title {
+	font-size: 1rem;
+	font-weight: 700;
+	color: #111;
+}
+
+.profile-card ion-card-subtitle {
+	margin-top: 4px;
+	font-size: .85rem;
+	color: #666;
+}
+
+.profile-card ion-card-content {
+	padding-top: 0;
+}
+
+.logout-button {
+	--border-color: #eadfd2;
+	--color: #f57b25;
+	--background: #fff;
+	--border-width: 1px;
+	--border-radius: 10px;
+	height: 34px;
+	font-size: .8rem;
+	text-transform: none;
+}
