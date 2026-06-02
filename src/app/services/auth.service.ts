@@ -5,7 +5,7 @@ import { DatabaseService } from './database.service';
 import { UsersService } from './users.service';
 
 const CURRENT_USER_ID_KEY = 'current_user_id';
-const PASSWORD_RULE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{4,}$/;
+const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
 @Injectable({
   providedIn: 'root',
