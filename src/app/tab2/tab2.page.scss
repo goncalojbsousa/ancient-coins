@@ -1,0 +1,174 @@
+ion-content {
+  --background: #fafaf9;
+}
+
+.collection-page {
+  display: grid;
+  gap: 16px;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 24px 18px 28px;
+}
+
+.collection-summary {
+  display: grid;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid #eadfd2;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.collection-summary h2,
+.coin-card h2,
+.empty-collection h2 {
+  margin: 0;
+  color: #111;
+  font-weight: 700;
+}
+
+.collection-summary h2 {
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.collection-summary p,
+.coin-card p,
+.empty-collection p {
+  margin: 0;
+  color: #666;
+  line-height: 1.45;
+}
+
+.collection-summary p {
+  font-size: .86rem;
+}
+
+.add-coin-button {
+  --background: #fff;
+  --background-hover: #fff7f0;
+  --background-activated: #fff2e8;
+  --border-color: #eadfd2;
+  --border-radius: 10px;
+  --border-width: 1px;
+  --box-shadow: none;
+  --color: #f57b25;
+  height: 38px;
+  margin: 0;
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.collection-controls {
+  display: grid;
+  gap: 10px;
+}
+
+ion-searchbar {
+  padding: 0;
+  --background: #f4f4f3;
+  --border-radius: 10px;
+  --box-shadow: none;
+  --color: #111;
+  --icon-color: #666;
+  --placeholder-color: #666;
+}
+
+.filter-button {
+  --background: #fff;
+  --border-color: #eadfd2;
+  --border-radius: 8px;
+  --border-width: 1px;
+  --box-shadow: none;
+  --color: #111;
+  height: 34px;
+  margin: 0;
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.coin-list {
+  display: grid;
+  gap: 14px;
+}
+
+.coin-card,
+.empty-collection {
+  margin: 0;
+  border: 1px solid #eadfd2;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 14px 30px rgba(17, 17, 17, .08);
+  overflow: hidden;
+  --background: #fff;
+}
+
+.coin-image {
+  height: 220px;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.coin-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.coin-image ion-icon,
+.empty-collection ion-icon {
+  color: #f57b25;
+  font-size: 3rem;
+}
+
+.coin-card ion-card-content {
+  padding: 18px 20px 20px;
+}
+
+.coin-card h2 {
+  font-size: .98rem;
+}
+
+.coin-card p {
+  font-size: .88rem;
+}
+
+.coin-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.coin-details span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff2e8;
+  color: #8f3f12;
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.empty-collection {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.empty-collection h2 {
+  font-size: 1rem;
+}
+
+.empty-collection p {
+  max-width: 260px;
+  font-size: .86rem;
+}

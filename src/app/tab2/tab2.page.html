@@ -1,8 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Minha Coleção
-    </ion-title>
+    <ion-title>Minha Coleção</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,4 +10,63 @@
       <ion-title size="large">Minha Coleção</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <main class="collection-page">
+    <section class="collection-summary">
+      <div>
+        <h2>Coleção pessoal</h2>
+        <p>{{ collectionCountText }}</p>
+      </div>
+
+      <ion-button class="add-coin-button" fill="outline">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Adicionar Moeda
+      </ion-button>
+    </section>
+
+    <section class="collection-controls">
+      <ion-searchbar
+        placeholder="Pesquisar por nome ou origem..."
+        [(ngModel)]="searchTerm"
+        debounce="200">
+      </ion-searchbar>
+
+      <ion-button class="filter-button" fill="outline" size="small">
+        <ion-icon slot="start" name="filter-outline"></ion-icon>
+        Filtros
+      </ion-button>
+    </section>
+
+    @if (filteredCoins.length > 0) {
+      <section class="coin-list">
+        @for (coin of filteredCoins; track coin.id) {
+          <ion-card class="coin-card">
+            <div class="coin-image">
+              @if (coin.photos.length > 0) {
+                <img [src]="coin.photos[0]" [alt]="coin.name">
+              } @else {
+                <ion-icon name="cash-outline"></ion-icon>
+              }
+            </div>
+
+            <ion-card-content>
+              <h2>{{ coin.name }}</h2>
+              <p>{{ coin.origin }} · {{ coin.year }}</p>
+
+              <div class="coin-details">
+                <span>{{ coin.material }}</span>
+                <span>{{ coin.condition }}</span>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        }
+      </section>
+    } @else {
+      <section class="empty-collection">
+        <ion-icon name="file-tray-full-outline"></ion-icon>
+        <h2>Nenhuma moeda encontrada</h2>
+        <p>Adicione moedas à sua coleção ou ajuste a pesquisa.</p>
+      </section>
+    }
+  </main>
 </ion-content>
