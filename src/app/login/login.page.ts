@@ -1,9 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 
 import { AuthService } from '../services/auth.service';
 
@@ -11,22 +8,19 @@ import { AuthService } from '../services/auth.service';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IonicModule],
+  standalone: false,
 })
 export class LoginPage implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private formBuilder = inject(NonNullableFormBuilder);
+
   loginForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
   });
 
   errorMessage = '';
-
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private formBuilder: NonNullableFormBuilder,
-  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();

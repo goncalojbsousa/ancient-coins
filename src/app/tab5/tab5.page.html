@@ -10,4 +10,19 @@
       <ion-title size="large">Perfil</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <div class="profile-section ion-padding">
+    <ion-card class="profile-card">
+      <ion-card-header>
+        <ion-card-title>Conta</ion-card-title>
+        <ion-card-subtitle>Gerir a sua sessão</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-button expand="block" fill="outline" class="logout-button" (click)="logout()">
+          Terminar sessão
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

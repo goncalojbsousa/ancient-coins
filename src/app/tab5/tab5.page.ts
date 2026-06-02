@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tab5',
@@ -6,11 +9,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tab5.page.scss'],
   standalone: false,
 })
-export class Tab5Page implements OnInit {
+export class Tab5Page {
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor() { }
-
-  ngOnInit() {
+  async logout(): Promise<void> {
+    await this.authService.logout();
+    await this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
 }
