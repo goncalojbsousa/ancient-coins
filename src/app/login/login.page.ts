@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    this.errorMessage = 'Email ou password inválidos.';
+    this.errorMessage = 'Dados inválidos. Confirme o e-mail e a palavra-passe.';
   }
 
 }
