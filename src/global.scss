@@ -44,3 +44,62 @@ ion-app {
 ion-content {
 	--background: #FAFAF9;
 }
+
+.ancient-confirm-alert {
+	--backdrop-opacity: .32;
+}
+
+.ancient-confirm-alert .alert-wrapper {
+	border: 1px solid #eadfd2;
+	border-radius: 16px;
+	background: #ffffff;
+	box-shadow: 0 16px 34px rgba(17, 17, 17, .12);
+}
+
+.ancient-confirm-alert .alert-head {
+	padding-bottom: 6px;
+}
+
+.ancient-confirm-alert .alert-title {
+	color: #111111;
+	font-size: 1rem;
+	font-weight: 700;
+}
+
+.ancient-confirm-alert .alert-message {
+	color: #666666;
+	font-size: .9rem;
+	line-height: 1.45;
+}
+
+.ancient-confirm-alert .alert-button {
+	text-transform: none;
+}
+
+.ancient-confirm-alert .confirm-cancel-button {
+	color: #666666;
+}
+
+.ancient-confirm-alert .confirm-delete-button {
+	color: #f57b25;
+	font-weight: 700;
+}
+
+.success-toast,
+.error-toast {
+	--background: #ffffff;
+	--border-color: #eadfd2;
+	--border-radius: 12px;
+	--border-style: solid;
+	--border-width: 1px;
+	--box-shadow: 0 12px 28px rgba(17, 17, 17, .12);
+	--color: #111111;
+}
+
+.success-toast {
+	--color: #8f3f12;
+}
+
+.error-toast {
+	--color: #c65f1a;
+}

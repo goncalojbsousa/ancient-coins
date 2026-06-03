@@ -9,7 +9,7 @@
         <ion-icon name="cash-outline"></ion-icon>
       </div>
     }
-    <button class="hero__close" (click)="dismiss()" aria-label="Fechar">
+    <button class="hero__close" type="button" (click)="dismiss()" aria-label="Fechar">
       <ion-icon name="close"></ion-icon>
     </button>
   </div>
@@ -63,7 +63,7 @@
 
   <!-- Gestão do marketplace + botões Editar/Remover -->
   <div class="modal-card manage-card">
-    <p class="manage-hint">Esta é a sua moeda. Gerencie como ela aparece no marketplace.</p>
+    <p class="manage-hint">Esta é a sua moeda. Gira como ela aparece no marketplace.</p>
 
     <!-- Toggle: Publicar para Venda -->
     <div class="toggle-row">
@@ -85,8 +85,8 @@
 
     <!-- Ações: Editar / Remover dentro do card -->
     <div class="action-row">
-      <button class="btn-edit">Editar</button>
-      <button class="btn-remove">Remover</button>
+      <button class="btn-edit" type="button">Editar</button>
+      <button class="btn-remove" type="button" (click)="confirmDeleteCoin()">Remover</button>
     </div>
   </div>
 

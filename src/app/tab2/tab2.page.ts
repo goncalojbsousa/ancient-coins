@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { Coin } from '../models/ancient-coins.models';
 import { AuthService } from '../services/auth.service';
 import { CoinsService } from '../services/coins.service';
 import { CoinDetailModalComponent } from './coin-detail-modal/coin-detail-modal.component';
+
+interface CoinDetailModalResult {
+  wasDeleted: boolean;
+}
 
 @Component({
   selector: 'app-tab2',
@@ -13,12 +17,9 @@ import { CoinDetailModalComponent } from './coin-detail-modal/coin-detail-modal.
   standalone: false,
 })
 export class Tab2Page implements OnInit {
-
-  constructor(
-    private authService: AuthService,
-    private coinsService: CoinsService,
-    private modalCtrl: ModalController
-  ) {}
+  private authService = inject(AuthService);
+  private coinsService = inject(CoinsService);
+  private modalController = inject(ModalController);
 
   searchTerm = '';
   userCoins: Coin[] = [];
@@ -34,26 +35,38 @@ export class Tab2Page implements OnInit {
   }
 
   get filteredCoins(): Coin[] {
-    const term = this.searchTerm.trim().toLowerCase();
-    if (!term) return this.userCoins;
-    return this.userCoins.filter(c =>
-      c.name.toLowerCase().includes(term) ||
-      c.origin.toLowerCase().includes(term)
+    const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
+
+    if (!normalizedSearchTerm) {
+      return this.userCoins;
+    }
+
+    return this.userCoins.filter(coin =>
+      coin.name.toLowerCase().includes(normalizedSearchTerm) ||
+      coin.origin.toLowerCase().includes(normalizedSearchTerm)
     );
   }
 
   get collectionCountText(): string {
-    const n = this.userCoins.length;
-    return n === 1 ? '1 moeda cadastrada' : `${n} moedas cadastradas`;
+    const coinCount = this.userCoins.length;
+
+    return coinCount === 1 ? '1 moeda registada' : `${coinCount} moedas registadas`;
   }
 
   async openCoinDetail(coin: Coin): Promise<void> {
-    const modal = await this.modalCtrl.create({
+    const modal = await this.modalController.create({
       component: CoinDetailModalComponent,
       componentProps: { coin },
       breakpoints: [0, 1],
       initialBreakpoint: 1,
     });
+
     await modal.present();
+
+    const { data } = await modal.onWillDismiss<CoinDetailModalResult>();
+
+    if (data?.wasDeleted) {
+      this.userCoins = this.userCoins.filter(userCoin => userCoin.id !== coin.id);
+    }
   }
 }
