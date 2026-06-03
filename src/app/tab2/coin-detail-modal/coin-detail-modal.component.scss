@@ -1,0 +1,230 @@
+// ── Base ───────────────────────────────────────────────────────────────────
+.modal-content {
+  --background: #fafaf9;
+  --padding-bottom: 40px;
+}
+
+.section-label {
+  margin: 0 0 8px;
+  color: #f57b25;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+// ── Hero ───────────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1a0e05 0%, #111 100%);
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    ion-icon { font-size: 4rem; color: #f57b25; }
+  }
+
+  &__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.45);
+    transition: background .15s ease;
+
+    ion-icon {
+      font-size: 1.35rem;
+      color: #ffffff;
+    }
+
+    &:active {
+      background: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+// ── Title row ──────────────────────────────────────────────────────────────
+.title-row {
+  padding: 14px 20px 4px;
+}
+
+.coin-title {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.25;
+}
+
+// ── Cards ──────────────────────────────────────────────────────────────────
+.modal-card {
+  margin: 10px 16px 0;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #eadfd2;
+  border-left: 3px solid #f57b25;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(17,17,17,.06);
+}
+
+// ── Info grid ──────────────────────────────────────────────────────────────
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  &--full {
+    grid-column: 1 / -1;
+  }
+
+  &__label {
+    color: #aaa;
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  &__value {
+    color: #111;
+    font-size: .86rem;
+    font-weight: 600;
+  }
+}
+
+.condition-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #fff3e8;
+  color: #c65f1a;
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.price-value {
+  color: #f57b25;
+  font-size: .92rem;
+  font-weight: 700;
+}
+
+// ── Description (within main card) ─────────────────────────────────────────
+.description-divider {
+  margin: 12px 0 10px;
+  border: none;
+  border-top: 1px solid #f0ebe3;
+}
+
+.modal-description {
+  margin: 0;
+  color: #555;
+  font-size: .84rem;
+  line-height: 1.5;
+}
+
+// ── Manage card ────────────────────────────────────────────────────────────
+.manage-card {
+  border-left-color: #eadfd2;
+  margin-bottom: 16px;
+}
+
+.manage-hint {
+  margin: 0 0 12px;
+  color: #888;
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+// ── Toggle rows ────────────────────────────────────────────────────────────
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid #f0ebe3;
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  &__title {
+    color: #111;
+    font-size: .84rem;
+    font-weight: 600;
+  }
+
+  &__sub {
+    color: #aaa;
+    font-size: .74rem;
+  }
+}
+
+.market-toggle {
+  --track-background: #e0d8ce;
+  --track-background-checked: #f57b25;
+  --handle-background: #fff;
+  --handle-background-checked: #fff;
+  flex-shrink: 0;
+}
+
+// ── Action buttons (inside manage card) ────────────────────────────────────
+.action-row {
+  display: flex;
+  gap: 10px;
+  padding-top: 14px;
+}
+
+.btn-edit,
+.btn-remove {
+  flex: 1;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #eadfd2;
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s ease;
+
+  &:active { opacity: .75; }
+}
+
+.btn-edit {
+  background: #fff;
+  color: #333;
+}
+
+.btn-remove {
+  background: #fff;
+  color: #d94040;
+  border-color: #f5d0d0;
+}

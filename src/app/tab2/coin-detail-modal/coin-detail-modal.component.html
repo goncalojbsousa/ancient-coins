@@ -1,0 +1,93 @@
+<ion-content class="modal-content">
+
+  <!-- Hero: foto com botão fechar sobreposto -->
+  <div class="hero">
+    @if (coin.photos && coin.photos.length > 0) {
+      <img class="hero__img" [src]="coin.photos[0]" [alt]="coin.name">
+    } @else {
+      <div class="hero__placeholder">
+        <ion-icon name="cash-outline"></ion-icon>
+      </div>
+    }
+    <button class="hero__close" (click)="dismiss()" aria-label="Fechar">
+      <ion-icon name="close"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Título -->
+  <div class="title-row">
+    <h1 class="coin-title">{{ coin.name }}</h1>
+  </div>
+
+  <!-- Info principal + Descrição no mesmo card -->
+  <div class="modal-card">
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-item__label">Origem</span>
+        <span class="info-item__value">{{ coin.origin }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item__label">Ano</span>
+        <span class="info-item__value">{{ coin.year }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item__label">Material</span>
+        <span class="info-item__value">{{ coin.material }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-item__label">Condição</span>
+        <span class="info-item__value">
+          <span class="condition-badge">{{ coin.condition }}</span>
+        </span>
+      </div>
+      @if (coin.availableForSale && coin.price) {
+        <div class="info-item">
+          <span class="info-item__label">Preço</span>
+          <span class="info-item__value price-value">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+        </div>
+      }
+      @if (coin.availableForTrade && coin.tradePreference) {
+        <div class="info-item info-item--full">
+          <span class="info-item__label">Preferência de Troca</span>
+          <span class="info-item__value">{{ coin.tradePreference }}</span>
+        </div>
+      }
+    </div>
+
+    @if (coin.description) {
+      <div class="description-divider"></div>
+      <p class="section-label">Descrição</p>
+      <p class="modal-description">{{ coin.description }}</p>
+    }
+  </div>
+
+  <!-- Gestão do marketplace + botões Editar/Remover -->
+  <div class="modal-card manage-card">
+    <p class="manage-hint">Esta é a sua moeda. Gerencie como ela aparece no marketplace.</p>
+
+    <!-- Toggle: Publicar para Venda -->
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__title">Publicar para Venda</span>
+        <span class="toggle-row__sub">Disponibilizar esta moeda para compra</span>
+      </div>
+      <ion-toggle [checked]="coin.availableForSale" class="market-toggle"></ion-toggle>
+    </div>
+
+    <!-- Toggle: Publicar para Troca -->
+    <div class="toggle-row">
+      <div class="toggle-row__info">
+        <span class="toggle-row__title">Publicar para Troca</span>
+        <span class="toggle-row__sub">Disponibilizar esta moeda para troca</span>
+      </div>
+      <ion-toggle [checked]="coin.availableForTrade" class="market-toggle"></ion-toggle>
+    </div>
+
+    <!-- Ações: Editar / Remover dentro do card -->
+    <div class="action-row">
+      <button class="btn-edit">Editar</button>
+      <button class="btn-remove">Remover</button>
+    </div>
+  </div>
+
+</ion-content>
