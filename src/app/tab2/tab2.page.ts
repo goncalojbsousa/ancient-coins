@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+
+import { Coin } from '../models/ancient-coins.models';
+import { AuthService } from '../services/auth.service';
+import { CoinsService } from '../services/coins.service';
 
 @Component({
   selector: 'app-tab2',
@@ -6,8 +10,43 @@ import { Component } from '@angular/core';
   styleUrls: ['tab2.page.scss'],
   standalone: false,
 })
-export class Tab2Page {
+export class Tab2Page implements OnInit {
+  private authService = inject(AuthService);
+  private coinsService = inject(CoinsService);
 
-  constructor() {}
+  searchTerm = '';
+  userCoins: Coin[] = [];
+
+  async ngOnInit(): Promise<void> {
+    await this.authService.init();
+    await this.coinsService.init();
+
+    const currentUser = this.authService.getCurrentUser();
+
+    this.userCoins = currentUser
+      ? this.coinsService.getCoinsByOwner(currentUser.id)
+      : [];
+  }
+
+  get filteredCoins(): Coin[] {
+    const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
+
+    if (!normalizedSearchTerm) {
+      return this.userCoins;
+    }
+
+    return this.userCoins.filter(coin =>
+      coin.name.toLowerCase().includes(normalizedSearchTerm) ||
+      coin.origin.toLowerCase().includes(normalizedSearchTerm)
+    );
+  }
+
+  get collectionCountText(): string {
+    const coinCount = this.userCoins.length;
+
+    return coinCount === 1
+      ? '1 moeda cadastrada'
+      : `${coinCount} moedas cadastradas`;
+  }
 
 }

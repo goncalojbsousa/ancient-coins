@@ -1,15 +1,62 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Minha Coleção
-    </ion-title>
+  <ion-toolbar class="collection-toolbar">
+    <ion-title>Minha Coleção</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Minha Coleção</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="collection-content">
+
+  <!-- Summary -->
+  <div class="summary-card">
+    <div>
+      <p class="section-label">A minha coleção</p>
+      <p class="summary-card__sub">{{ collectionCountText }}</p>
+    </div>
+    <ion-button class="add-coin-button" fill="outline" routerLink="/tabs/tab3">
+      Adicionar
+    </ion-button>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <ion-searchbar
+      placeholder="Pesquisar por nome ou origem..."
+      [(ngModel)]="searchTerm"
+      debounce="200">
+    </ion-searchbar>
+  </div>
+
+  <!-- List -->
+  @if (filteredCoins.length > 0) {
+    <div class="coin-list">
+      @for (coin of filteredCoins; track coin.id) {
+        <ion-card class="coin-card">
+          <div class="coin-image">
+            @if (coin.photos.length > 0) {
+              <img [src]="coin.photos[0]" [alt]="coin.name">
+            } @else {
+              <ion-icon name="cash-outline"></ion-icon>
+            }
+          </div>
+          <ion-card-content class="coin-body">
+            <div class="coin-body__meta">
+              <h3>{{ coin.name }}</h3>
+              <p>{{ coin.origin }} · {{ coin.year }}</p>
+            </div>
+            <div class="coin-body__tags">
+              <span>{{ coin.material }}</span>
+              <span>{{ coin.condition }}</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  } @else {
+    <div class="empty-state">
+      <ion-icon name="file-tray-full-outline"></ion-icon>
+      <h3>Nenhuma moeda encontrada</h3>
+      <p>Adicione moedas à sua coleção ou ajuste a pesquisa.</p>
+    </div>
+  }
+
 </ion-content>
