@@ -1,47 +1,35 @@
-ion-content {
-  --background: #fafaf9;
-}
+// ── Content ───────────────────────────────────────────────────────────────
+.collection-toolbar { --background: #fafaf9; --border-color: transparent; }
+.collection-content { --background: #fafaf9; --padding-bottom: 32px; }
 
-.collection-page {
-  display: grid;
-  gap: 16px;
-  max-width: 430px;
-  margin: 0 auto;
-  padding: 24px 18px 28px;
-}
-
-.collection-summary {
-  display: grid;
-  gap: 16px;
-  padding: 18px 20px;
-  border: 1px solid #eadfd2;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: none;
-}
-
-.collection-summary h2,
-.coin-card h2,
-.empty-collection h2 {
+// ── Section label (shared) ────────────────────────────────────────────────
+.section-label {
   margin: 0;
-  color: #111;
+  color: #f57b25;
+  font-size: .75rem;
   font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
 }
 
-.collection-summary h2 {
-  margin-bottom: 4px;
-  font-size: 1rem;
+// ── Summary Card ──────────────────────────────────────────────────────────
+.summary-card {
+  margin: 16px 16px 0;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #eadfd2;
+  border-left: 3px solid #f57b25;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(17,17,17,.07);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.collection-summary p,
-.coin-card p,
-.empty-collection p {
-  margin: 0;
+.summary-card__sub {
+  margin: 4px 0 0;
   color: #666;
-  line-height: 1.45;
-}
-
-.collection-summary p {
   font-size: .86rem;
 }
 
@@ -53,122 +41,98 @@ ion-content {
   --border-radius: 10px;
   --border-width: 1px;
   --box-shadow: none;
-  --color: #f57b25;
-  height: 38px;
+  --color: #666;
+  flex-shrink: 0;
+  height: 36px;
   margin: 0;
   font-size: .8rem;
-  font-weight: 700;
   text-transform: none;
 }
 
-.collection-controls {
-  display: grid;
-  gap: 10px;
+// ── Search ────────────────────────────────────────────────────────────────
+.controls {
+  padding: 14px 16px 0;
 }
 
 ion-searchbar {
   padding: 0;
-  --background: #f4f4f3;
-  --border-radius: 10px;
-  --box-shadow: none;
-  --color: #111;
-  --icon-color: #666;
-  --placeholder-color: #666;
-}
-
-.filter-button {
   --background: #fff;
-  --border-color: #eadfd2;
-  --border-radius: 8px;
-  --border-width: 1px;
-  --box-shadow: none;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 12px rgba(17,17,17,.06);
   --color: #111;
-  height: 34px;
-  margin: 0;
-  font-size: .8rem;
-  font-weight: 700;
-  text-transform: none;
+  --icon-color: #aaa;
+  --placeholder-color: #aaa;
+  border: 1px solid #eadfd2;
+  border-radius: 12px;
 }
 
+// ── Coin List ─────────────────────────────────────────────────────────────
 .coin-list {
   display: grid;
-  gap: 14px;
+  gap: 12px;
+  padding: 16px 16px 0;
 }
 
-.coin-card,
-.empty-collection {
+.coin-card {
   margin: 0;
   border: 1px solid #eadfd2;
   border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 14px 30px rgba(17, 17, 17, .08);
-  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(17,17,17,.06);
   --background: #fff;
+  overflow: hidden;
 }
 
 .coin-image {
-  height: 220px;
-  display: grid;
-  place-items: center;
-  padding: 12px;
-  background: #fff;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #1a0e05 0%, #111 100%);
   overflow: hidden;
+
+  img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  ion-icon { font-size: 3rem; color: #f57b25; }
 }
 
-.coin-image img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
+.coin-body {
+  padding: 16px 18px 18px !important;
 }
 
-.coin-image ion-icon,
-.empty-collection ion-icon {
-  color: #f57b25;
-  font-size: 3rem;
+.coin-body__meta {
+  h3 { margin: 0 0 4px; color: #111; font-size: .95rem; font-weight: 700; }
+  p  { margin: 0; color: #888; font-size: .8rem; }
 }
 
-.coin-card ion-card-content {
-  padding: 18px 20px 20px;
-}
-
-.coin-card h2 {
-  font-size: .98rem;
-}
-
-.coin-card p {
-  font-size: .88rem;
-}
-
-.coin-details {
+.coin-body__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 6px;
+  margin-top: 12px;
+
+  span {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #fff3e8;
+    color: #c65f1a;
+    font-size: .72rem;
+    font-weight: 600;
+  }
 }
 
-.coin-details span {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #fff2e8;
-  color: #8f3f12;
-  font-size: .76rem;
-  font-weight: 700;
-}
-
-.empty-collection {
-  display: grid;
-  justify-items: center;
+// ── Empty State ───────────────────────────────────────────────────────────
+.empty-state {
+  margin: 24px 16px 0;
+  padding: 32px 20px;
+  background: #fff;
+  border: 1px solid #eadfd2;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 8px;
-  padding: 30px 20px;
   text-align: center;
-}
 
-.empty-collection h2 {
-  font-size: 1rem;
-}
-
-.empty-collection p {
-  max-width: 260px;
-  font-size: .86rem;
+  ion-icon { font-size: 2.8rem; color: #f57b25; }
+  h3 { margin: 0; color: #111; font-size: 1rem; font-weight: 700; }
+  p  { margin: 0; color: #666; font-size: .86rem; max-width: 240px; line-height: 1.45; }
 }
