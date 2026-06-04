@@ -8,7 +8,8 @@ import { AddCoinModalComponent } from './add-coin-modal/add-coin-modal.component
 import { CoinDetailModalComponent } from './coin-detail-modal/coin-detail-modal.component';
 
 interface CoinDetailModalResult {
-  wasDeleted: boolean;
+  wasDeleted?: boolean;
+  updatedCoin?: Coin;
 }
 
 interface AddCoinModalResult {
@@ -79,6 +80,10 @@ export class Tab2Page implements OnInit {
 
     if (data?.wasDeleted) {
       this.userCoins = this.userCoins.filter(userCoin => userCoin.id !== coin.id);
+    }
+
+    if (data?.updatedCoin) {
+      await this.loadUserCoins();
     }
   }
 
