@@ -26,7 +26,14 @@ export class Tab1Page implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
+    await this.loadHomeData();
+  }
 
+  async ionViewWillEnter(): Promise<void> {
+    await this.loadHomeData();
+  }
+
+  private async loadHomeData(): Promise<void> {
     this.recentCoins = await this.marketService.getRecentMarketCoins(2);
     this.userName = (await this.authService.getCurrentUser())?.name.split(' ')[0] ?? '';
   }

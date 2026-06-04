@@ -31,7 +31,14 @@ export class Tab2Page implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
+    await this.loadUserCoins();
+  }
 
+  async ionViewWillEnter(): Promise<void> {
+    await this.loadUserCoins();
+  }
+
+  private async loadUserCoins(): Promise<void> {
     const currentUser = await this.authService.getCurrentUser();
 
     this.userCoins = currentUser
