@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Coin } from '../models/ancient-coins.models';
+import { Coin } from '../models/coin.model';
 import { getSupabase } from './supabase.client';
 
 @Injectable({

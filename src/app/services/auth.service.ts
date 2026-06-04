@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 
-import { RegisterUser, User } from '../models/ancient-coins.models';
+import { RegisterUser, User } from '../models/user.model';
 import { getSupabase } from './supabase.client';
 import { UsersService } from './users.service';
 

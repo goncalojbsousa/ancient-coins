@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 
-import { Conversation, Message, Review } from '../models/ancient-coins.models';
+import { Conversation } from '../models/conversation.model';
+import { Message } from '../models/message.model';
+import { Review } from '../models/review.model';
 import { getSupabase } from './supabase.client';
 import { UsersService } from './users.service';
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 
-import { Coin } from '../models/ancient-coins.models';
+import { Coin } from '../models/coin.model';
 import { AuthService } from '../services/auth.service';
 import { MarketService } from '../services/market.service';
 
