@@ -1,16 +1,14 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Conversation } from '../models/conversation.model';
 import { Message } from '../models/message.model';
 import { Review } from '../models/review.model';
 import { getSupabase } from './supabase.client';
-import { UsersService } from './users.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessagesService {
-  private usersService = inject(UsersService);
   private supabaseClient = getSupabase();
 
   async getConversations(): Promise<Conversation[]> {
@@ -66,6 +64,24 @@ export class MessagesService {
     }
 
     return data as Review[];
+  }
+
+  async getReviewByConversationAndReviewer(
+    conversationId: number,
+    reviewerId: number
+  ): Promise<Review | undefined> {
+    const { data, error } = await this.supabaseClient
+      .from('reviews')
+      .select('*')
+      .eq('conversation_id', conversationId)
+      .eq('reviewer_id', reviewerId)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data ? data as Review : undefined;
   }
 
   async startNegotiation(
@@ -161,6 +177,33 @@ export class MessagesService {
     stars: number,
     comment: string
   ): Promise<void> {
+    const existingReview = await this.getReviewByConversationAndReviewer(
+      conversation_id,
+      reviewer_id
+    );
+
+    if (existingReview) {
+      const { data, error } = await this.supabaseClient
+        .from('reviews')
+        .update({
+          stars,
+          comment,
+        })
+        .eq('id', existingReview.id)
+        .select()
+        .maybeSingle();
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('Nao foi possivel atualizar a avaliacao.');
+      }
+
+      return;
+    }
+
     const review: Omit<Review, 'id'> = {
       conversation_id,
       reviewer_id,
@@ -180,19 +223,6 @@ export class MessagesService {
       throw error;
     }
 
-    await this.updateUserRating(reviewed_user_id);
-  }
-
-  private async updateUserRating(userId: number): Promise<void> {
-    const user = await this.usersService.getUserById(userId);
-    const userReviews = await this.getReviewsByUser(userId);
-
-    if (user && userReviews.length > 0) {
-      const totalStars = userReviews.reduce((total, review) => total + review.stars, 0);
-      user.rating = Number((totalStars / userReviews.length).toFixed(1));
-      user.total_reviews = userReviews.length;
-      await this.usersService.updateUser(user);
-    }
   }
 
   private async updateConversation(conversation: Conversation): Promise<void> {
