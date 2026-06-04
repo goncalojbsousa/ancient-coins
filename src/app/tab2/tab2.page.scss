@@ -1,8 +1,6 @@
-// ── Content ───────────────────────────────────────────────────────────────
 .collection-toolbar { --background: #fafaf9; --border-color: transparent; }
 .collection-content { --background: #fafaf9; --padding-bottom: 32px; }
 
-// ── Section label (shared) ────────────────────────────────────────────────
 .section-label {
   margin: 0;
   color: #f57b25;
@@ -12,7 +10,6 @@
   text-transform: uppercase;
 }
 
-// ── Summary Card ──────────────────────────────────────────────────────────
 .summary-card {
   margin: 16px 16px 0;
   padding: 18px 20px;
@@ -27,7 +24,7 @@
   gap: 12px;
 }
 
-.summary-card__sub {
+.summary-card_sub {
   margin: 4px 0 0;
   color: #666;
   font-size: .86rem;
@@ -49,7 +46,6 @@
   text-transform: none;
 }
 
-// ── Search ────────────────────────────────────────────────────────────────
 .controls {
   padding: 14px 16px 0;
 }
@@ -66,7 +62,6 @@ ion-searchbar {
   border-radius: 12px;
 }
 
-// ── Coin List ─────────────────────────────────────────────────────────────
 .coin-list {
   display: grid;
   gap: 12px;
@@ -98,15 +93,14 @@ ion-searchbar {
   padding: 14px 16px 16px !important;
 }
 
-// ── Header: nome + preço lado a lado ─────────────────────────────────────
-.coin-body__header {
+.coin-body_header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
 }
 
-.coin-body__meta {
+.coin-body_meta {
   flex: 1;
   h3 { margin: 0 0 3px; color: #111; font-size: .95rem; font-weight: 700; }
   p  { margin: 0; color: #888; font-size: .8rem; }
@@ -120,8 +114,7 @@ ion-searchbar {
   padding-top: 1px;
 }
 
-// ── Tags ──────────────────────────────────────────────────────────────────
-.coin-body__tags {
+.coin-body_tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -136,8 +129,6 @@ ion-searchbar {
     font-weight: 600;
   }
 }
-
-// Tags de estado de listagem
 .tag--listing {
   font-weight: 700 !important;
 
@@ -162,7 +153,6 @@ ion-searchbar {
   }
 }
 
-// ── Empty State ───────────────────────────────────────────────────────────
 .empty-state {
   margin: 24px 16px 0;
   padding: 32px 20px;

@@ -26,7 +26,7 @@
 
     @if (getCoin(selectedConversation); as coin) {
     <div class="coin-summary">
-      <div class="coin-summary__image">
+      <div class="coin-summary_image">
         @if (coin.photos.length > 0) {
         <img [src]="coin.photos[0]" [alt]="coin.name">
         } @else {
@@ -75,8 +75,8 @@
       <div class="avatar">
         {{ getInitials(getOtherUser(conversation)?.name) }}
       </div>
-      <div class="conversation-card__body">
-        <div class="conversation-card__top">
+      <div class="conversation-card_body">
+        <div class="conversation-card_top">
           <h2>{{ getOtherUser(conversation)?.name || 'Utilizador' }}</h2>
           <span>{{ getConversationDate(conversation) }}</span>
         </div>
@@ -105,14 +105,14 @@
   <ng-template>
     <ion-content class="review-modal-content">
       <div class="review-card">
-        <div class="review-card__header">
+        <div class="review-card_header">
           <div>
-            <p class="review-card__label">Avaliacao</p>
+            <p class="review-card_label">Avaliacao</p>
             <h2>{{ hasReviewedConversation(selectedConversation) ? 'Atualizar avaliacao' : 'Avaliar utilizador' }}</h2>
           </div>
         </div>
 
-        <p class="review-card__sub">Como correu a negociacao com {{ getOtherUser(selectedConversation)?.name || 'este
+        <p class="review-card_sub">Como correu a negociacao com {{ getOtherUser(selectedConversation)?.name || 'este
           utilizador' }}?</p>
 
         <div class="review-modal-stars">

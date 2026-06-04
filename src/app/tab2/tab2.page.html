@@ -5,19 +5,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="collection-content">
-
-  <!-- Summary -->
   <div class="summary-card">
     <div>
       <p class="section-label">A minha coleção</p>
-      <p class="summary-card__sub">{{ collectionCountText }}</p>
+      <p class="summary-card_sub">{{ collectionCountText }}</p>
     </div>
     <ion-button class="add-coin-button" fill="outline" (click)="openAddCoinModal()">
       Adicionar
     </ion-button>
   </div>
-
-  <!-- Controls -->
   <div class="controls">
     <ion-searchbar
       placeholder="Pesquisar por nome ou origem..."
@@ -25,8 +21,6 @@
       debounce="200">
     </ion-searchbar>
   </div>
-
-  <!-- List -->
   @if (filteredCoins.length > 0) {
     <div class="coin-list">
       @for (coin of filteredCoins; track coin.id) {
@@ -39,8 +33,8 @@
             }
           </div>
           <ion-card-content class="coin-body">
-            <div class="coin-body__header">
-              <div class="coin-body__meta">
+            <div class="coin-body_header">
+              <div class="coin-body_meta">
                 <h3>{{ coin.name }}</h3>
                 <p>{{ coin.origin }} · {{ coin.year }}</p>
               </div>
@@ -48,7 +42,7 @@
                 <span class="coin-price">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
               }
             </div>
-            <div class="coin-body__tags">
+            <div class="coin-body_tags">
               <span>{{ coin.material }}</span>
               <span>{{ coin.condition }}</span>
                 @if (coin.available_for_sale && coin.available_for_trade) {
