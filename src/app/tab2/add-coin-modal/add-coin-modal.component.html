@@ -105,12 +105,35 @@
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="Imagem"
-          label-placement="stacked"
-          placeholder="assets/img/moeda.jpg ou URL"
-          formControlName="photoUrl">
-        </ion-input>
+        <label class="field-label">Imagem</label>
+
+        @if (selectedPhotoPreview) {
+          <div class="photo-preview">
+            <img [src]="selectedPhotoPreview" alt="Imagem selecionada">
+            <ion-button fill="clear" size="small" type="button" (click)="removeSelectedPhoto()">
+              Remover
+            </ion-button>
+          </div>
+        }
+
+        <div class="photo-actions">
+          <ion-button fill="outline" size="small" type="button">
+            <ion-icon slot="start" name="image-outline"></ion-icon>
+            Escolher
+            <input class="photo-input" type="file" accept="image/*" (change)="onPhotoSelected($event)">
+          </ion-button>
+
+          <ion-button fill="outline" size="small" type="button">
+            <ion-icon slot="start" name="camera-outline"></ion-icon>
+            Foto
+            <input
+              class="photo-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+              (change)="onPhotoSelected($event)">
+          </ion-button>
+        </div>
       </div>
     </section>
 
@@ -171,8 +194,8 @@
       }
     </section>
 
-    <ion-button class="submit-button" expand="block" type="submit">
-      Guardar moeda
+    <ion-button class="submit-button" expand="block" type="submit" [disabled]="isSaving">
+      {{ isSaving ? 'A guardar...' : 'Guardar moeda' }}
     </ion-button>
   </form>
 </ion-content>
