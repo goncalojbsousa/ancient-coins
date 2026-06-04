@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { Coin } from '../models/ancient-coins.models';
+import { Coin } from '../models/coin.model';
 import { AuthService } from '../services/auth.service';
 import { CoinsService } from '../services/coins.service';
 import { CoinDetailModalComponent } from './coin-detail-modal/coin-detail-modal.component';
@@ -26,11 +26,11 @@ export class Tab2Page implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
-    await this.coinsService.init();
 
-    const currentUser = this.authService.getCurrentUser();
+    const currentUser = await this.authService.getCurrentUser();
+
     this.userCoins = currentUser
-      ? this.coinsService.getCoinsByOwner(currentUser.id)
+      ? await this.coinsService.getCoinsByOwner(currentUser.id)
       : [];
   }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 
-import { Coin } from '../models/ancient-coins.models';
+import { Coin } from '../models/coin.model';
 import { AuthService } from '../services/auth.service';
 import { MarketService } from '../services/market.service';
 
@@ -12,16 +12,15 @@ import { MarketService } from '../services/market.service';
 })
 export class Tab1Page implements OnInit {
   private marketService = inject(MarketService);
-  private authService   = inject(AuthService);
+  private authService = inject(AuthService);
 
   recentCoins: Coin[] = [];
   userName = '';
 
   async ngOnInit(): Promise<void> {
-    await this.marketService.init();
     await this.authService.init();
 
-    this.recentCoins = this.marketService.getRecentMarketCoins(2);
-    this.userName = this.authService.getCurrentUser()?.name.split(' ')[0] ?? '';
+    this.recentCoins = await this.marketService.getRecentMarketCoins(2);
+    this.userName = (await this.authService.getCurrentUser())?.name.split(' ')[0] ?? '';
   }
 }

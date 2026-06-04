@@ -1,114 +1,132 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { Coin } from '../models/ancient-coins.models';
-import { DatabaseService } from './database.service';
+import { Coin } from '../models/coin.model';
+import { getSupabase } from './supabase.client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CoinsService {
-  private databaseService = inject(DatabaseService);
-  private coins: Coin[];
+  private supabaseClient = getSupabase();
 
-  constructor() {
-    this.coins = [];
-    this.init();
-  }
+  async getCoins(): Promise<Coin[]> {
+    const { data, error } = await this.supabaseClient
+      .from('coins')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-  async init(): Promise<void> {
-    this.coins = await this.databaseService.getData<Coin[]>('coins', []);
-  }
-
-  getCoins(): Coin[] {
-    return this.coins;
-  }
-
-  getCoinById(id: number): Coin | undefined {
-    return this.coins.find(coin => coin.id === id);
-  }
-
-  getCoinsByOwner(ownerId: number): Coin[] {
-    return this.coins.filter(coin => coin.ownerId === ownerId);
-  }
-
-  searchCoinsByOwner(ownerId: number, term: string): Coin[] {
-    const searchTerm = term.trim().toLowerCase();
-
-    return this.coins.filter(coin =>
-      coin.ownerId === ownerId &&
-      (
-        coin.name.toLowerCase().includes(searchTerm) ||
-        coin.origin.toLowerCase().includes(searchTerm) ||
-        coin.material.toLowerCase().includes(searchTerm)
-      )
-    );
-  }
-
-  async insertCoin(coin: Coin): Promise<void> {
-    if (!coin.id) {
-      coin.id = Date.now();
+    if (error) {
+      throw error;
     }
 
+    return data as Coin[];
+  }
+
+  async getCoinById(id: number): Promise<Coin | undefined> {
+    const { data, error } = await this.supabaseClient
+      .from('coins')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Coin | undefined;
+  }
+
+  async getCoinsByOwner(owner_id: number): Promise<Coin[]> {
+    const { data, error } = await this.supabaseClient
+      .from('coins')
+      .select('*')
+      .eq('owner_id', owner_id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Coin[];
+  }
+
+  async insertCoin(coin: Coin): Promise<Coin> {
     const now = new Date().toISOString();
-    coin.createdAt = now;
-    coin.updatedAt = now;
+    coin.created_at = now;
+    coin.updated_at = now;
+    const { id, ...coinData } = coin;
 
-    this.coins.push(coin);
-    await this.saveCoins();
+    const { data, error } = await this.supabaseClient
+      .from('coins')
+      .insert(coinData)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Coin;
   }
 
-  async updateCoin(coin: Coin): Promise<void> {
-    const index = this.coins.findIndex(currentCoin => currentCoin.id === coin.id);
+  async updateCoin(coin: Coin): Promise<Coin | undefined> {
+    coin.updated_at = new Date().toISOString();
+    const { id, ...coinData } = coin;
 
-    if (index >= 0) {
-      coin.updatedAt = new Date().toISOString();
-      this.coins[index] = coin;
-      await this.saveCoins();
+    const { data, error } = await this.supabaseClient
+      .from('coins')
+      .update(coinData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
     }
+
+    return data as Coin;
   }
 
   async deleteCoin(id: number): Promise<void> {
-    const index = this.coins.findIndex(coin => coin.id === id);
+    const { error } = await this.supabaseClient
+      .from('coins')
+      .delete()
+      .eq('id', id);
 
-    if (index >= 0) {
-      this.coins.splice(index, 1);
-      await this.saveCoins();
+    if (error) {
+      throw error;
     }
   }
 
   async publishForSale(id: number, price: number): Promise<void> {
-    const coin = this.getCoinById(id);
+    const coin = await this.getCoinById(id);
 
     if (coin) {
-      coin.availableForSale = true;
+      coin.available_for_sale = true;
       coin.price = price;
       await this.updateCoin(coin);
     }
   }
 
-  async publishForTrade(id: number, tradePreference: string): Promise<void> {
-    const coin = this.getCoinById(id);
+  async publishForTrade(id: number, trade_preference: string): Promise<void> {
+    const coin = await this.getCoinById(id);
 
     if (coin) {
-      coin.availableForTrade = true;
-      coin.tradePreference = tradePreference;
+      coin.available_for_trade = true;
+      coin.trade_preference = trade_preference;
       await this.updateCoin(coin);
     }
   }
 
   async removeFromMarket(id: number): Promise<void> {
-    const coin = this.getCoinById(id);
+    const coin = await this.getCoinById(id);
 
     if (coin) {
-      coin.availableForSale = false;
-      coin.availableForTrade = false;
-      coin.price = undefined;
-      coin.tradePreference = undefined;
+      coin.available_for_sale = false;
+      coin.available_for_trade = false;
+      coin.price = null;
+      coin.trade_preference = null;
       await this.updateCoin(coin);
     }
-  }
-
-  private async saveCoins(): Promise<void> {
-    await this.databaseService.setData('coins', this.coins);
   }
 }

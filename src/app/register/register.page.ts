@@ -66,7 +66,7 @@ export class RegisterPage {
     });
 
     if (registeredUser) {
-      await this.router.navigateByUrl('/tabs/tab1');
+      await this.router.navigateByUrl('/login', { replaceUrl: true });
       return;
     }
 
