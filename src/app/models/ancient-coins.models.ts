@@ -4,12 +4,12 @@ export type ConversationStatus = 'aberta' | 'aceite' | 'concluida';
 
 export interface User {
   id: number;
+  auth_id: string;
   name: string;
   email: string;
-  password: string;
   location: string;
   rating: number;
-  totalReviews: number;
+  total_reviews: number;
 }
 
 export interface RegisterUser {
@@ -21,7 +21,7 @@ export interface RegisterUser {
 
 export interface Coin {
   id: number;
-  ownerId: number;
+  owner_id: number;
   name: string;
   origin: string;
   year: string;
@@ -29,45 +29,39 @@ export interface Coin {
   condition: CoinCondition;
   description: string;
   photos: string[];
-  availableForSale: boolean;
-  availableForTrade: boolean;
-  price?: number;
-  tradePreference?: string;
-  createdAt: string;
-  updatedAt: string;
+  available_for_sale: boolean;
+  available_for_trade: boolean;
+  price?: number | null;
+  trade_preference?: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Message {
   id: number;
-  senderId: number;
+  sender_id: number;
   text: string;
-  createdAt: string;
+  created_at: string;
 }
 
 export interface Conversation {
   id: number;
-  coinId: number;
-  buyerId: number;
-  sellerId: number;
+  coin_id: number;
+  buyer_id: number;
+  seller_id: number;
   status: ConversationStatus;
   messages: Message[];
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Review {
   id: number;
-  conversationId: number;
-  reviewerId: number;
-  reviewedUserId: number;
+  conversation_id: number;
+  reviewer_id: number;
+  reviewed_user_id: number;
   stars: number;
   comment: string;
-  createdAt: string;
+  created_at: string;
 }
 
-export interface AncientCoinsSeedData {
-  users: User[];
-  coins: Coin[];
-  conversations: Conversation[];
-  reviews: Review[];
-}

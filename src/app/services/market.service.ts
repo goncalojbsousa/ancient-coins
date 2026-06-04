@@ -9,28 +9,26 @@ import { CoinsService } from './coins.service';
 export class MarketService {
   private coinsService = inject(CoinsService);
 
-  async init(): Promise<void> {
-    await this.coinsService.init();
+  async getMarketCoins(): Promise<Coin[]> {
+    const coins = await this.coinsService.getCoins();
+    return coins.filter(coin => coin.available_for_sale || coin.available_for_trade);
   }
 
-  getMarketCoins(): Coin[] {
-    return this.coinsService
-      .getCoins()
-      .filter(coin => coin.availableForSale || coin.availableForTrade);
+  async getCoinsForSale(): Promise<Coin[]> {
+    const coins = await this.getMarketCoins();
+    return coins.filter(coin => coin.available_for_sale);
   }
 
-  getCoinsForSale(): Coin[] {
-    return this.getMarketCoins().filter(coin => coin.availableForSale);
+  async getCoinsForTrade(): Promise<Coin[]> {
+    const coins = await this.getMarketCoins();
+    return coins.filter(coin => coin.available_for_trade);
   }
 
-  getCoinsForTrade(): Coin[] {
-    return this.getMarketCoins().filter(coin => coin.availableForTrade);
-  }
-
-  searchMarket(term: string): Coin[] {
+  async searchMarket(term: string): Promise<Coin[]> {
     const searchTerm = term.trim().toLowerCase();
+    const coins = await this.getMarketCoins();
 
-    return this.getMarketCoins().filter(coin =>
+    return coins.filter(coin =>
       coin.name.toLowerCase().includes(searchTerm) ||
       coin.origin.toLowerCase().includes(searchTerm) ||
       coin.material.toLowerCase().includes(searchTerm) ||
@@ -39,14 +37,15 @@ export class MarketService {
   }
 
   sortByNewest(coins: Coin[]): Coin[] {
-    return [...coins].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return [...coins].sort((a, b) => b.created_at.localeCompare(a.created_at));
   }
 
   sortByPrice(coins: Coin[]): Coin[] {
     return [...coins].sort((a, b) => (a.price || 0) - (b.price || 0));
   }
 
-  getRecentMarketCoins(limit = 2): Coin[] {
-    return this.sortByNewest(this.getMarketCoins()).slice(0, limit);
+  async getRecentMarketCoins(limit = 2): Promise<Coin[]> {
+    const coins = await this.getMarketCoins();
+    return this.sortByNewest(coins).slice(0, limit);
   }
 }
