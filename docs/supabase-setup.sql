@@ -265,3 +265,20 @@ GRANT SELECT, INSERT, UPDATE ON public.reviews TO authenticated;
 
 GRANT usage, SELECT ON ALL sequences IN SCHEMA public TO authenticated;
 
+CREATE POLICY "Todos podem ver imagens das moedas" ON storage.objects
+  FOR SELECT
+  USING (bucket_id = 'coin-images');
+
+CREATE POLICY "Utilizadores autenticados enviam imagens das moedas" ON storage.objects
+  FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'coin-images');
+
+CREATE POLICY "Utilizadores autenticados atualizam imagens das moedas" ON storage.objects
+  FOR UPDATE TO authenticated
+  USING (bucket_id = 'coin-images')
+  WITH CHECK (bucket_id = 'coin-images');
+
+CREATE POLICY "Utilizadores autenticados removem imagens das moedas" ON storage.objects
+  FOR DELETE TO authenticated
+  USING (bucket_id = 'coin-images');
+

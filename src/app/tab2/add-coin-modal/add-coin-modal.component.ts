@@ -27,6 +27,9 @@ export class AddCoinModalComponent {
 
   readonly coinConditions = COIN_CONDITIONS;
   formSubmitted = false;
+  selectedPhotoFile?: File;
+  selectedPhotoPreview = '';
+  isSaving = false;
 
   addCoinForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -35,7 +38,6 @@ export class AddCoinModalComponent {
     material: ['', [Validators.required]],
     condition: ['Bom' as CoinCondition, [Validators.required]],
     description: ['', [Validators.required]],
-    photoUrl: [''],
     availableForSale: [false],
     price: [0],
     availableForTrade: [false],
@@ -80,6 +82,25 @@ export class AddCoinModalComponent {
     return this.addCoinForm.hasError('tradePreferenceRequired') && (this.tradePreference.touched || this.formSubmitted);
   }
 
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.clearPhotoPreview();
+    this.selectedPhotoFile = file;
+    this.selectedPhotoPreview = URL.createObjectURL(file);
+    input.value = '';
+  }
+
+  removeSelectedPhoto(): void {
+    this.selectedPhotoFile = undefined;
+    this.clearPhotoPreview();
+  }
+
   async dismiss(result?: AddCoinModalResult): Promise<void> {
     await this.modalController.dismiss(result);
   }
@@ -87,7 +108,7 @@ export class AddCoinModalComponent {
   async submitCoinForm(): Promise<void> {
     this.formSubmitted = true;
 
-    if (this.addCoinForm.invalid) {
+    if (this.addCoinForm.invalid || this.isSaving) {
       this.addCoinForm.markAllAsTouched();
       return;
     }
@@ -99,18 +120,24 @@ export class AddCoinModalComponent {
       return;
     }
 
-    const newCoin = this.createCoinFromForm(currentUser.id);
+    this.isSaving = true;
 
     try {
+      const uploadedPhotoUrl = this.selectedPhotoFile
+        ? await this.coinsService.uploadCoinPhoto(this.selectedPhotoFile, currentUser.id)
+        : '';
+      const newCoin = this.createCoinFromForm(currentUser.id, uploadedPhotoUrl);
       const createdCoin = await this.coinsService.insertCoin(newCoin);
       await this.showOperationMessage('Moeda adicionada com sucesso.', 'success-toast');
       await this.dismiss({ createdCoin });
     } catch {
       await this.showOperationMessage('Não foi possível adicionar a moeda. Tente novamente.', 'error-toast');
+    } finally {
+      this.isSaving = false;
     }
   }
 
-  private createCoinFromForm(ownerId: number): Coin {
+  private createCoinFromForm(ownerId: number, uploadedPhotoUrl: string): Coin {
     const formValue = this.addCoinForm.getRawValue();
 
     return {
@@ -122,7 +149,7 @@ export class AddCoinModalComponent {
       material: formValue.material.trim(),
       condition: formValue.condition,
       description: formValue.description.trim(),
-      photos: this.getPhotoUrls(formValue.photoUrl),
+      photos: uploadedPhotoUrl ? [uploadedPhotoUrl] : [],
       available_for_sale: formValue.availableForSale,
       available_for_trade: formValue.availableForTrade,
       price: formValue.availableForSale ? Number(formValue.price) : null,
@@ -132,10 +159,11 @@ export class AddCoinModalComponent {
     };
   }
 
-  private getPhotoUrls(photoUrl: string): string[] {
-    const normalizedPhotoUrl = photoUrl.trim();
-
-    return normalizedPhotoUrl ? [normalizedPhotoUrl] : [];
+  private clearPhotoPreview(): void {
+    if (this.selectedPhotoPreview) {
+      URL.revokeObjectURL(this.selectedPhotoPreview);
+      this.selectedPhotoPreview = '';
+    }
   }
 
   private marketFieldsValidator(control: AbstractControl): ValidationErrors | null {
