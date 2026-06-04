@@ -1,8 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Coin } from '../models/coin.model';
 import { User } from '../models/user.model';
+import { AuthService } from '../services/auth.service';
 import { MarketService } from '../services/market.service';
+import { MessagesService } from '../services/messages.service';
 import { UsersService } from '../services/users.service';
 
 @Component({
@@ -12,7 +15,10 @@ import { UsersService } from '../services/users.service';
   styleUrls: ['tab3.page.scss'],
 })
 export class Tab3Page implements OnInit {
+  private authService = inject(AuthService);
   private marketService = inject(MarketService);
+  private messagesService = inject(MessagesService);
+  private router = inject(Router);
   private usersService = inject(UsersService);
 
   filtroAtual = 'Todas';
@@ -105,6 +111,46 @@ export class Tab3Page implements OnInit {
 
   voltarMercado(): void {
     this.moedaSelecionada = null;
+  }
+
+  async verPerfil(moeda: Coin): Promise<void> {
+    localStorage.setItem('selectedProfileUserId', String(moeda.owner_id));
+    await this.router.navigateByUrl('/tabs/tab5');
+  }
+
+  async iniciarNegociacao(moeda: Coin): Promise<void> {
+    try {
+      await this.authService.init();
+
+      const currentUser = await this.authService.getCurrentUser();
+
+      if (!currentUser) {
+        this.erro = 'Inicie sessão para iniciar uma negociação.';
+        await this.router.navigateByUrl('/login');
+        return;
+      }
+
+      if (currentUser.id === moeda.owner_id) {
+        this.erro = 'Não pode iniciar negociação com a sua própria moeda.';
+        return;
+      }
+
+      const textoInicial = `Olá! Tenho interesse na moeda "${moeda.name}". Ainda está disponível?`;
+
+      const conversation = await this.messagesService.startNegotiation(
+        moeda.id,
+        currentUser.id,
+        moeda.owner_id,
+        textoInicial
+      );
+
+      localStorage.setItem('selectedConversationId', String(conversation.id));
+      await this.router.navigateByUrl('/tabs/tab4');
+
+    } catch (error) {
+      console.error('Erro ao iniciar negociação:', error);
+      this.erro = 'Não foi possível iniciar a negociação.';
+    }
   }
 
   getFotoPrincipal(moeda: Coin): string {

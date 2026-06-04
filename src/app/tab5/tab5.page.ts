@@ -5,6 +5,7 @@ import { Coin } from '../models/coin.model';
 import { User } from '../models/user.model';
 import { AuthService } from '../services/auth.service';
 import { CoinsService } from '../services/coins.service';
+import { UsersService } from '../services/users.service';
 
 @Component({
   selector: 'app-tab5',
@@ -16,12 +17,15 @@ export class Tab5Page implements OnInit {
   private authService = inject(AuthService);
   private coinsService = inject(CoinsService);
   private router = inject(Router);
+  private usersService = inject(UsersService);
 
   loading = true;
   erro = '';
 
   utilizador?: User;
+  utilizadorAutenticado?: User;
   moedasDoUtilizador: Coin[] = [];
+  perfilPublico = false;
 
   estatisticas = {
     moedas: 0,
@@ -69,16 +73,41 @@ export class Tab5Page implements OnInit {
 
       await this.authService.init();
 
-      const user = await this.authService.getCurrentUser();
+      const currentUser = await this.authService.getCurrentUser();
+      this.utilizadorAutenticado = currentUser;
 
-      if (!user) {
-        this.erro = 'Não foi possível carregar o utilizador autenticado.';
-        return;
+      const selectedProfileUserId = localStorage.getItem('selectedProfileUserId');
+
+      if (selectedProfileUserId) {
+        localStorage.removeItem('selectedProfileUserId');
+
+        const userId = Number(selectedProfileUserId);
+
+        if (!Number.isFinite(userId)) {
+          this.erro = 'Perfil inválido.';
+          return;
+        }
+
+        const publicUser = await this.usersService.getUserById(userId);
+
+        if (!publicUser) {
+          this.erro = 'Não foi possível carregar o perfil do vendedor.';
+          return;
+        }
+
+        this.utilizador = publicUser;
+        this.perfilPublico = currentUser?.id !== publicUser.id;
+      } else {
+        if (!currentUser) {
+          this.erro = 'Não foi possível carregar o utilizador autenticado.';
+          return;
+        }
+
+        this.utilizador = currentUser;
+        this.perfilPublico = false;
       }
 
-      this.utilizador = user;
-      this.moedasDoUtilizador = await this.coinsService.getCoinsByOwner(user.id);
-
+      this.moedasDoUtilizador = await this.coinsService.getCoinsByOwner(this.utilizador.id);
       this.calcularEstatisticas();
 
     } catch (error) {
@@ -112,6 +141,12 @@ export class Tab5Page implements OnInit {
 
   getMembroDesde(): string {
     return '2026';
+  }
+
+  voltarAoMeuPerfil(): void {
+    localStorage.removeItem('selectedProfileUserId');
+    this.perfilPublico = false;
+    this.carregarPerfil();
   }
 
   async logout(): Promise<void> {

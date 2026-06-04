@@ -61,7 +61,7 @@
 
     <div class="empty-state error-state" *ngIf="!loading && erro">
       <ion-icon name="alert-circle-outline"></ion-icon>
-      <h3>Erro ao carregar</h3>
+      <h3>Aviso</h3>
       <p>{{ erro }}</p>
     </div>
 
@@ -234,20 +234,22 @@
           </span>
         </div>
 
-        <button type="button" class="profile-button">
+        <button
+          type="button"
+          class="profile-button"
+          (click)="verPerfil(moeda)">
           Ver Perfil
         </button>
       </div>
     </div>
 
     <div class="action-row">
-      <button class="btn-primary" type="button">
+      <button
+        class="btn-primary"
+        type="button"
+        (click)="iniciarNegociacao(moeda)">
         <ion-icon name="chatbubble-outline"></ion-icon>
         Iniciar Negociação
-      </button>
-
-      <button class="btn-secondary" type="button">
-        <ion-icon name="flag-outline"></ion-icon>
       </button>
     </div>
 

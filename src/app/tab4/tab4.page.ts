@@ -45,6 +45,7 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
 
   async ionViewWillEnter(): Promise<void> {
     await this.loadConversations();
+    await this.openConversationFromMarket();
     this.startAutoRefresh();
   }
 
@@ -84,6 +85,7 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
         const updatedConversation = this.conversations.find(
           conversation => conversation.id === selectedConversationId
         );
+
         this.selectedConversation = updatedConversation;
 
         if (updatedConversation && updatedConversation.messages.length !== selectedMessageCount) {
@@ -98,6 +100,37 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       if (showLoading) {
         this.isLoading = false;
       }
+    }
+  }
+
+  async openConversationFromMarket(): Promise<void> {
+    const storedConversationId = localStorage.getItem('selectedConversationId');
+
+    if (!storedConversationId) {
+      return;
+    }
+
+    localStorage.removeItem('selectedConversationId');
+
+    const conversationId = Number(storedConversationId);
+
+    if (!Number.isFinite(conversationId)) {
+      return;
+    }
+
+    let conversation = this.conversations.find(item => item.id === conversationId);
+
+    if (!conversation) {
+      conversation = await this.messagesService.getConversationById(conversationId);
+
+      if (conversation) {
+        this.conversations = [conversation, ...this.conversations];
+        await this.loadConversationCoins();
+      }
+    }
+
+    if (conversation) {
+      await this.selectConversation(conversation);
     }
   }
 
@@ -286,6 +319,7 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
 
   private async loadConversationCoins(): Promise<void> {
     const coinIds = [...new Set(this.conversations.map(conversation => conversation.coin_id))];
+
     const coins = await Promise.all(
       coinIds.map(coinId => this.coinsService.getCoinById(coinId))
     );

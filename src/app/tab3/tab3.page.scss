@@ -420,4 +420,20 @@ ion-searchbar {
   .hero {
     height: 300px;
   }
+
+  .btn-secondary-profile {
+  flex: 1;
+  height: 42px;
+  border: 1px solid #eadfd2;
+  border-radius: 10px;
+  background: #fff;
+  color: #666;
+  font-size: .84rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  }
 }

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="profile-toolbar">
-    <ion-title>Perfil</ion-title>
+    <ion-title>{{ perfilPublico ? 'Perfil do Vendedor' : 'Perfil' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -11,7 +11,7 @@
     <div class="empty-state" *ngIf="loading">
       <ion-icon name="person-circle-outline"></ion-icon>
       <h3>A carregar perfil</h3>
-      <p>A obter os dados da sua conta.</p>
+      <p>A obter os dados da conta.</p>
     </div>
 
     <div class="empty-state error-state" *ngIf="!loading && erro">
@@ -22,13 +22,25 @@
 
     <ng-container *ngIf="!loading && !erro && utilizador as user">
 
+      <button
+        *ngIf="perfilPublico"
+        class="back-button"
+        type="button"
+        (click)="voltarAoMeuPerfil()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        Voltar ao meu perfil
+      </button>
+
       <section class="summary-card profile-summary">
         <div class="avatar">
           {{ getInicial() }}
         </div>
 
         <div class="profile-info">
-          <p class="section-label">Conta</p>
+          <p class="section-label">
+            {{ perfilPublico ? 'Vendedor' : 'Conta' }}
+          </p>
+
           <h1>{{ user.name }}</h1>
           <p>{{ user.email }}</p>
 
@@ -67,7 +79,7 @@
           <div>
             <p class="section-label">Valor em Mercado</p>
             <p class="modal-description">
-              Soma dos preços das suas moedas publicadas para venda.
+              Soma dos preços das moedas publicadas para venda.
             </p>
           </div>
 
@@ -119,20 +131,11 @@
         </div>
       </section>
 
-      <section class="modal-card settings-card">
-        <p class="section-label">Configurações</p>
+      <section
+        class="modal-card settings-card"
+        *ngIf="!perfilPublico">
 
-        <button class="setting-button" type="button">
-          Alterar Palavra-passe
-        </button>
-
-        <button class="setting-button" type="button">
-          Notificações
-        </button>
-
-        <button class="setting-button" type="button">
-          Privacidade e Segurança
-        </button>
+        <p class="section-label">Sessão</p>
 
         <button
           class="setting-button danger"
