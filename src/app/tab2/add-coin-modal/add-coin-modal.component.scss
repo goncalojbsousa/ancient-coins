@@ -81,12 +81,6 @@
   gap: 7px;
 }
 
-.field-label {
-  color: #555;
-  font-size: .78rem;
-  font-weight: 600;
-}
-
 .form-field ion-input,
 .form-field ion-select,
 .form-field ion-textarea {
@@ -110,51 +104,6 @@
   padding-left: 2px;
   color: #c65f1a;
   line-height: 1.3;
-}
-
-.photo-actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.photo-actions ion-button {
-  position: relative;
-  overflow: hidden;
-  --border-color: #eadfd2;
-  --border-radius: 10px;
-  --color: #c65f1a;
-  height: 42px;
-  margin: 0;
-  text-transform: none;
-}
-
-.photo-input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-}
-
-.photo-preview {
-  display: grid;
-  gap: 8px;
-}
-
-.photo-preview img {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  border: 1px solid #eadfd2;
-  border-radius: 10px;
-  background: #f4f4f3;
-}
-
-.photo-preview ion-button {
-  justify-self: start;
-  --color: #c65f1a;
-  min-height: 28px;
-  margin: 0;
-  text-transform: none;
 }
 
 .toggle-field {
