@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Coin } from '../models/coin.model';
 import { getSupabase } from './supabase.client';
 
+const COIN_IMAGES_BUCKET = 'coin-images';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -67,6 +69,26 @@ export class CoinsService {
     }
 
     return data as Coin;
+  }
+
+  async uploadCoinPhoto(file: File, ownerId: number): Promise<string> {
+    const fileExtension = file.name.split('.').pop() || 'jpg';
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExtension}`;
+    const filePath = `${ownerId}/${fileName}`;
+
+    const { error } = await this.supabaseClient.storage
+      .from(COIN_IMAGES_BUCKET)
+      .upload(filePath, file);
+
+    if (error) {
+      throw error;
+    }
+
+    const { data } = this.supabaseClient.storage
+      .from(COIN_IMAGES_BUCKET)
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
   }
 
   async updateCoin(coin: Coin): Promise<Coin | undefined> {

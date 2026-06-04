@@ -27,6 +27,9 @@ export class EditCoinModalComponent implements OnInit {
 
   readonly coinConditions = COIN_CONDITIONS;
   formSubmitted = false;
+  selectedPhotoFile?: File;
+  selectedPhotoPreview = '';
+  isSaving = false;
 
   editCoinForm = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -35,7 +38,6 @@ export class EditCoinModalComponent implements OnInit {
     material: ['', [Validators.required]],
     condition: ['Bom' as CoinCondition, [Validators.required]],
     description: ['', [Validators.required]],
-    photoUrl: [''],
     availableForSale: [false],
     price: [0],
     availableForTrade: [false],
@@ -84,6 +86,25 @@ export class EditCoinModalComponent implements OnInit {
     return this.editCoinForm.hasError('tradePreferenceRequired') && (this.tradePreference.touched || this.formSubmitted);
   }
 
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    this.clearPhotoPreview();
+    this.selectedPhotoFile = file;
+    this.selectedPhotoPreview = URL.createObjectURL(file);
+    input.value = '';
+  }
+
+  removeSelectedPhoto(): void {
+    this.selectedPhotoFile = undefined;
+    this.clearPhotoPreview();
+  }
+
   async dismiss(result?: EditCoinModalResult): Promise<void> {
     await this.modalController.dismiss(result);
   }
@@ -91,13 +112,18 @@ export class EditCoinModalComponent implements OnInit {
   async submitEditCoinForm(): Promise<void> {
     this.formSubmitted = true;
 
-    if (this.editCoinForm.invalid) {
+    if (this.editCoinForm.invalid || this.isSaving) {
       this.editCoinForm.markAllAsTouched();
       return;
     }
 
+    this.isSaving = true;
+
     try {
-      const coinToUpdate = this.createCoinFromForm();
+      const uploadedPhotoUrl = this.selectedPhotoFile
+        ? await this.coinsService.uploadCoinPhoto(this.selectedPhotoFile, this.coin.owner_id)
+        : '';
+      const coinToUpdate = this.createCoinFromForm(uploadedPhotoUrl);
       const updatedCoin = await this.coinsService.updateCoin(coinToUpdate);
 
       if (!updatedCoin) {
@@ -108,6 +134,8 @@ export class EditCoinModalComponent implements OnInit {
       await this.dismiss({ updatedCoin });
     } catch {
       await this.showOperationMessage('Não foi possível atualizar a moeda. Tente novamente.', 'error-toast');
+    } finally {
+      this.isSaving = false;
     }
   }
 
@@ -119,16 +147,22 @@ export class EditCoinModalComponent implements OnInit {
       material: this.coin.material,
       condition: this.coin.condition,
       description: this.coin.description,
-      photoUrl: this.coin.photos[0] ?? '',
       availableForSale: this.coin.available_for_sale,
       price: this.coin.price ?? 0,
       availableForTrade: this.coin.available_for_trade,
       tradePreference: this.coin.trade_preference ?? '',
     });
+
+    this.selectedPhotoPreview = this.coin.photos[0] ?? '';
   }
 
-  private createCoinFromForm(): Coin {
+  private createCoinFromForm(uploadedPhotoUrl: string): Coin {
     const formValue = this.editCoinForm.getRawValue();
+    const photos = uploadedPhotoUrl
+      ? [uploadedPhotoUrl]
+      : this.selectedPhotoPreview
+        ? [this.selectedPhotoPreview]
+        : [];
 
     return {
       ...this.coin,
@@ -138,7 +172,7 @@ export class EditCoinModalComponent implements OnInit {
       material: formValue.material.trim(),
       condition: formValue.condition,
       description: formValue.description.trim(),
-      photos: this.getPhotoUrls(formValue.photoUrl),
+      photos,
       available_for_sale: formValue.availableForSale,
       available_for_trade: formValue.availableForTrade,
       price: formValue.availableForSale ? Number(formValue.price) : null,
@@ -146,10 +180,12 @@ export class EditCoinModalComponent implements OnInit {
     };
   }
 
-  private getPhotoUrls(photoUrl: string): string[] {
-    const normalizedPhotoUrl = photoUrl.trim();
+  private clearPhotoPreview(): void {
+    if (this.selectedPhotoPreview && this.selectedPhotoPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(this.selectedPhotoPreview);
+    }
 
-    return normalizedPhotoUrl ? [normalizedPhotoUrl] : [];
+    this.selectedPhotoPreview = '';
   }
 
   private marketFieldsValidator(control: AbstractControl): ValidationErrors | null {
