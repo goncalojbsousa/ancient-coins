@@ -22,18 +22,12 @@ Desenvolver a página da coleção do utilizador, melhorar a apresentação visu
 - Simplifiquei alguns módulos e componentes, removendo imports desnecessários e código sem utilização.
 
 ## Problemas:
-- A página da coleção ainda não apresentava conteúdo real nem uma estrutura adequada ao objetivo da aplicação;
 - Era necessário garantir que a coleção mostrava apenas as moedas do utilizador autenticado;
-- A interface inicial da coleção precisava de estar alinhada com o estilo já definido no login e no registo;
-- As imagens das moedas podiam ficar desformatadas se não existissem dimensões e regras visuais consistentes;
 - A aplicação ainda não permitia consultar os detalhes completos de uma moeda sem sobrecarregar o cartão da coleção;
 - A remoção de moedas precisava de confirmação para evitar eliminações acidentais;
-- Depois de eliminar uma moeda, a lista apresentada ao utilizador tinha de ser atualizada de forma imediata;
-- Alguns ficheiros continham imports ou estruturas que podiam ser simplificados sem alterar a lógica da aplicação.
+- Depois de eliminar uma moeda, a lista apresentada ao utilizador tinha de ser atualizada de forma imediata.
 
 ## Solução:
-- Estruturei a página da coleção com um cabeçalho de contexto, botão de ação, pesquisa e lista de moedas;
-- Usei componentes e estilos coerentes com o restante projeto, mantendo cartões simples, bordas suaves e destaque visual em laranja;
 - Mantive a lógica de obtenção das moedas no service, deixando a página responsável pela apresentação e interação;
 - Criei um modal específico para os detalhes da moeda, evitando colocar informação excessiva diretamente no cartão da coleção;
 - Usei o `ModalController` do Ionic para abrir e fechar o modal de detalhe;

@@ -30,7 +30,6 @@ Implementar a funcionalidade de adicionar moedas à coleção, reutilizar essa f
 - O formulário de criação precisava de validações simples, mas suficientes para garantir dados consistentes;
 - A lógica de venda e troca exigia campos condicionais, evitando pedir informação desnecessária quando a moeda não está disponível no mercado;
 - O modal de adicionar moeda precisava de ser reutilizado também na página inicial;
-- O modal de detalhes tinha um header visualmente diferente do modal de adicionar moeda;
 - Ao criar uma moeda a partir da página inicial, a coleção podia não ser atualizada devido ao comportamento de cache das tabs no Ionic;
 - Ao criar uma moeda a partir da coleção, os destaques da página inicial também podiam ficar desatualizados pelo mesmo motivo.
 

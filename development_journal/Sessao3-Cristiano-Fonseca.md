@@ -24,15 +24,12 @@ Implementar e melhorar a página de login, com validação através de Reactive 
 ## Problemas:
 - Inicialmente, as rotas das tabs podiam ser abertas diretamente sem passar pelo login;
 - Algumas páginas estavam registadas fora da estrutura das tabs, o que podia quebrar a navegação esperada;
-- A página de login começou com uma estrutura standalone, enquanto o restante projeto seguia uma organização por módulos;
-- A validação inicial do formulário ainda era simples e precisava de mensagens mais claras para o utilizador;
-- O design inicial do login ainda não estava alinhado com o estilo visual pretendido para a aplicação.
+- A validação inicial do formulário de login não garantia ainda um controlo suficientemente robusto dos dados introduzidos.
 
 ## Solução:
 - Criei um guard funcional com `CanActivateFn`, usando o `AuthService` para confirmar se existia uma sessão ativa;
 - Apliquei o guard à rota principal das tabs, garantindo que apenas utilizadores autenticados conseguem aceder à área privada da app;
 - Reorganizei o routing para manter as tabs dentro do `tabs-routing.module.ts`, respeitando a estrutura ensinada na documentação;
-- Converti o login para `standalone: false`, mantendo o padrão de `NgModule` usado no projeto;
 - Usei `ReactiveFormsModule`, `NonNullableFormBuilder` e `Validators` para criar um formulário mais robusto e simples de manter;
 - Mantive a lógica de autenticação no `AuthService`, deixando o componente responsável pela interação com o formulário e pela navegação;
 - Atualizei o design do login com uma interface limpa, centrada e consistente com as cores da aplicação;
