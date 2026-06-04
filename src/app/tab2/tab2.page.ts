@@ -1,5 +1,7 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 import { Coin } from '../models/coin.model';
 import { AuthService } from '../services/auth.service';
@@ -24,18 +26,26 @@ type CollectionFilter = 'Todas' | 'À Venda' | 'Para Troca' | 'Não listadas';
   styleUrls: ['tab2.page.scss'],
   standalone: false,
 })
-export class Tab2Page implements OnInit {
+export class Tab2Page implements OnInit, OnDestroy {
+  private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private coinsService = inject(CoinsService);
   private modalController = inject(ModalController);
+  private routeParamsSubscription?: Subscription;
 
+  navigationSource = '';
   searchTerm = '';
   activeFilter: CollectionFilter = 'Todas';
   userCoins: Coin[] = [];
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
+    this.watchRouteParams();
     await this.loadUserCoins();
+  }
+
+  ngOnDestroy(): void {
+    this.routeParamsSubscription?.unsubscribe();
   }
 
   async ionViewWillEnter(): Promise<void> {
@@ -125,5 +135,13 @@ export class Tab2Page implements OnInit {
     }
 
     return true;
+  }
+
+  private watchRouteParams(): void {
+    this.routeParamsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
+      const routeOrigin = params.get('origem');
+
+      this.navigationSource = routeOrigin ?? '';
+    });
   }
 }
