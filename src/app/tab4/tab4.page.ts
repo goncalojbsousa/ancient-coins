@@ -1,4 +1,5 @@
 import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 
 import { Coin } from '../models/coin.model';
@@ -21,10 +22,12 @@ import { UsersService } from '../services/users.service';
 export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
   @ViewChild(IonContent) content?: IonContent;
 
+  private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private chatStorageService = inject(ChatStorageService);
   private coinsService = inject(CoinsService);
   private messagesService = inject(MessagesService);
+  private router = inject(Router);
   private usersService = inject(UsersService);
 
   conversations: Conversation[] = [];
@@ -80,6 +83,7 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       this.reviews = await this.loadUserReviews(this.currentUser.id);
       this.users = await this.usersService.getUsers();
       await this.loadConversationCoins();
+      await this.selectConversationFromRoute();
 
       if (selectedConversationId) {
         const updatedConversation = this.conversations.find(
@@ -155,6 +159,9 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
   }
 
   async selectConversation(conversation: Conversation): Promise<void> {
+    await this.router.navigate(['/tabs/tab4'], {
+      queryParams: { conversationId: conversation.id },
+    });
     this.selectedConversation = conversation;
     this.showReviewForm = false;
     this.reviewComment = '';
@@ -162,7 +169,10 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
     setTimeout(() => this.content?.scrollToBottom(250), 100);
   }
 
-  closeConversation(): void {
+  async closeConversation(): Promise<void> {
+    await this.router.navigate(['/tabs/tab4'], {
+      queryParams: {},
+    });
     this.selectedConversation = undefined;
     this.closeReviewForm();
     this.newMessage = '';
@@ -358,6 +368,23 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       conversation.id,
       lastMessage.id
     );
+  }
+
+  private async selectConversationFromRoute(): Promise<void> {
+    const conversationIdParam = this.activatedRoute.snapshot.queryParamMap.get('conversationId');
+
+    if (!conversationIdParam || this.selectedConversation) {
+      return;
+    }
+
+    const conversationId = Number(conversationIdParam);
+    const conversation = this.conversations.find(item => item.id === conversationId);
+
+    if (conversation) {
+      this.selectedConversation = conversation;
+      await this.markConversationAsRead(conversation);
+      setTimeout(() => this.content?.scrollToBottom(250), 100);
+    }
   }
 
   private startAutoRefresh(): void {
