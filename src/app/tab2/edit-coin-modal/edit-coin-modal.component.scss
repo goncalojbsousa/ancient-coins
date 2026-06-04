@@ -1,20 +1,20 @@
 @use '../coin-form-modal';
 
-.add-coin-toolbar {
+.edit-coin-toolbar {
   --background: #fff;
   --border-color: #eadfd2;
   --color: #111;
 }
 
-.add-coin-toolbar ion-button {
+.edit-coin-toolbar ion-button {
   --color: #c65f1a;
 }
 
-.add-coin-content {
+.edit-coin-content {
   --background: #fafaf9;
 }
 
-.add-coin-form {
+.edit-coin-form {
   display: grid;
   gap: 14px;
   max-width: 430px;

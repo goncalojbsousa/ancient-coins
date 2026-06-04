@@ -3,9 +3,15 @@ import { AlertController, ModalController, ToastController } from '@ionic/angula
 
 import { Coin } from '../../models/coin.model';
 import { CoinsService } from '../../services/coins.service';
+import { EditCoinModalComponent } from '../edit-coin-modal/edit-coin-modal.component';
 
 interface CoinDetailModalResult {
-  wasDeleted: boolean;
+  wasDeleted?: boolean;
+  updatedCoin?: Coin;
+}
+
+interface EditCoinModalResult {
+  updatedCoin?: Coin;
 }
 
 @Component({
@@ -21,9 +27,10 @@ export class CoinDetailModalComponent {
   private toastController = inject(ToastController);
 
   @Input() coin!: Coin;
+  private updatedCoin?: Coin;
 
   async dismiss(result?: CoinDetailModalResult): Promise<void> {
-    await this.modalController.dismiss(result);
+    await this.modalController.dismiss(result ?? this.getModalResult());
   }
 
   async confirmDeleteCoin(): Promise<void> {
@@ -51,6 +58,24 @@ export class CoinDetailModalComponent {
     await deleteConfirmationAlert.present();
   }
 
+  async openEditCoinModal(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: EditCoinModalComponent,
+      componentProps: { coin: this.coin },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1,
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss<EditCoinModalResult>();
+
+    if (data?.updatedCoin) {
+      this.coin = data.updatedCoin;
+      this.updatedCoin = data.updatedCoin;
+    }
+  }
+
   private async deleteCoin(): Promise<void> {
     try {
       await this.coinsService.deleteCoin(this.coin.id);
@@ -59,6 +84,10 @@ export class CoinDetailModalComponent {
     } catch {
       await this.showOperationMessage('Não foi possível eliminar a moeda. Tente novamente.', 'error-toast');
     }
+  }
+
+  private getModalResult(): CoinDetailModalResult | undefined {
+    return this.updatedCoin ? { updatedCoin: this.updatedCoin } : undefined;
   }
 
   private async showOperationMessage(message: string, cssClass: string): Promise<void> {

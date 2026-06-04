@@ -1,7 +1,5 @@
-// ── Content ───────────────────────────────────────────────────────────────
 .home-content { --background: #fafaf9; }
 
-// ── Greeting ──────────────────────────────────────────────────────────────
 .greeting {
   margin: 16px 16px 0;
   padding: 20px;
@@ -12,21 +10,20 @@
   box-shadow: 0 4px 16px rgba(17,17,17,.07);
 }
 
-.greeting__title {
+.greeting_title {
   margin: 0 0 6px;
   color: #111;
   font-size: 1.25rem;
   font-weight: 700;
 }
 
-.greeting__sub {
+.greeting_sub {
   margin: 0;
   color: #666;
   font-size: .88rem;
   line-height: 1.45;
 }
 
-// ── Section labels ────────────────────────────────────────────────────────
 .section-label {
   margin: 0;
   color: #f57b25;
@@ -42,7 +39,6 @@
   font-size: .78rem;
 }
 
-// ── Quick Actions ─────────────────────────────────────────────────────────
 .quick-actions-section {
   padding: 24px 16px 0;
 }
@@ -75,7 +71,7 @@
   }
 }
 
-.action-tile__icon {
+.action-tile_icon {
   width: 44px;
   height: 44px;
   flex-shrink: 0;
@@ -87,7 +83,7 @@
   ion-icon { font-size: 1.4rem; }
 }
 
-.action-tile__text {
+.action-tile_text {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -96,12 +92,11 @@
   span   { color: #aaa; font-size: .72rem; line-height: 1.3; }
 }
 
-.action-tile--add        .action-tile__icon { background: #fff3e8; ion-icon { color: #f57b25; } }
-.action-tile--collection .action-tile__icon { background: #f0eee8; ion-icon { color: #7a5c3a; } }
-.action-tile--market     .action-tile__icon { background: #fff0e6; ion-icon { color: #c65f1a; } }
-.action-tile--trade      .action-tile__icon { background: #edf5ee; ion-icon { color: #3a8a4a; } }
+.action-tile--add        .action-tile_icon { background: #fff3e8; ion-icon { color: #f57b25; } }
+.action-tile--collection .action-tile_icon { background: #f0eee8; ion-icon { color: #7a5c3a; } }
+.action-tile--market     .action-tile_icon { background: #fff0e6; ion-icon { color: #c65f1a; } }
+.action-tile--trade      .action-tile_icon { background: #edf5ee; ion-icon { color: #3a8a4a; } }
 
-// ── Market Highlights ─────────────────────────────────────────────────────
 .market-highlights { padding: 28px 16px 0; }
 
 .section-header { margin-bottom: 14px; }

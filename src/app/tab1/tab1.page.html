@@ -5,53 +5,49 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="home-content">
-
-  <!-- Greeting -->
   <div class="greeting">
-    <p class="greeting__title">Bem-vindo, <span style="color:#f57b25">{{ userName }}</span> 👋</p>
-    <p class="greeting__sub">Organize a sua coleção e explore o mercado de moedas antigas</p>
+    <p class="greeting_title">Bem-vindo, <span style="color:#f57b25">{{ userName }}</span> 👋</p>
+    <p class="greeting_sub">Organize a sua coleção e explore o mercado de moedas antigas</p>
   </div>
-
-<!-- Ações Rápidas -->
   <div class="quick-actions-section">
     <p class="section-label">Ações rápidas</p>
     <div class="quick-actions-grid">
 
       <button type="button" class="action-tile action-tile--add" (click)="openAddCoinModal()">
-        <div class="action-tile__icon">
+        <div class="action-tile_icon">
           <ion-icon name="add-outline"></ion-icon>
         </div>
-        <div class="action-tile__text">
+        <div class="action-tile_text">
           <strong>Adicionar Moeda</strong>
           <span>Fotografe e adicione</span>
         </div>
       </button>
 
       <button class="action-tile action-tile--collection" routerLink="/tabs/tab2">
-        <div class="action-tile__icon">
+        <div class="action-tile_icon">
           <ion-icon name="cube-outline"></ion-icon>
         </div>
-        <div class="action-tile__text">
+        <div class="action-tile_text">
           <strong>A minha coleção</strong>
           <span>Ver as suas moedas</span>
         </div>
       </button>
 
       <button class="action-tile action-tile--market" routerLink="/tabs/tab4">
-        <div class="action-tile__icon">
+        <div class="action-tile_icon">
           <ion-icon name="trending-up-outline"></ion-icon>
         </div>
-        <div class="action-tile__text">
+        <div class="action-tile_text">
           <strong>Mercado</strong>
           <span>Explorar listagens</span>
         </div>
       </button>
 
       <button class="action-tile action-tile--trade" routerLink="/tabs/tab5">
-        <div class="action-tile__icon">
+        <div class="action-tile_icon">
           <ion-icon name="swap-horizontal-outline"></ion-icon>
         </div>
-        <div class="action-tile__text">
+        <div class="action-tile_text">
           <strong>Trocas</strong>
           <span>Trocar com outros</span>
         </div>
@@ -59,8 +55,6 @@
 
     </div>
   </div>
-
-  <!-- Destaques do Mercado -->
   <div class="market-highlights">
     <div class="section-header">
       <p class="section-label">Destaques do Mercado</p>
