@@ -16,56 +16,61 @@
     </ion-button>
   </div>
   <div class="controls">
-    <ion-searchbar
-      placeholder="Pesquisar por nome ou origem..."
-      [(ngModel)]="searchTerm"
-      debounce="200">
+    <ion-searchbar placeholder="Pesquisar por nome ou origem..." [(ngModel)]="searchTerm" debounce="200">
     </ion-searchbar>
   </div>
+  <div class="filter-select">
+    <ion-select label="Estado" label-placement="stacked" interface="popover" [(ngModel)]="activeFilter">
+      <ion-select-option value="Todas">Todas</ion-select-option>
+      <ion-select-option value="À Venda">À Venda</ion-select-option>
+      <ion-select-option value="Para Troca">Para Troca</ion-select-option>
+      <ion-select-option value="Não listadas">Não listadas</ion-select-option>
+    </ion-select>
+  </div>
   @if (filteredCoins.length > 0) {
-    <div class="coin-list">
-      @for (coin of filteredCoins; track coin.id) {
-        <ion-card class="coin-card" (click)="openCoinDetail(coin)">
-          <div class="coin-image">
-            @if (coin.photos.length > 0) {
-              <img [src]="coin.photos[0]" [alt]="coin.name">
-            } @else {
-              <ion-icon name="cash-outline"></ion-icon>
-            }
+  <div class="coin-list">
+    @for (coin of filteredCoins; track coin.id) {
+    <ion-card class="coin-card" (click)="openCoinDetail(coin)">
+      <div class="coin-image">
+        @if (coin.photos.length > 0) {
+        <img [src]="coin.photos[0]" [alt]="coin.name">
+        } @else {
+        <ion-icon name="cash-outline"></ion-icon>
+        }
+      </div>
+      <ion-card-content class="coin-body">
+        <div class="coin-body_header">
+          <div class="coin-body_meta">
+            <h3>{{ coin.name }}</h3>
+            <p>{{ coin.origin }} · {{ coin.year }}</p>
           </div>
-          <ion-card-content class="coin-body">
-            <div class="coin-body_header">
-              <div class="coin-body_meta">
-                <h3>{{ coin.name }}</h3>
-                <p>{{ coin.origin }} · {{ coin.year }}</p>
-              </div>
-              @if (coin.available_for_sale && coin.price) {
-                <span class="coin-price">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
-              }
-            </div>
-            <div class="coin-body_tags">
-              <span>{{ coin.material }}</span>
-              <span>{{ coin.condition }}</span>
-                @if (coin.available_for_sale && coin.available_for_trade) {
-                <span class="tag--listing tag--both">Venda & Troca</span>
-              } @else if (coin.available_for_sale) {
-                <span class="tag--listing tag--sale">À Venda</span>
-              } @else if (coin.available_for_trade) {
-                <span class="tag--listing tag--trade">Para Troca</span>
-              } @else {
-                <span class="tag--listing tag--unlisted">Não listada</span>
-              }
-            </div>
-          </ion-card-content>
-        </ion-card>
-      }
-    </div>
+          @if (coin.available_for_sale && coin.price) {
+          <span class="coin-price">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+          }
+        </div>
+        <div class="coin-body_tags">
+          <span>{{ coin.material }}</span>
+          <span>{{ coin.condition }}</span>
+          @if (coin.available_for_sale && coin.available_for_trade) {
+          <span class="tag--listing tag--both">Venda & Troca</span>
+          } @else if (coin.available_for_sale) {
+          <span class="tag--listing tag--sale">À Venda</span>
+          } @else if (coin.available_for_trade) {
+          <span class="tag--listing tag--trade">Para Troca</span>
+          } @else {
+          <span class="tag--listing tag--unlisted">Não listada</span>
+          }
+        </div>
+      </ion-card-content>
+    </ion-card>
+    }
+  </div>
   } @else {
-    <div class="empty-state">
-      <ion-icon name="file-tray-full-outline"></ion-icon>
-      <h3>Nenhuma moeda encontrada</h3>
-      <p>Adicione moedas à sua coleção ou ajuste a pesquisa.</p>
-    </div>
+  <div class="empty-state">
+    <ion-icon name="file-tray-full-outline"></ion-icon>
+    <h3>Nenhuma moeda encontrada</h3>
+    <p>Adicione moedas à sua coleção ou ajuste a pesquisa.</p>
+  </div>
   }
 
 </ion-content>
