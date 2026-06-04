@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {
+  OrientationLockOptions,
+  OrientationLockType,
+  ScreenOrientation,
+} from '@capacitor/screen-orientation';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +11,17 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
   standalone: false,
 })
-export class AppComponent {
-  constructor() {}
+export class AppComponent implements OnInit {
+  async ngOnInit(): Promise<void> {
+    await this.lockPortraitOrientation();
+  }
+
+  private async lockPortraitOrientation(): Promise<void> {
+    try {
+      const orientation: OrientationLockType = 'portrait';
+      const options: OrientationLockOptions = { orientation };
+
+      await ScreenOrientation.lock(options);
+    } catch { }
+  }
 }

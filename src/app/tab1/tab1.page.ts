@@ -1,7 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 
-import { Coin } from '../models/ancient-coins.models';
+import { AddCoinModalComponent } from '../tab2/add-coin-modal/add-coin-modal.component';
+import { Coin } from '../models/coin.model';
+import { AuthService } from '../services/auth.service';
 import { MarketService } from '../services/market.service';
+
+interface AddCoinModalResult {
+  createdCoin?: Coin;
+}
 
 @Component({
   selector: 'app-tab1',
@@ -11,13 +19,48 @@ import { MarketService } from '../services/market.service';
 })
 export class Tab1Page implements OnInit {
   private marketService = inject(MarketService);
+  private authService = inject(AuthService);
+  private modalController = inject(ModalController);
+  private router = inject(Router);
 
   recentCoins: Coin[] = [];
+  userName = '';
 
   async ngOnInit(): Promise<void> {
-    await this.marketService.init();
-
-    this.recentCoins = this.marketService.getRecentMarketCoins(2);
+    await this.authService.init();
+    await this.loadHomeData();
   }
 
+  async ionViewWillEnter(): Promise<void> {
+    await this.loadHomeData();
+  }
+
+  private async loadHomeData(): Promise<void> {
+    this.recentCoins = await this.marketService.getRecentMarketCoins(2);
+    this.userName = (await this.authService.getCurrentUser())?.name.split(' ')[0] ?? '';
+  }
+
+  async openAddCoinModal(): Promise<void> {
+    const modal = await this.modalController.create({
+      component: AddCoinModalComponent,
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss<AddCoinModalResult>();
+
+    if (data?.createdCoin) {
+      this.recentCoins = await this.marketService.getRecentMarketCoins(2);
+    }
+  }
+
+  async openCollectionPage(): Promise<void> {
+    await this.router.navigate(['/tabs/tab2'], {
+      queryParams: {
+        origem: 'inicio',
+      },
+    });
+  }
 }

@@ -1,13 +1,150 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar class="messages-toolbar">
+    @if (selectedConversation) {
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="closeConversation()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ getOtherUser(selectedConversation)?.name || 'Conversa' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="review-button" fill="outline" (click)="openReviewForm()">
+        {{ hasReviewedConversation(selectedConversation) ? 'Atualizar' : 'Avaliar' }}
+      </ion-button>
+    </ion-buttons>
+    } @else {
     <ion-title>Mensagens</ion-title>
+    }
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Mensagens</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="messages-content">
+
+  @if (selectedConversation) {
+  <div class="chat-view">
+
+
+    @if (getCoin(selectedConversation); as coin) {
+    <div class="coin-summary">
+      <div class="coin-summary_image">
+        @if (coin.photos.length > 0) {
+        <img [src]="coin.photos[0]" [alt]="coin.name">
+        } @else {
+        <ion-icon name="cash-outline"></ion-icon>
+        }
+      </div>
+      <div>
+        <h2>{{ coin.name }}</h2>
+        <p>{{ coin.origin }} - {{ coin.year }}</p>
+      </div>
+    </div>
+    }
+
+    <div class="message-list">
+      @for (message of selectedConversation.messages; track message.id) {
+      <div class="message-row" [class.message-row--mine]="isMyMessage(message)">
+        <div class="message-bubble">
+          {{ message.text }}
+        </div>
+        <span>{{ getMessageTime(message) }}</span>
+      </div>
+      }
+    </div>
+  </div>
+  } @else {
+  <div class="controls" style="padding-top: 16px;">
+    <ion-searchbar placeholder="Pesquisar conversas..." [(ngModel)]="searchTerm" debounce="200">
+    </ion-searchbar>
+  </div>
+
+  @if (isLoading) {
+  <div class="empty-state">
+    <ion-spinner name="circles"></ion-spinner>
+    <p>A carregar conversas...</p>
+  </div>
+  } @else if (errorMessage) {
+  <div class="empty-state">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <p>{{ errorMessage }}</p>
+  </div>
+  } @else if (filteredConversations.length > 0) {
+  <div class="conversation-list">
+    @for (conversation of filteredConversations; track conversation.id) {
+    <button type="button" class="conversation-card" [class.conversation-card--unread]="hasUnreadMessage(conversation)"
+      (click)="selectConversation(conversation)">
+      <div class="avatar">
+        {{ getInitials(getOtherUser(conversation)?.name) }}
+      </div>
+      <div class="conversation-card_body">
+        <div class="conversation-card_top">
+          <h2>{{ getOtherUser(conversation)?.name || 'Utilizador' }}</h2>
+          <span>{{ getConversationDate(conversation) }}</span>
+        </div>
+        <p class="coin-name">{{ getCoin(conversation)?.name || 'Moeda em negociacao' }}</p>
+        <p class="last-message">{{ getLastMessage(conversation)?.text || 'Sem mensagens.' }}</p>
+      </div>
+      @if (getUnreadMessageCount(conversation); as unreadCount) {
+      <span class="unread-badge">{{ unreadCount }}</span>
+      }
+    </button>
+    }
+  </div>
+  } @else {
+  <div class="empty-state">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <h3>Nenhuma conversa encontrada</h3>
+    <p>Quando iniciar uma negociacao, a conversa aparece aqui.</p>
+  </div>
+  }
+  }
 </ion-content>
+
+@if (selectedConversation) {
+<ion-modal class="review-modal" [isOpen]="showReviewForm" (didDismiss)="closeReviewForm()" [breakpoints]="[0, 0.48]"
+  [initialBreakpoint]="0.48" [handle]="true">
+  <ng-template>
+    <ion-content class="review-modal-content">
+      <div class="review-card">
+        <div class="review-card_header">
+          <div>
+            <p class="review-card_label">Avaliacao</p>
+            <h2>{{ hasReviewedConversation(selectedConversation) ? 'Atualizar avaliacao' : 'Avaliar utilizador' }}</h2>
+          </div>
+        </div>
+
+        <p class="review-card_sub">Como correu a negociacao com {{ getOtherUser(selectedConversation)?.name || 'este
+          utilizador' }}?</p>
+
+        <div class="review-modal-stars">
+          @for (star of [1, 2, 3, 4, 5]; track star) {
+          <ion-button fill="clear" (click)="reviewStars = star" [class.star-active]="star <= reviewStars">
+            <ion-icon slot="icon-only" name="star"></ion-icon>
+          </ion-button>
+          }
+        </div>
+
+        <ion-textarea class="review-modal-textarea" autoGrow="true" rows="3"
+          placeholder="Escreva um comentario breve..." [(ngModel)]="reviewComment">
+        </ion-textarea>
+
+        <ion-button class="submit-review-button" expand="block" (click)="submitReview()"
+          [disabled]="!reviewComment.trim()">
+          Guardar avaliacao
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<ion-footer class="composer-footer">
+  <ion-toolbar>
+    <div class="composer">
+      <ion-input placeholder="Escreva a sua mensagem..." [(ngModel)]="newMessage" (keyup.enter)="sendMessage()">
+      </ion-input>
+      <ion-button class="send-button" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+        <ion-icon slot="icon-only" name="send-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
+}

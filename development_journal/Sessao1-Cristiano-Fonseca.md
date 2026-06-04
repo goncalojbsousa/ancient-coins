@@ -16,10 +16,7 @@ Preparar a estrutura principal da interface da aplicação Ancient Coins, atrav�
 - Atualizei variáveis de tema em `variables.scss`, criando uma base visual mais uniforme.
 
 ## Problemas:
-- A aplicação ainda apresentava nomes e ícones genéricos nas tabs, o que dificultava a perceção da finalidade de cada secção;
-- As páginas de mensagens e perfil ainda não existiam, apesar de fazerem parte da navegação principal prevista;
-- O tema escuro automático do Ionic interferia com o estilo visual pretendido;
-- Foi necessário garantir que as novas páginas ficavam integradas no layout das tabs e não apenas registadas como páginas isoladas.
+- Não foram identificados problemas funcionais relevantes nesta sessão.
 
 ## Solução:
 - Usei os componentes de tabs do Ionic para organizar a navegação principal da aplicação;

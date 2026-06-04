@@ -1,57 +1,87 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { User } from '../models/ancient-coins.models';
-import { DatabaseService } from './database.service';
+import { User } from '../models/user.model';
+import { getSupabase } from './supabase.client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersService {
-  private databaseService = inject(DatabaseService);
-  private users: User[];
+  private supabaseClient = getSupabase();
 
-  constructor() {
-    this.users = [];
-    this.init();
-  }
+  async getUsers(): Promise<User[]> {
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .select('*')
+      .order('name', { ascending: true });
 
-  async init(): Promise<void> {
-    this.users = await this.databaseService.getData<User[]>('users', []);
-  }
-
-  getUsers(): User[] {
-    return this.users;
-  }
-
-  getUserById(id: number): User | undefined {
-    return this.users.find(user => user.id === id);
-  }
-
-  getUserByEmail(email: string): User | undefined {
-    const normalizedEmail = email.trim().toLowerCase();
-
-    return this.users.find(user => user.email.toLowerCase() === normalizedEmail);
-  }
-
-  async insertUser(user: User): Promise<void> {
-    if (!user.id) {
-      user.id = Date.now();
+    if (error) {
+      throw error;
     }
 
-    this.users.push(user);
-    await this.saveUsers();
+    return data as User[];
   }
 
-  async updateUser(user: User): Promise<void> {
-    const index = this.users.findIndex(currentUser => currentUser.id === user.id);
+  async getUserById(id: number): Promise<User | undefined> {
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
 
-    if (index >= 0) {
-      this.users[index] = user;
-      await this.saveUsers();
+    if (error) {
+      throw error;
     }
+
+    return data as User | undefined;
   }
 
-  private async saveUsers(): Promise<void> {
-    await this.databaseService.setData('users', this.users);
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .select('*')
+      .eq('email', email.trim().toLowerCase())
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as User | undefined;
+  }
+
+  async getUserByAuthId(auth_id: string): Promise<User | undefined> {
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .select('*')
+      .eq('auth_id', auth_id)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as User | undefined;
+  }
+
+  async updateUser(user: User): Promise<User> {
+    const { data, error } = await this.supabaseClient
+      .from('users')
+      .update({
+        name: user.name,
+        email: user.email,
+        location: user.location,
+        rating: user.rating,
+        total_reviews: user.total_reviews,
+      })
+      .eq('id', user.id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as User;
   }
 }

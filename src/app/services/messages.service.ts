@@ -1,152 +1,287 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { Conversation, Message, Review } from '../models/ancient-coins.models';
-import { DatabaseService } from './database.service';
-import { UsersService } from './users.service';
+import { Conversation } from '../models/conversation.model';
+import { Message } from '../models/message.model';
+import { Review } from '../models/review.model';
+import { getSupabase } from './supabase.client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MessagesService {
-  private databaseService = inject(DatabaseService);
-  private usersService = inject(UsersService);
-  private conversations: Conversation[];
-  private reviews: Review[];
+  private supabaseClient = getSupabase();
 
-  constructor() {
-    this.conversations = [];
-    this.reviews = [];
-    this.init();
+  async getConversations(): Promise<Conversation[]> {
+    const { data, error } = await this.supabaseClient
+      .from('conversations')
+      .select('*')
+      .order('updated_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Conversation[];
   }
 
-  async init(): Promise<void> {
-    this.conversations = await this.databaseService.getData<Conversation[]>('conversations', []);
-    this.reviews = await this.databaseService.getData<Review[]>('reviews', []);
+  async getConversationsByUser(userId: number): Promise<Conversation[]> {
+    const { data, error } = await this.supabaseClient
+      .from('conversations')
+      .select('*')
+      .or(`buyer_id.eq.${userId},seller_id.eq.${userId}`)
+      .order('updated_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Conversation[];
   }
 
-  getConversations(): Conversation[] {
-    return this.conversations;
+  async getConversationById(id: number): Promise<Conversation | undefined> {
+    const { data, error } = await this.supabaseClient
+      .from('conversations')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Conversation | undefined;
   }
 
-  getConversationsByUser(userId: number): Conversation[] {
-    return this.conversations.filter(conversation =>
-      conversation.buyerId === userId || conversation.sellerId === userId
-    );
+  async getReviewsByUser(userId: number): Promise<Review[]> {
+    const { data, error } = await this.supabaseClient
+      .from('reviews')
+      .select('*')
+      .eq('reviewed_user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data as Review[];
   }
 
-  getConversationById(id: number): Conversation | undefined {
-    return this.conversations.find(conversation => conversation.id === id);
-  }
+  async getReviewByConversationAndReviewer(
+    conversationId: number,
+    reviewerId: number
+  ): Promise<Review | undefined> {
+    const { data, error } = await this.supabaseClient
+      .from('reviews')
+      .select('*')
+      .eq('conversation_id', conversationId)
+      .eq('reviewer_id', reviewerId)
+      .maybeSingle();
 
-  getReviewsByUser(userId: number): Review[] {
-    return this.reviews.filter(review => review.reviewedUserId === userId);
+    if (error) {
+      throw error;
+    }
+
+    return data ? data as Review : undefined;
   }
 
   async startNegotiation(
-    coinId: number,
-    buyerId: number,
-    sellerId: number,
+    coin_id: number,
+    buyer_id: number,
+    seller_id: number,
     text: string
   ): Promise<Conversation> {
-    const existingConversation = this.conversations.find(conversation =>
-      conversation.coinId === coinId &&
-      conversation.buyerId === buyerId &&
-      conversation.sellerId === sellerId &&
-      conversation.status === 'aberta'
-    );
+    const { data: existingConversationData, error: existingConversationError } = await this.supabaseClient
+      .from('conversations')
+      .select('*')
+      .eq('coin_id', coin_id)
+      .eq('buyer_id', buyer_id)
+      .eq('seller_id', seller_id)
+      .eq('status', 'aberta')
+      .maybeSingle();
+
+    if (existingConversationError) {
+      throw existingConversationError;
+    }
+
+    const existingConversation = existingConversationData
+      ? existingConversationData as Conversation
+      : undefined;
 
     if (existingConversation) {
-      await this.insertMessage(existingConversation.id, buyerId, text);
+      await this.insertMessage(existingConversation.id, buyer_id, text);
       return existingConversation;
     }
 
     const now = new Date().toISOString();
-    const conversation: Conversation = {
-      id: Date.now(),
-      coinId,
-      buyerId,
-      sellerId,
+    const conversation: Omit<Conversation, 'id'> = {
+      coin_id,
+      buyer_id,
+      seller_id,
       status: 'aberta',
       messages: [
         {
-          id: Date.now() + 1,
-          senderId: buyerId,
+          id: 1,
+          sender_id: buyer_id,
           text,
-          createdAt: now,
+          created_at: now,
         },
       ],
-      createdAt: now,
-      updatedAt: now,
+      created_at: now,
+      updated_at: now,
     };
 
-    this.conversations.push(conversation);
-    await this.saveConversations();
+    const { data, error } = await this.supabaseClient
+      .from('conversations')
+      .insert(this.conversationToSupabase(conversation))
+      .select()
+      .single();
 
-    return conversation;
+    if (error) {
+      throw error;
+    }
+
+    return data as Conversation;
   }
 
-  async insertMessage(conversationId: number, senderId: number, text: string): Promise<void> {
-    const conversation = this.getConversationById(conversationId);
+  async insertMessage(conversation_id: number, sender_id: number, text: string): Promise<void> {
+    const conversation = await this.getConversationById(conversation_id);
 
     if (conversation) {
       const message: Message = {
-        id: Date.now(),
-        senderId,
+        id: this.getNextMessageId(conversation),
+        sender_id,
         text,
-        createdAt: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       };
 
       conversation.messages.push(message);
-      conversation.updatedAt = message.createdAt;
-      await this.saveConversations();
+      conversation.updated_at = message.created_at;
+      await this.updateConversation(conversation);
     }
   }
 
-  async acceptNegotiation(conversationId: number): Promise<void> {
-    const conversation = this.getConversationById(conversationId);
+  async acceptNegotiation(conversation_id: number): Promise<void> {
+    const conversation = await this.getConversationById(conversation_id);
 
     if (conversation) {
       conversation.status = 'aceite';
-      conversation.updatedAt = new Date().toISOString();
-      await this.saveConversations();
+      conversation.updated_at = new Date().toISOString();
+      await this.updateConversation(conversation);
     }
   }
 
   async insertReview(
-    conversationId: number,
-    reviewerId: number,
-    reviewedUserId: number,
+    conversation_id: number,
+    reviewer_id: number,
+    reviewed_user_id: number,
     stars: number,
     comment: string
   ): Promise<void> {
-    const review: Review = {
-      id: Date.now(),
-      conversationId,
-      reviewerId,
-      reviewedUserId,
+    const existingReview = await this.getReviewByConversationAndReviewer(
+      conversation_id,
+      reviewer_id
+    );
+
+    if (existingReview) {
+      const { data, error } = await this.supabaseClient
+        .from('reviews')
+        .update({
+          stars,
+          comment,
+        })
+        .eq('id', existingReview.id)
+        .select()
+        .maybeSingle();
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('Nao foi possivel atualizar a avaliacao.');
+      }
+
+      return;
+    }
+
+    const review: Omit<Review, 'id'> = {
+      conversation_id,
+      reviewer_id,
+      reviewed_user_id,
       stars,
       comment,
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     };
 
-    this.reviews.push(review);
-    await this.databaseService.setData('reviews', this.reviews);
-    await this.updateUserRating(reviewedUserId);
+    const { data, error } = await this.supabaseClient
+      .from('reviews')
+      .insert(this.reviewToSupabase(review))
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
   }
 
-  private async updateUserRating(userId: number): Promise<void> {
-    const user = this.usersService.getUserById(userId);
-    const userReviews = this.getReviewsByUser(userId);
+  private async updateConversation(conversation: Conversation): Promise<void> {
+    const { error } = await this.supabaseClient
+      .from('conversations')
+      .update(this.conversationToSupabase(conversation))
+      .eq('id', conversation.id);
 
-    if (user && userReviews.length > 0) {
-      const totalStars = userReviews.reduce((total, review) => total + review.stars, 0);
-      user.rating = Number((totalStars / userReviews.length).toFixed(1));
-      user.totalReviews = userReviews.length;
-      await this.usersService.updateUser(user);
+    if (error) {
+      throw error;
     }
   }
 
-  private async saveConversations(): Promise<void> {
-    await this.databaseService.setData('conversations', this.conversations);
+  private getNextMessageId(conversation: Conversation): number {
+    const lastMessageId = conversation.messages.reduce(
+      (lastId, message) => Math.max(lastId, message.id),
+      0
+    );
+
+    return lastMessageId + 1;
+  }
+
+  private conversationToSupabase(conversation: Conversation | Omit<Conversation, 'id'>): any {
+    const conversationData: any = {
+      coin_id: conversation.coin_id,
+      buyer_id: conversation.buyer_id,
+      seller_id: conversation.seller_id,
+      status: conversation.status,
+      messages: conversation.messages.map(message => ({
+        id: message.id,
+        sender_id: message.sender_id,
+        text: message.text,
+        created_at: message.created_at,
+      })),
+      created_at: conversation.created_at,
+      updated_at: conversation.updated_at,
+    };
+
+    if ('id' in conversation) {
+      conversationData.id = conversation.id;
+    }
+
+    return conversationData;
+  }
+
+  private reviewToSupabase(review: Review | Omit<Review, 'id'>): any {
+    const reviewData: any = {
+      conversation_id: review.conversation_id,
+      reviewer_id: review.reviewer_id,
+      reviewed_user_id: review.reviewed_user_id,
+      stars: review.stars,
+      comment: review.comment,
+      created_at: review.created_at,
+    };
+
+    if ('id' in review) {
+      reviewData.id = review.id;
+    }
+
+    return reviewData;
   }
 }

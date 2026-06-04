@@ -1,88 +1,95 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Início
-    </ion-title>
+  <ion-toolbar class="home-toolbar">
+    <ion-title>Início</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Início</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div class="welcome-block ion-padding">
-    <h1>Bem-vindo,👋</h1>
-    <p>Gerencie sua coleção e explore o mercado de moedas antiga</p>
+<ion-content [fullscreen]="true" class="home-content">
+  <div class="greeting">
+    <p class="greeting_title">Bem-vindo, <span style="color:#f57b25">{{ userName }}</span> 👋</p>
+    <p class="greeting_sub">Organize a sua coleção e explore o mercado de moedas antigas</p>
   </div>
+  <div class="quick-actions-section">
+    <p class="section-label">Ações rápidas</p>
+    <div class="quick-actions-grid">
 
-  <div class="quick-cards ion-padding">
-    <ion-card class="quick-card">
-      <ion-card-content>
-        <div class="card-top">
-          <h2>Adicionar Moeda</h2>
+      <button type="button" class="action-tile action-tile--add" (click)="openAddCoinModal()">
+        <div class="action-tile_icon">
           <ion-icon name="add-outline"></ion-icon>
         </div>
-        <p>Fotografe e adicione à coleção</p>
-      </ion-card-content>
-    </ion-card>
+        <div class="action-tile_text">
+          <strong>Adicionar Moeda</strong>
+          <span>Fotografe e adicione</span>
+        </div>
+      </button>
 
-    <ion-card class="quick-card">
-      <ion-card-content>
-        <div class="card-top">
-          <h2>Minha Coleção</h2>
+      <button type="button" class="action-tile action-tile--collection" (click)="openCollectionPage()">
+        <div class="action-tile_icon">
           <ion-icon name="cube-outline"></ion-icon>
         </div>
-        <p>1 moedas cadastradas</p>
-      </ion-card-content>
-    </ion-card>
+        <div class="action-tile_text">
+          <strong>A minha coleção</strong>
+          <span>Ver as suas moedas</span>
+        </div>
+      </button>
 
-    <ion-card class="quick-card">
-      <ion-card-content>
-        <div class="card-top">
-          <h2>Explorar Mercado</h2>
+      <button class="action-tile action-tile--market" routerLink="/tabs/tab3">
+        <div class="action-tile_icon">
           <ion-icon name="trending-up-outline"></ion-icon>
         </div>
-        <p>5 moedas disponíveis</p>
-      </ion-card-content>
-    </ion-card>
-  </div>
+        <div class="action-tile_text">
+          <strong>Mercado</strong>
+          <span>Explorar listagens</span>
+        </div>
+      </button>
 
-  <div class="market-highlights ion-padding">
+      <button class="action-tile action-tile--reviews" routerLink="/tabs/tab5">
+        <div class="action-tile_icon">
+          <ion-icon name="star-outline"></ion-icon>
+        </div>
+        <div class="action-tile_text">
+          <strong>Avaliações</strong>
+          <span>Ver o seu perfil</span>
+        </div>
+      </button>
+
+    </div>
+  </div>
+  <div class="market-highlights">
     <div class="section-header">
-      <div>
-        <h2>Destaques do Mercado</h2>
-        <p>Moedas criadas recentemente</p>
-      </div>
-      <ion-button fill="outline" size="small" class="see-all-button">Ver Todas</ion-button>
+      <p class="section-label">Destaques do Mercado</p>
+      <p class="section-sub">Moedas adicionadas recentemente</p>
     </div>
 
     <div class="highlight-list">
       @for (coin of recentCoins; track coin.id) {
-        <ion-card class="highlight-card">
-          <div class="highlight-visual">
-            @if (coin.photos.length > 0) {
-              <img [src]="coin.photos[0]" [alt]="coin.name">
-            } @else {
-              <ion-icon name="cash-outline"></ion-icon>
+      <ion-card class="highlight-card">
+        <div class="highlight-visual">
+          @if (coin.photos.length > 0) {
+          <img [src]="coin.photos[0]" [alt]="coin.name">
+          } @else {
+          <ion-icon name="cash-outline"></ion-icon>
+          }
+        </div>
+        <ion-card-content class="highlight-body">
+          <div class="highlight-meta">
+            <h3>{{ coin.name }}</h3>
+            <p>{{ coin.origin }} · {{ coin.year }}</p>
+          </div>
+          <div class="highlight-market">
+            @if (coin.available_for_sale && coin.price) {
+            <span class="market-pill market-pill--sale">
+              {{ coin.price | currency:'EUR':'symbol':'1.2-2' }}
+            </span>
+            }
+            @if (coin.available_for_trade) {
+            <span class="market-pill market-pill--trade">
+              Troca
+            </span>
             }
           </div>
-
-          <ion-card-content>
-            <div class="highlight-title-row">
-              <div>
-                <h3>{{ coin.name }}</h3>
-                <p>{{ coin.origin }} • {{ coin.year }}</p>
-              </div>
-            </div>
-
-            <div class="highlight-footer">
-              <strong>€{{ coin.price ?? 0 }}</strong>
-            </div>
-          </ion-card-content>
-        </ion-card>
+        </ion-card-content>
+      </ion-card>
       }
     </div>
   </div>

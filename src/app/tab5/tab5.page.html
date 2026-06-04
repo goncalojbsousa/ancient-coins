@@ -1,28 +1,152 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Perfil</ion-title>
+<ion-header>
+  <ion-toolbar class="profile-toolbar">
+    <ion-title>{{ perfilPublico ? 'Perfil do Vendedor' : 'Perfil' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Perfil</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="profile-content">
 
-  <div class="profile-section ion-padding">
-    <ion-card class="profile-card">
-      <ion-card-header>
-        <ion-card-title>Conta</ion-card-title>
-        <ion-card-subtitle>Gerir a sua sessão</ion-card-subtitle>
-      </ion-card-header>
+  <div class="profile-page">
 
-      <ion-card-content>
-        <ion-button expand="block" fill="outline" class="logout-button" (click)="logout()">
-          Terminar sessão
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
+    <div class="empty-state" *ngIf="loading">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <h3>A carregar perfil</h3>
+      <p>A obter os dados da conta.</p>
+    </div>
+
+    <div class="empty-state error-state" *ngIf="!loading && erro">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <h3>Erro ao carregar</h3>
+      <p>{{ erro }}</p>
+    </div>
+
+    <ng-container *ngIf="!loading && !erro && utilizador as user">
+
+      <button
+        *ngIf="perfilPublico"
+        class="back-button"
+        type="button"
+        (click)="voltarAoMeuPerfil()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+        Voltar ao meu perfil
+      </button>
+
+      <section class="summary-card profile-summary">
+        <div class="avatar">
+          {{ getInicial() }}
+        </div>
+
+        <div class="profile-info">
+          <p class="section-label">
+            {{ perfilPublico ? 'Vendedor' : 'Conta' }}
+          </p>
+
+          <h1>{{ user.name }}</h1>
+          <p>{{ user.email }}</p>
+
+          <div class="profile-tags">
+            <span>📍 {{ user.location }}</span>
+            <span>⭐ {{ user.rating }} / 5</span>
+            <span>{{ user.total_reviews }} avaliações</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+
+        <div class="stat-card">
+          <p class="section-label">Coleção</p>
+          <strong>{{ estatisticas.moedas }}</strong>
+          <span>moedas registadas</span>
+        </div>
+
+        <div class="stat-card">
+          <p class="section-label">Venda</p>
+          <strong>{{ estatisticas.vendas }}</strong>
+          <span>moedas publicadas</span>
+        </div>
+
+        <div class="stat-card">
+          <p class="section-label">Troca</p>
+          <strong>{{ estatisticas.trocas }}</strong>
+          <span>moedas disponíveis</span>
+        </div>
+
+      </section>
+
+      <section class="modal-card">
+        <div class="value-header">
+          <div>
+            <p class="section-label">Valor em Mercado</p>
+            <p class="modal-description">
+              Soma dos preços das moedas publicadas para venda.
+            </p>
+          </div>
+
+          <strong class="market-value">
+            €{{ estatisticas.valorTotal }}
+          </strong>
+        </div>
+      </section>
+
+      <section class="modal-card">
+        <p class="section-label">Conquistas</p>
+
+        <div class="achievements-grid">
+
+          <div
+            class="achievement"
+            *ngFor="let conquista of conquistas">
+
+            <div class="achievement-icon">
+              {{ conquista.emoji }}
+            </div>
+
+            <div>
+              <h3>{{ conquista.titulo }}</h3>
+              <span>{{ conquista.descricao }}</span>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <section class="modal-card">
+        <p class="section-label">Reputação</p>
+
+        <div class="review-card">
+          <div class="review-avatar">
+            {{ getInicial() }}
+          </div>
+
+          <div class="review-info">
+            <h3>{{ user.name }}</h3>
+            <span>⭐ {{ user.rating }} / 5</span>
+            <p>
+              Taxa de satisfação estimada:
+              <strong>{{ estatisticas.satisfacao }}%</strong>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="modal-card settings-card"
+        *ngIf="!perfilPublico">
+
+        <p class="section-label">Sessão</p>
+
+        <button
+          class="setting-button danger"
+          type="button"
+          (click)="logout()">
+          Terminar Sessão
+        </button>
+      </section>
+
+    </ng-container>
+
   </div>
+
 </ion-content>
