@@ -33,7 +33,7 @@
         </div>
       </button>
 
-      <button class="action-tile action-tile--market" routerLink="/tabs/tab4">
+      <button class="action-tile action-tile--market" routerLink="/tabs/tab3">
         <div class="action-tile_icon">
           <ion-icon name="trending-up-outline"></ion-icon>
         </div>
@@ -43,13 +43,13 @@
         </div>
       </button>
 
-      <button class="action-tile action-tile--trade" routerLink="/tabs/tab5">
+      <button class="action-tile action-tile--reviews" routerLink="/tabs/tab5">
         <div class="action-tile_icon">
-          <ion-icon name="swap-horizontal-outline"></ion-icon>
+          <ion-icon name="star-outline"></ion-icon>
         </div>
         <div class="action-tile_text">
-          <strong>Trocas</strong>
-          <span>Trocar com outros</span>
+          <strong>Avaliações</strong>
+          <span>Ver o seu perfil</span>
         </div>
       </button>
 
@@ -76,8 +76,17 @@
             <h3>{{ coin.name }}</h3>
             <p>{{ coin.origin }} · {{ coin.year }}</p>
           </div>
-          <div class="highlight-price">
-            <strong>€{{ coin.price ?? 0 }}</strong>
+          <div class="highlight-market">
+            @if (coin.available_for_sale && coin.price) {
+            <span class="market-pill market-pill--sale">
+              {{ coin.price | currency:'EUR':'symbol':'1.2-2' }}
+            </span>
+            }
+            @if (coin.available_for_trade) {
+            <span class="market-pill market-pill--trade">
+              Troca
+            </span>
+            }
           </div>
         </ion-card-content>
       </ion-card>
