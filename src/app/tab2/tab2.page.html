@@ -44,18 +44,18 @@
                 <h3>{{ coin.name }}</h3>
                 <p>{{ coin.origin }} · {{ coin.year }}</p>
               </div>
-              @if (coin.availableForSale && coin.price) {
+              @if (coin.available_for_sale && coin.price) {
                 <span class="coin-price">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
               }
             </div>
             <div class="coin-body__tags">
               <span>{{ coin.material }}</span>
               <span>{{ coin.condition }}</span>
-              @if (coin.availableForSale && coin.availableForTrade) {
+                @if (coin.available_for_sale && coin.available_for_trade) {
                 <span class="tag--listing tag--both">Venda & Troca</span>
-              } @else if (coin.availableForSale) {
+              } @else if (coin.available_for_sale) {
                 <span class="tag--listing tag--sale">À Venda</span>
-              } @else if (coin.availableForTrade) {
+              } @else if (coin.available_for_trade) {
                 <span class="tag--listing tag--trade">Para Troca</span>
               } @else {
                 <span class="tag--listing tag--unlisted">Não listada</span>

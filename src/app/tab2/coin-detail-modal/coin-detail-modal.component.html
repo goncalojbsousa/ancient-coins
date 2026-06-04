@@ -40,16 +40,16 @@
           <span class="condition-badge">{{ coin.condition }}</span>
         </span>
       </div>
-      @if (coin.availableForSale && coin.price) {
+      @if (coin.available_for_sale && coin.price) {
         <div class="info-item">
           <span class="info-item__label">Preço</span>
           <span class="info-item__value price-value">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
         </div>
       }
-      @if (coin.availableForTrade && coin.tradePreference) {
+      @if (coin.available_for_trade && coin.trade_preference) {
         <div class="info-item info-item--full">
           <span class="info-item__label">Preferência de Troca</span>
-          <span class="info-item__value">{{ coin.tradePreference }}</span>
+          <span class="info-item__value">{{ coin.trade_preference }}</span>
         </div>
       }
     </div>
@@ -71,7 +71,7 @@
         <span class="toggle-row__title">Publicar para Venda</span>
         <span class="toggle-row__sub">Disponibilizar esta moeda para compra</span>
       </div>
-      <ion-toggle [checked]="coin.availableForSale" class="market-toggle"></ion-toggle>
+      <ion-toggle [checked]="coin.available_for_sale" class="market-toggle"></ion-toggle>
     </div>
 
     <!-- Toggle: Publicar para Troca -->
@@ -80,7 +80,7 @@
         <span class="toggle-row__title">Publicar para Troca</span>
         <span class="toggle-row__sub">Disponibilizar esta moeda para troca</span>
       </div>
-      <ion-toggle [checked]="coin.availableForTrade" class="market-toggle"></ion-toggle>
+      <ion-toggle [checked]="coin.available_for_trade" class="market-toggle"></ion-toggle>
     </div>
 
     <!-- Ações: Editar / Remover dentro do card -->

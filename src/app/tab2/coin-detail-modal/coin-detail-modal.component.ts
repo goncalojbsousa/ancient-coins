@@ -1,7 +1,7 @@
 import { Component, Input, inject } from '@angular/core';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
 
-import { Coin } from '../../models/ancient-coins.models';
+import { Coin } from '../../models/coin.model';
 import { CoinsService } from '../../services/coins.service';
 
 interface CoinDetailModalResult {
