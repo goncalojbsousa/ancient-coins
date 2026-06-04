@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 
 import { AddCoinModalComponent } from '../tab2/add-coin-modal/add-coin-modal.component';
@@ -20,6 +21,7 @@ export class Tab1Page implements OnInit {
   private marketService = inject(MarketService);
   private authService = inject(AuthService);
   private modalController = inject(ModalController);
+  private router = inject(Router);
 
   recentCoins: Coin[] = [];
   userName = '';
@@ -52,5 +54,13 @@ export class Tab1Page implements OnInit {
     if (data?.createdCoin) {
       this.recentCoins = await this.marketService.getRecentMarketCoins(2);
     }
+  }
+
+  async openCollectionPage(): Promise<void> {
+    await this.router.navigate(['/tabs/tab2'], {
+      queryParams: {
+        origem: 'inicio',
+      },
+    });
   }
 }
