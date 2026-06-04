@@ -45,7 +45,7 @@ ion-searchbar {
 }
 
 .conversation-card--unread {
-  border-color: #8a3d0b;
+  border-color: #f57b25;
 }
 
 .avatar {
@@ -116,7 +116,7 @@ ion-searchbar {
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: #8a3d0b;
+  background: #f57b25;
   color: #fff;
   display: grid;
   place-items: center;
@@ -160,7 +160,7 @@ ion-searchbar {
   --border-radius: 10px;
   --border-width: 1px;
   --box-shadow: none;
-  --color: #8a3d0b;
+  --color: #c65f1a;
   height: 34px;
   margin-right: 8px;
   font-size: .78rem;
@@ -193,7 +193,7 @@ ion-searchbar {
 
 .coin-summary p {
   margin: 5px 0 0;
-  color: #8a3d0b;
+  color: #c65f1a;
   font-size: .8rem;
   font-weight: 600;
 }
@@ -251,7 +251,7 @@ ion-searchbar {
 }
 
 .message-row--mine .message-bubble {
-  background: #8a3d0b;
+  background: #f57b25;
   color: #fff;
   border-radius: 16px 16px 4px 16px;
 }
@@ -280,8 +280,8 @@ ion-searchbar {
 }
 
 .send-button {
-  --background: #8a3d0b;
-  --background-activated: #6f2f08;
+  --background: #f57b25;
+  --background-activated: #c65f1a;
   --box-shadow: none;
   --border-radius: 12px;
   width: 42px;
@@ -372,8 +372,8 @@ ion-searchbar {
 }
 
 .submit-review-button {
-  --background: #8a3d0b;
-  --background-activated: #6f2f08;
+  --background: #f57b25;
+  --background-activated: #c65f1a;
   --border-radius: 12px;
   --box-shadow: none;
   height: 42px;

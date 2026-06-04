@@ -16,6 +16,8 @@ interface AddCoinModalResult {
   createdCoin?: Coin;
 }
 
+type CollectionFilter = 'Todas' | 'À Venda' | 'Para Troca' | 'Não listadas';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -28,6 +30,7 @@ export class Tab2Page implements OnInit {
   private modalController = inject(ModalController);
 
   searchTerm = '';
+  activeFilter: CollectionFilter = 'Todas';
   userCoins: Coin[] = [];
 
   async ngOnInit(): Promise<void> {
@@ -50,13 +53,9 @@ export class Tab2Page implements OnInit {
   get filteredCoins(): Coin[] {
     const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
 
-    if (!normalizedSearchTerm) {
-      return this.userCoins;
-    }
-
     return this.userCoins.filter(coin =>
-      coin.name.toLowerCase().includes(normalizedSearchTerm) ||
-      coin.origin.toLowerCase().includes(normalizedSearchTerm)
+      this.matchesSearch(coin, normalizedSearchTerm) &&
+      this.matchesFilter(coin)
     );
   }
 
@@ -101,5 +100,30 @@ export class Tab2Page implements OnInit {
     if (data?.createdCoin) {
       this.userCoins = [data.createdCoin, ...this.userCoins];
     }
+  }
+
+  private matchesSearch(coin: Coin, searchTerm: string): boolean {
+    if (!searchTerm) {
+      return true;
+    }
+
+    return coin.name.toLowerCase().includes(searchTerm) ||
+      coin.origin.toLowerCase().includes(searchTerm);
+  }
+
+  private matchesFilter(coin: Coin): boolean {
+    if (this.activeFilter === 'À Venda') {
+      return coin.available_for_sale;
+    }
+
+    if (this.activeFilter === 'Para Troca') {
+      return coin.available_for_trade;
+    }
+
+    if (this.activeFilter === 'Não listadas') {
+      return !coin.available_for_sale && !coin.available_for_trade;
+    }
+
+    return true;
   }
 }
