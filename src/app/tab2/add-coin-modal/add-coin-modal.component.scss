@@ -4,6 +4,10 @@
   --color: #111;
 }
 
+.add-coin-toolbar ion-button {
+  --color: #c65f1a;
+}
+
 .add-coin-content {
   --background: #fafaf9;
 }
@@ -21,6 +25,7 @@
   gap: 16px;
   padding: 20px;
   border: 1px solid #eadfd2;
+  border-left: 3px solid #f57b25;
   border-radius: 16px;
   background: #fff;
   box-shadow: 0 12px 28px rgba(17, 17, 17, .05);
@@ -31,6 +36,17 @@
   margin: 0;
   color: #111;
   font-weight: 700;
+}
+
+.form-header h1::before,
+.form-header h2::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 3px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+  background: #f57b25;
 }
 
 .form-header h1 {

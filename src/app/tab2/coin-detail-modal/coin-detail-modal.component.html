@@ -1,3 +1,14 @@
+<ion-header>
+  <ion-toolbar class="detail-coin-toolbar">
+    <ion-title>Detalhes da moeda</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="modal-content">
 
   <!-- Hero: foto com botão fechar sobreposto -->
@@ -9,9 +20,6 @@
         <ion-icon name="cash-outline"></ion-icon>
       </div>
     }
-    <button class="hero__close" type="button" (click)="dismiss()" aria-label="Fechar">
-      <ion-icon name="close"></ion-icon>
-    </button>
   </div>
 
   <!-- Título -->
