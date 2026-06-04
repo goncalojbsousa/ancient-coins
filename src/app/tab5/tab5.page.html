@@ -1,28 +1,174 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Perfil</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
 
-  <div class="profile-section ion-padding">
-    <ion-card class="profile-card">
-      <ion-card-header>
-        <ion-card-title>Conta</ion-card-title>
-        <ion-card-subtitle>Gerir a sua sessão</ion-card-subtitle>
-      </ion-card-header>
+  <div class="profile-page">
 
-      <ion-card-content>
-        <ion-button expand="block" fill="outline" class="logout-button" (click)="logout()">
-          Terminar sessão
-        </ion-button>
-      </ion-card-content>
-    </ion-card>
+    <!-- PERFIL -->
+
+    <section class="profile-header">
+
+      <div class="avatar">
+        {{ utilizador.nome.charAt(0) }}
+      </div>
+
+      <div class="profile-info">
+        <h1>{{ utilizador.nome }}</h1>
+        <p>{{ utilizador.email }}</p>
+
+        <div class="meta">
+          <span>📅 Membro desde {{ utilizador.membroDesde }}</span>
+
+          <span>
+            ⭐ {{ utilizador.avaliacao }}
+            ({{ utilizador.totalAvaliacoes }} avaliações)
+          </span>
+        </div>
+      </div>
+
+      <button class="edit-button">
+        ✏️ Editar Perfil
+      </button>
+
+    </section>
+
+    <!-- ESTATÍSTICAS -->
+
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <h3>Total de Vendas</h3>
+        <strong>{{ estatisticas.vendas }}</strong>
+        <span>moedas vendidas</span>
+      </div>
+
+      <div class="stat-card">
+        <h3>Trocas Realizadas</h3>
+        <strong>{{ estatisticas.trocas }}</strong>
+        <span>trocas concluídas</span>
+      </div>
+
+      <div class="stat-card">
+        <h3>Taxa de Satisfação</h3>
+        <strong>{{ estatisticas.satisfacao }}%</strong>
+        <span>feedback positivo</span>
+      </div>
+
+    </section>
+
+    <!-- GASTOS -->
+
+    <section class="expenses-card">
+
+      <div class="expenses-header">
+        <div>
+          <h2>Gastos Anuais</h2>
+          <p>Investimento em moedas nos últimos 12 meses</p>
+        </div>
+
+        <div class="expenses-total">
+          €{{ estatisticas.gastos }}
+        </div>
+      </div>
+
+      <div class="chart-placeholder">
+        Gráfico será ligado futuramente ao Chart.js
+      </div>
+
+    </section>
+
+    <!-- CONQUISTAS -->
+
+    <section class="achievements-card">
+
+      <h2>Conquistas</h2>
+      <p>Seus marcos como colecionador</p>
+
+      <div class="achievements-grid">
+
+        <div
+          class="achievement"
+          *ngFor="let conquista of conquistas">
+
+          <div class="achievement-icon">
+            {{ conquista.emoji }}
+          </div>
+
+          <div>
+            <h3>{{ conquista.titulo }}</h3>
+            <span>{{ conquista.descricao }}</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- AVALIAÇÕES -->
+
+    <section class="reviews-card">
+
+      <h2>Avaliações Recentes</h2>
+      <p>O que outros colecionadores dizem sobre você</p>
+
+      <div
+        class="review"
+        *ngFor="let avaliacao of avaliacoes">
+
+        <div class="review-header">
+
+          <div class="review-avatar">
+            {{ avaliacao.nome.charAt(0) }}
+          </div>
+
+          <div class="review-info">
+            <h3>{{ avaliacao.nome }}</h3>
+            <div>⭐⭐⭐⭐⭐</div>
+          </div>
+
+          <span class="review-date">
+            {{ avaliacao.data }}
+          </span>
+
+        </div>
+
+        <p>{{ avaliacao.comentario }}</p>
+
+      </div>
+
+    </section>
+
+    <!-- CONFIGURAÇÕES -->
+
+    <section class="settings-card">
+
+      <h2>Configurações da Conta</h2>
+
+      <button class="setting-button">
+        Alterar Palavra-passe
+      </button>
+
+      <button class="setting-button">
+        Notificações
+      </button>
+
+      <button class="setting-button">
+        Privacidade e Segurança
+      </button>
+
+      <button
+        class="setting-button danger"
+        (click)="logout()">
+        Terminar Sessão
+      </button>
+
+    </section>
+
   </div>
+
 </ion-content>

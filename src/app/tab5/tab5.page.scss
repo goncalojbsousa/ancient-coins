@@ -1,42 +1,232 @@
-.profile-section {
-	padding-top: 16px;
+ion-content {
+  --background: #ffffff;
 }
 
-.profile-card {
-	margin: 0;
-	border: 1px solid #eadfd2;
-	border-radius: 16px;
-	box-shadow: none;
-	--background: #fff;
+.profile-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+  padding-bottom: 120px;
 }
 
-.profile-card ion-card-header {
-	padding-bottom: 8px;
+/* HEADER */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border: 1px solid #eadfd2;
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 24px;
 }
 
-.profile-card ion-card-title {
-	font-size: 1rem;
-	font-weight: 700;
-	color: #111;
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 700;
 }
 
-.profile-card ion-card-subtitle {
-	margin-top: 4px;
-	font-size: .85rem;
-	color: #666;
+.profile-info {
+  flex: 1;
 }
 
-.profile-card ion-card-content {
-	padding-top: 0;
+.profile-info h1 {
+  margin: 0;
+  font-size: 32px;
 }
 
-.logout-button {
-	--border-color: #eadfd2;
-	--color: #f57b25;
-	--background: #fff;
-	--border-width: 1px;
-	--border-radius: 10px;
-	height: 34px;
-	font-size: .8rem;
-	text-transform: none;
+.profile-info p {
+  margin: 6px 0;
+  color: #777;
+}
+
+.meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 10px;
+  color: #666;
+  flex-wrap: wrap;
+}
+
+.edit-button {
+  border: 1px solid #eadfd2;
+  background: white;
+  border-radius: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+}
+
+/* STATS */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  border: 1px solid #eadfd2;
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.stat-card h3 {
+  margin-top: 0;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 40px;
+  margin: 20px 0 4px;
+}
+
+.stat-card span {
+  color: #777;
+}
+
+/* GASTOS */
+
+.expenses-card,
+.achievements-card,
+.reviews-card,
+.settings-card {
+  border: 1px solid #eadfd2;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.expenses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.expenses-total {
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.chart-placeholder {
+  margin-top: 24px;
+  height: 320px;
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+}
+
+/* CONQUISTAS */
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.achievement {
+  border: 1px solid #eadfd2;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.achievement-icon {
+  width: 50px;
+  height: 50px;
+  background: #f7f7f7;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+
+/* REVIEWS */
+
+.review {
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.review:last-child {
+  border-bottom: none;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+}
+
+.review-avatar {
+  width: 45px;
+  height: 45px;
+  background: #f3f3f3;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.review-info {
+  margin-left: 12px;
+  flex: 1;
+}
+
+.review-info h3 {
+  margin: 0;
+}
+
+.review-date {
+  color: #777;
+}
+
+/* SETTINGS */
+
+.setting-button {
+  width: 100%;
+  margin-top: 12px;
+  border: 1px solid #eadfd2;
+  border-radius: 12px;
+  padding: 14px;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.danger {
+  color: #dc3545;
+}
+
+@media (max-width: 900px) {
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .expenses-header {
+    flex-direction: column;
+    gap: 16px;
+  }
 }
