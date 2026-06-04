@@ -1,3 +1,5 @@
+@use '../coin-form-modal';
+
 .detail-coin-toolbar {
   --background: #fff;
   --border-color: #eadfd2;
@@ -123,6 +125,8 @@
 }
 
 .manage-card {
+  display: grid;
+  gap: 12px;
   border-left-color: #eadfd2;
   margin-bottom: 16px;
 }
@@ -161,6 +165,10 @@
   }
 }
 
+.market-field {
+  margin-top: -2px;
+}
+
 .market-toggle {
   --track-background: #e0d8ce;
   --track-background-checked: #f57b25;
@@ -172,7 +180,7 @@
 .action-row {
   display: flex;
   gap: 10px;
-  padding-top: 14px;
+  padding-top: 2px;
 }
 
 .btn-edit,
