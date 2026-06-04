@@ -1,84 +1,94 @@
 # Sessão 1 - 4 de junho de 2026
 
-## Objetivo:
+## Objetivo
 
-Implementar e melhorar a área de Mercado e Perfil da aplicação Ancient Coins, aproximando a interface ao protótipo definido no Figma e preparando a navegação entre listagem de moedas, detalhe de moeda e perfil de utilizador.
+Implementar e consolidar as áreas de Mercado e Perfil da aplicação Ancient Coins, integrando os dados reais provenientes do Supabase, uniformizando o design visual da aplicação e aproximando a interface ao protótipo definido no Figma.
 
-## Atividades realizadas:
+## Atividades realizadas
 
-* Corrigi a estrutura da página Mercado (`Tab3`) para eliminar conflitos entre componentes standalone e módulos Angular;
-* Reestruturei completamente os ficheiros `tab3.page.ts`, `tab3.page.html` e `tab3.page.scss`;
-* Implementei a pesquisa de moedas por nome e origem;
-* Implementei filtros por categoria:
+* Reestruturei a página Mercado (`Tab3`) para funcionar com os dados armazenados na base de dados Supabase;
+* Integrei o `MarketService`, `CoinsService`, `UsersService` e `AuthService` na camada de apresentação;
+* Implementei o carregamento dinâmico das moedas disponíveis para venda e troca;
+* Desenvolvi a pesquisa de moedas por nome, origem, material e descrição;
+* Implementei filtros de mercado:
 
   * Todas;
   * À Venda;
   * Para Troca;
-* Corrigi os estilos dos filtros para garantir contraste adequado e visibilidade dos textos;
-* Criei os cartões de moedas com:
-
-  * imagem;
-  * nome;
-  * origem;
-  * ano;
-  * preço;
-  * vendedor;
-  * classificação;
-  * estado de conservação;
-* Adicionei a secção informativa "Negocie com Segurança";
-* Corrigi referências de imagens armazenadas na pasta `assets/img`;
-* Resolvi problemas de compilação relacionados com a configuração Angular/Ionic;
-* Configurei a navegação para que a seleção de uma moeda no Mercado abra a respetiva página de detalhe;
-* Implementei a página de detalhe da moeda baseada no design do Figma;
+* Adicionei ordenação por data de publicação e preço;
+* Desenvolvi a página de detalhe da moeda diretamente integrada com os modelos de dados existentes;
 * Estruturei a página de detalhe com:
 
   * imagem principal;
-  * informação histórica da moeda;
+  * nome da moeda;
+  * preço;
   * origem;
-  * material;
   * ano;
+  * material;
   * estado de conservação;
   * descrição;
+  * preferências de troca;
   * informações do vendedor;
-  * botão para iniciar negociação;
-* Iniciei a reformulação completa da página Perfil (`Tab5`);
-* Desenvolvi uma nova estrutura de perfil inspirada no protótipo do Figma;
-* Adicionei estatísticas do utilizador:
+  * botão de negociação;
+* Integrei a obtenção automática dos dados do vendedor através do `UsersService`;
+* Desenvolvi a navegação entre a listagem do mercado e o detalhe da moeda;
+* Reformulei completamente a página Perfil (`Tab5`);
+* Integrei os dados reais do utilizador autenticado através do `AuthService`;
+* Desenvolvi um dashboard de perfil com:
 
-  * total de vendas;
-  * trocas realizadas;
-  * taxa de satisfação;
-* Adicionei área de gastos anuais preparada para futura integração com gráficos;
-* Adicionei sistema de conquistas e badges do utilizador;
-* Adicionei secção de avaliações recentes;
-* Adicionei secção de configurações da conta;
-* Mantive a funcionalidade de logout integrada com o `AuthService`.
+  * informações da conta;
+  * localização;
+  * classificação média;
+  * número de avaliações;
+* Calculei estatísticas automaticamente a partir das moedas do utilizador:
 
-## Problemas:
+  * total de moedas na coleção;
+  * moedas publicadas para venda;
+  * moedas disponíveis para troca;
+  * valor total das moedas publicadas no mercado;
+* Implementei um sistema visual de conquistas baseado na atividade do utilizador;
+* Adicionei uma secção de reputação baseada na classificação existente na base de dados;
+* Mantive a funcionalidade de logout integrada com o Supabase Auth;
+* Uniformizei o design visual da aplicação utilizando os mesmos padrões visuais da Coleção (`Tab2`);
+* Reaproveitei os estilos utilizados nos modais de detalhe e gestão de moedas;
+* Padronizei:
 
-* O Angular identificava o componente `Tab3Page` como standalone, impedindo a compilação do módulo;
-* Existiam conflitos entre a estrutura gerada pelo Ionic e as alterações realizadas manualmente;
-* Os filtros do Mercado apresentavam texto branco sobre fundo claro, tornando-os praticamente invisíveis;
-* Algumas imagens não eram apresentadas corretamente devido a caminhos incorretos nos assets;
-* O layout inicial do Perfil estava demasiado simples e não correspondia ao protótipo definido;
-* A navegação entre a listagem e o detalhe das moedas ainda não estava implementada.
+  * cartões;
+  * badges;
+  * sombras;
+  * bordas;
+  * espaçamentos;
+  * tipografia;
+  * cores da marca;
+* Ajustei as dimensões e larguras das páginas Mercado e Perfil para manter consistência com a página Inicial (`Tab1`).
 
-## Solução:
+## Problemas
 
-* Reestruturei os módulos e componentes da Tab3 para garantir compatibilidade com Angular Modules;
-* Corrigi a configuração do decorator `@Component`;
-* Ajustei os estilos SCSS dos filtros para garantir contraste adequado;
-* Uniformizei a organização dos assets e referências de imagens;
-* Criei uma estrutura de cartões reutilizável para o Mercado;
-* Implementei a navegação para páginas de detalhe das moedas;
-* Recriei a página Perfil seguindo a estrutura visual do Figma;
-* Organizei o perfil em secções independentes para facilitar futuras integrações com Supabase.
+* O Mercado inicialmente utilizava estruturas mockadas incompatíveis com os modelos reais da aplicação;
+* Existiam diferenças entre os nomes das propriedades dos objetos apresentados no frontend e os modelos provenientes do Supabase;
+* A página Perfil utilizava dados estáticos e não refletia o utilizador autenticado;
+* Os estilos do Mercado e Perfil eram visualmente diferentes das restantes áreas da aplicação;
+* Algumas alterações de layout provocaram perda de formatação devido à utilização de classes CSS incompatíveis com o HTML existente;
+* Existiam inconsistências nas larguras e espaçamentos entre as Tabs da aplicação.
 
-## Decisões:
+## Solução
 
-* Manter a arquitetura baseada em Tabs do Ionic;
-* Utilizar dados mockados nesta fase para acelerar o desenvolvimento da interface;
-* Preparar todas as páginas para futura integração com Supabase;
-* Separar claramente a listagem de moedas da página de detalhe;
-* Estruturar o Perfil de forma modular para permitir expansão futura com estatísticas reais, histórico de compras, vendas, avaliações e conquistas;
-* Seguir o design do Figma como referência principal para consistência visual da aplicação.
+* Substituí as estruturas mockadas pelos modelos `Coin` e `User` utilizados na aplicação;
+* Passei a obter os dados diretamente através dos serviços já implementados;
+* Integrei o carregamento do utilizador autenticado utilizando o `AuthService`;
+* Criei cálculos automáticos para gerar estatísticas reais do perfil;
+* Reestruturei os componentes do Mercado para funcionar exclusivamente sobre os dados do Supabase;
+* Uniformizei os estilos reutilizando a linguagem visual já utilizada na Coleção;
+* Corrigi os conflitos entre classes CSS e estrutura HTML;
+* Ajustei as dimensões dos componentes para manter consistência entre todas as Tabs.
+
+## Decisões
+
+* Utilizar exclusivamente os dados provenientes do Supabase nas páginas Mercado e Perfil;
+* Manter a lógica de acesso aos dados centralizada nos serviços existentes;
+* Reutilizar padrões visuais da Coleção para garantir consistência na experiência de utilização;
+* Evitar duplicação de estilos entre componentes semelhantes;
+* Manter a navegação de detalhe da moeda dentro da Tab Mercado;
+* Preparar a página Perfil para futuras integrações com avaliações reais, histórico de transações e estatísticas avançadas;
+* Utilizar o Figma como referência principal para estrutura funcional e visual da aplicação;
+* Priorizar consistência visual e reutilização de componentes antes da implementação de novas funcionalidades.

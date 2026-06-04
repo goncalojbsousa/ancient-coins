@@ -62,26 +62,62 @@
       <p class="modal-description">{{ coin.description }}</p>
     }
   </div>
-  <div class="modal-card manage-card">
+  <form class="modal-card manage-card market-form" [formGroup]="marketForm">
     <p class="manage-hint">Esta é a sua moeda. Gira como ela aparece no marketplace.</p>
     <div class="toggle-row">
       <div class="toggle-row_info">
         <span class="toggle-row_title">Publicar para Venda</span>
         <span class="toggle-row_sub">Disponibilizar esta moeda para compra</span>
       </div>
-      <ion-toggle [checked]="coin.available_for_sale" class="market-toggle"></ion-toggle>
+      <ion-toggle class="market-toggle" formControlName="availableForSale"></ion-toggle>
     </div>
+
+    @if (marketForm.controls.availableForSale.value) {
+      <div class="form-field market-field">
+        <ion-input
+          label="Preço"
+          label-placement="stacked"
+          type="number"
+          min="0"
+          placeholder="120"
+          formControlName="price">
+        </ion-input>
+        @if (priceIsRequired) {
+          <ion-text class="validation-message">
+            <small>Indique um preço superior a zero.</small>
+          </ion-text>
+        }
+      </div>
+    }
+
     <div class="toggle-row">
       <div class="toggle-row_info">
         <span class="toggle-row_title">Publicar para Troca</span>
         <span class="toggle-row_sub">Disponibilizar esta moeda para troca</span>
       </div>
-      <ion-toggle [checked]="coin.available_for_trade" class="market-toggle"></ion-toggle>
+      <ion-toggle class="market-toggle" formControlName="availableForTrade"></ion-toggle>
     </div>
+
+    @if (marketForm.controls.availableForTrade.value) {
+      <div class="form-field market-field">
+        <ion-input
+          label="Preferência de troca"
+          label-placement="stacked"
+          placeholder="Moedas romanas ou gregas"
+          formControlName="tradePreference">
+        </ion-input>
+        @if (tradePreferenceIsRequired) {
+          <ion-text class="validation-message">
+            <small>Indique a preferência de troca.</small>
+          </ion-text>
+        }
+      </div>
+    }
+
     <div class="action-row">
       <button class="btn-edit" type="button" (click)="openEditCoinModal()">Editar</button>
       <button class="btn-remove" type="button" (click)="confirmDeleteCoin()">Remover</button>
     </div>
-  </div>
+  </form>
 
 </ion-content>

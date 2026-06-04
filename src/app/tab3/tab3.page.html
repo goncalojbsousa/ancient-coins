@@ -1,32 +1,32 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="market-toolbar">
     <ion-title>Mercado</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="market-content">
 
   <div class="market-page" *ngIf="!moedaSelecionada">
 
-    <section class="hero">
-      <h1>Mercado de Moedas</h1>
-      <p>Explore, compre e troque moedas com outros colecionadores</p>
+    <section class="summary-card">
+      <div>
+        <p class="section-label">Marketplace</p>
+        <p class="summary-card_sub">
+          Explore, compre e troque moedas com outros colecionadores.
+        </p>
+      </div>
     </section>
 
-    <section class="tools">
-      <div class="search-box">
-        <ion-icon name="search-outline"></ion-icon>
+    <section class="controls">
+      <ion-searchbar
+        [(ngModel)]="pesquisa"
+        placeholder="Pesquisar moedas..."
+        show-clear-button="focus">
+      </ion-searchbar>
 
-        <ion-input
-          [(ngModel)]="pesquisa"
-          placeholder="Pesquisar moedas...">
-        </ion-input>
-      </div>
-
-      <button type="button" class="sort-button">
+      <button type="button" class="sort-button" (click)="mudarOrdenacao()">
         <ion-icon name="options-outline"></ion-icon>
-        <span>Mais Recentes</span>
-        <ion-icon name="chevron-down-outline"></ion-icon>
+        {{ ordenacao === 'recentes' ? 'Mais Recentes' : 'Preço' }}
       </button>
     </section>
 
@@ -53,149 +53,203 @@
       </button>
     </section>
 
-    <p class="count">{{ moedasFiltradas.length }} moedas encontradas</p>
+    <div class="empty-state" *ngIf="loading">
+      <ion-icon name="hourglass-outline"></ion-icon>
+      <h3>A carregar mercado</h3>
+      <p>A procurar moedas disponíveis para venda ou troca.</p>
+    </div>
 
-    <section class="coin-grid">
-      <article
-        class="coin-card"
-        *ngFor="let moeda of moedasFiltradas"
-        (click)="abrirDetalhe(moeda)">
+    <div class="empty-state error-state" *ngIf="!loading && erro">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <h3>Erro ao carregar</h3>
+      <p>{{ erro }}</p>
+    </div>
 
-        <img [src]="moeda.imagem" [attr.alt]="moeda.nome">
+    <ng-container *ngIf="!loading && !erro">
 
-        <div class="coin-info">
-          <h3>{{ moeda.nome }}</h3>
-          <p>{{ moeda.origem }} • {{ moeda.ano }}</p>
+      <p class="market-count">
+        {{ moedasFiltradas.length }} moedas encontradas
+      </p>
 
-          <strong *ngIf="moeda.preco > 0">€{{ moeda.preco }}</strong>
+      <section class="coin-list" *ngIf="moedasFiltradas.length > 0">
 
-          <span class="trade-badge" *ngIf="moeda.preco === 0">
-            Para Troca
-          </span>
+        <ion-card
+          class="coin-card"
+          *ngFor="let moeda of moedasFiltradas"
+          (click)="abrirDetalhe(moeda)">
 
-          <div class="seller">
-            <span>{{ moeda.vendedor }}</span>
-            <span class="rating">⭐ {{ moeda.rating }}</span>
+          <div class="coin-image">
+            <img
+              *ngIf="getFotoPrincipal(moeda); else coinPlaceholder"
+              [src]="getFotoPrincipal(moeda)"
+              [attr.alt]="moeda.name">
+
+            <ng-template #coinPlaceholder>
+              <ion-icon name="cash-outline"></ion-icon>
+            </ng-template>
           </div>
 
-          <span class="condition">{{ moeda.condicao }}</span>
-        </div>
-      </article>
-    </section>
+          <ion-card-content class="coin-body">
 
-    <section class="security-box">
-      <div class="icon-circle">🔒</div>
+            <div class="coin-body_header">
+              <div class="coin-body_meta">
+                <h3>{{ moeda.name }}</h3>
+                <p>{{ moeda.origin }} • {{ moeda.year }}</p>
+              </div>
 
-      <div>
-        <h2>Negocie com Segurança</h2>
-        <p>
-          Use sempre o chat integrado da plataforma para negociar.
-          Verifique as avaliações do vendedor antes de finalizar qualquer transação.
-        </p>
+              <span class="coin-price">
+                {{ getPreco(moeda) }}
+              </span>
+            </div>
+
+            <div class="coin-body_tags">
+              <span>{{ moeda.material }}</span>
+              <span>{{ moeda.condition }}</span>
+
+              <span
+                class="tag--listing"
+                [class.tag--sale]="moeda.available_for_sale && !moeda.available_for_trade"
+                [class.tag--trade]="!moeda.available_for_sale && moeda.available_for_trade"
+                [class.tag--both]="moeda.available_for_sale && moeda.available_for_trade">
+                {{ getTipoMercado(moeda) }}
+              </span>
+            </div>
+
+            <div class="seller-row">
+              <span>{{ getNomeVendedor(moeda) }}</span>
+              <span>⭐ {{ getRatingVendedor(moeda) }}</span>
+            </div>
+
+          </ion-card-content>
+
+        </ion-card>
+
+      </section>
+
+      <div class="empty-state" *ngIf="moedasFiltradas.length === 0">
+        <ion-icon name="search-outline"></ion-icon>
+        <h3>Nenhuma moeda encontrada</h3>
+        <p>Tenta pesquisar por outro nome, origem ou material.</p>
       </div>
-    </section>
+
+      <section class="summary-card security-card">
+        <div>
+          <p class="section-label">Segurança</p>
+          <p class="summary-card_sub">
+            Use sempre o chat integrado da plataforma para negociar.
+            Verifique as avaliações do vendedor antes de finalizar qualquer transação.
+          </p>
+        </div>
+      </section>
+
+    </ng-container>
 
   </div>
 
-  <div class="detail-page" *ngIf="moedaSelecionada">
+  <div class="detail-page" *ngIf="moedaSelecionada as moeda">
 
     <button type="button" class="back-button" (click)="voltarMercado()">
       <ion-icon name="arrow-back-outline"></ion-icon>
-      Voltar
+      Voltar ao mercado
     </button>
 
-    <section class="detail-layout">
+    <div class="hero">
+      <img
+        *ngIf="getFotoPrincipal(moeda); else detailPlaceholder"
+        class="hero_img"
+        [src]="getFotoPrincipal(moeda)"
+        [attr.alt]="moeda.name">
 
-      <div class="detail-image">
-        <img [src]="moedaSelecionada.imagem" [attr.alt]="moedaSelecionada.nome">
-      </div>
+      <ng-template #detailPlaceholder>
+        <div class="hero_placeholder">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+      </ng-template>
+    </div>
 
-      <div class="detail-info">
+    <div class="title-row">
+      <p class="section-label">Detalhes da moeda</p>
+      <h1 class="coin-title">{{ moeda.name }}</h1>
+      <p class="detail-price">{{ getPreco(moeda) }}</p>
+    </div>
 
-        <div class="detail-title-row">
-          <div>
-            <h1>{{ moedaSelecionada.nome }}</h1>
+    <div class="modal-card">
+      <div class="info-grid">
 
-            <h2 *ngIf="moedaSelecionada.preco > 0">
-              €{{ moedaSelecionada.preco }}
-            </h2>
-
-            <h2 *ngIf="moedaSelecionada.preco === 0">
-              Para Troca
-            </h2>
-          </div>
-
-          <button type="button" class="share-button">
-            <ion-icon name="share-social-outline"></ion-icon>
-          </button>
+        <div class="info-item">
+          <span class="info-item_label">Origem</span>
+          <span class="info-item_value">{{ moeda.origin }}</span>
         </div>
 
-        <div class="divider"></div>
+        <div class="info-item">
+          <span class="info-item_label">Ano</span>
+          <span class="info-item_value">{{ moeda.year }}</span>
+        </div>
 
-        <section class="spec-grid">
-          <div>
-            <span>Origem</span>
-            <strong>{{ moedaSelecionada.origem }}</strong>
-          </div>
+        <div class="info-item">
+          <span class="info-item_label">Material</span>
+          <span class="info-item_value">{{ moeda.material }}</span>
+        </div>
 
-          <div>
-            <span>Ano</span>
-            <strong>{{ moedaSelecionada.ano }}</strong>
-          </div>
+        <div class="info-item">
+          <span class="info-item_label">Condição</span>
+          <span class="info-item_value">
+            <span class="condition-badge">{{ moeda.condition }}</span>
+          </span>
+        </div>
 
-          <div>
-            <span>Material</span>
-            <strong>{{ moedaSelecionada.material }}</strong>
-          </div>
+        <div class="info-item" *ngIf="moeda.available_for_sale && moeda.price">
+          <span class="info-item_label">Preço</span>
+          <span class="info-item_value price-value">
+            {{ moeda.price | currency:'EUR':'symbol':'1.2-2' }}
+          </span>
+        </div>
 
-          <div>
-            <span>Condição</span>
-            <strong class="condition detail-condition">
-              {{ moedaSelecionada.condicao }}
-            </strong>
-          </div>
-        </section>
-
-        <section class="description">
-          <span>Descrição</span>
-          <p>{{ moedaSelecionada.descricao }}</p>
-        </section>
-
-        <div class="divider"></div>
-
-        <section class="seller-card">
-          <h3>Informações do Vendedor</h3>
-
-          <div class="seller-content">
-            <div class="seller-avatar">
-              {{ moedaSelecionada.vendedor.charAt(0) }}
-            </div>
-
-            <div class="seller-data">
-              <strong>{{ moedaSelecionada.vendedor }}</strong>
-              <span>⭐ {{ moedaSelecionada.rating }} de avaliação</span>
-            </div>
-
-            <button type="button" class="profile-button">
-              Ver Perfil
-            </button>
-          </div>
-        </section>
-
-        <section class="detail-actions">
-          <button type="button" class="deal-button">
-            <ion-icon name="chatbubble-outline"></ion-icon>
-            Iniciar Negociação
-          </button>
-
-          <button type="button" class="flag-button">
-            <ion-icon name="flag-outline"></ion-icon>
-          </button>
-        </section>
+        <div class="info-item info-item--full" *ngIf="moeda.trade_preference">
+          <span class="info-item_label">Preferência de Troca</span>
+          <span class="info-item_value">{{ moeda.trade_preference }}</span>
+        </div>
 
       </div>
 
-    </section>
+      <div class="description-divider"></div>
+
+      <p class="section-label">Descrição</p>
+      <p class="modal-description">{{ moeda.description }}</p>
+    </div>
+
+    <div class="modal-card seller-card">
+      <p class="section-label">Vendedor</p>
+
+      <div class="seller-content">
+        <div class="seller-avatar">
+          {{ getInicialVendedor(moeda) }}
+        </div>
+
+        <div class="seller-data">
+          <strong>{{ getNomeVendedor(moeda) }}</strong>
+          <span>
+            ⭐ {{ getRatingVendedor(moeda) }}
+            ({{ getTotalReviewsVendedor(moeda) }} avaliações)
+          </span>
+        </div>
+
+        <button type="button" class="profile-button">
+          Ver Perfil
+        </button>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" type="button">
+        <ion-icon name="chatbubble-outline"></ion-icon>
+        Iniciar Negociação
+      </button>
+
+      <button class="btn-secondary" type="button">
+        <ion-icon name="flag-outline"></ion-icon>
+      </button>
+    </div>
 
   </div>
 
