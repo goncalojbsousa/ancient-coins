@@ -1,173 +1,148 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="profile-toolbar">
     <ion-title>Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="profile-content">
 
   <div class="profile-page">
 
-    <!-- PERFIL -->
+    <div class="empty-state" *ngIf="loading">
+      <ion-icon name="person-circle-outline"></ion-icon>
+      <h3>A carregar perfil</h3>
+      <p>A obter os dados da sua conta.</p>
+    </div>
 
-    <section class="profile-header">
+    <div class="empty-state error-state" *ngIf="!loading && erro">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <h3>Erro ao carregar</h3>
+      <p>{{ erro }}</p>
+    </div>
 
-      <div class="avatar">
-        {{ utilizador.nome.charAt(0) }}
-      </div>
+    <ng-container *ngIf="!loading && !erro && utilizador as user">
 
-      <div class="profile-info">
-        <h1>{{ utilizador.nome }}</h1>
-        <p>{{ utilizador.email }}</p>
-
-        <div class="meta">
-          <span>📅 Membro desde {{ utilizador.membroDesde }}</span>
-
-          <span>
-            ⭐ {{ utilizador.avaliacao }}
-            ({{ utilizador.totalAvaliacoes }} avaliações)
-          </span>
-        </div>
-      </div>
-
-      <button class="edit-button">
-        ✏️ Editar Perfil
-      </button>
-
-    </section>
-
-    <!-- ESTATÍSTICAS -->
-
-    <section class="stats-grid">
-
-      <div class="stat-card">
-        <h3>Total de Vendas</h3>
-        <strong>{{ estatisticas.vendas }}</strong>
-        <span>moedas vendidas</span>
-      </div>
-
-      <div class="stat-card">
-        <h3>Trocas Realizadas</h3>
-        <strong>{{ estatisticas.trocas }}</strong>
-        <span>trocas concluídas</span>
-      </div>
-
-      <div class="stat-card">
-        <h3>Taxa de Satisfação</h3>
-        <strong>{{ estatisticas.satisfacao }}%</strong>
-        <span>feedback positivo</span>
-      </div>
-
-    </section>
-
-    <!-- GASTOS -->
-
-    <section class="expenses-card">
-
-      <div class="expenses-header">
-        <div>
-          <h2>Gastos Anuais</h2>
-          <p>Investimento em moedas nos últimos 12 meses</p>
+      <section class="summary-card profile-summary">
+        <div class="avatar">
+          {{ getInicial() }}
         </div>
 
-        <div class="expenses-total">
-          €{{ estatisticas.gastos }}
-        </div>
-      </div>
+        <div class="profile-info">
+          <p class="section-label">Conta</p>
+          <h1>{{ user.name }}</h1>
+          <p>{{ user.email }}</p>
 
-      <div class="chart-placeholder">
-        Gráfico será ligado futuramente ao Chart.js
-      </div>
-
-    </section>
-
-    <!-- CONQUISTAS -->
-
-    <section class="achievements-card">
-
-      <h2>Conquistas</h2>
-      <p>Seus marcos como colecionador</p>
-
-      <div class="achievements-grid">
-
-        <div
-          class="achievement"
-          *ngFor="let conquista of conquistas">
-
-          <div class="achievement-icon">
-            {{ conquista.emoji }}
+          <div class="profile-tags">
+            <span>📍 {{ user.location }}</span>
+            <span>⭐ {{ user.rating }} / 5</span>
+            <span>{{ user.total_reviews }} avaliações</span>
           </div>
+        </div>
+      </section>
 
+      <section class="stats-grid">
+
+        <div class="stat-card">
+          <p class="section-label">Coleção</p>
+          <strong>{{ estatisticas.moedas }}</strong>
+          <span>moedas registadas</span>
+        </div>
+
+        <div class="stat-card">
+          <p class="section-label">Venda</p>
+          <strong>{{ estatisticas.vendas }}</strong>
+          <span>moedas publicadas</span>
+        </div>
+
+        <div class="stat-card">
+          <p class="section-label">Troca</p>
+          <strong>{{ estatisticas.trocas }}</strong>
+          <span>moedas disponíveis</span>
+        </div>
+
+      </section>
+
+      <section class="modal-card">
+        <div class="value-header">
           <div>
-            <h3>{{ conquista.titulo }}</h3>
-            <span>{{ conquista.descricao }}</span>
+            <p class="section-label">Valor em Mercado</p>
+            <p class="modal-description">
+              Soma dos preços das suas moedas publicadas para venda.
+            </p>
+          </div>
+
+          <strong class="market-value">
+            €{{ estatisticas.valorTotal }}
+          </strong>
+        </div>
+      </section>
+
+      <section class="modal-card">
+        <p class="section-label">Conquistas</p>
+
+        <div class="achievements-grid">
+
+          <div
+            class="achievement"
+            *ngFor="let conquista of conquistas">
+
+            <div class="achievement-icon">
+              {{ conquista.emoji }}
+            </div>
+
+            <div>
+              <h3>{{ conquista.titulo }}</h3>
+              <span>{{ conquista.descricao }}</span>
+            </div>
+
           </div>
 
         </div>
+      </section>
 
-      </div>
+      <section class="modal-card">
+        <p class="section-label">Reputação</p>
 
-    </section>
-
-    <!-- AVALIAÇÕES -->
-
-    <section class="reviews-card">
-
-      <h2>Avaliações Recentes</h2>
-      <p>O que outros colecionadores dizem sobre você</p>
-
-      <div
-        class="review"
-        *ngFor="let avaliacao of avaliacoes">
-
-        <div class="review-header">
-
+        <div class="review-card">
           <div class="review-avatar">
-            {{ avaliacao.nome.charAt(0) }}
+            {{ getInicial() }}
           </div>
 
           <div class="review-info">
-            <h3>{{ avaliacao.nome }}</h3>
-            <div>⭐⭐⭐⭐⭐</div>
+            <h3>{{ user.name }}</h3>
+            <span>⭐ {{ user.rating }} / 5</span>
+            <p>
+              Taxa de satisfação estimada:
+              <strong>{{ estatisticas.satisfacao }}%</strong>
+            </p>
           </div>
-
-          <span class="review-date">
-            {{ avaliacao.data }}
-          </span>
-
         </div>
+      </section>
 
-        <p>{{ avaliacao.comentario }}</p>
+      <section class="modal-card settings-card">
+        <p class="section-label">Configurações</p>
 
-      </div>
+        <button class="setting-button" type="button">
+          Alterar Palavra-passe
+        </button>
 
-    </section>
+        <button class="setting-button" type="button">
+          Notificações
+        </button>
 
-    <!-- CONFIGURAÇÕES -->
+        <button class="setting-button" type="button">
+          Privacidade e Segurança
+        </button>
 
-    <section class="settings-card">
+        <button
+          class="setting-button danger"
+          type="button"
+          (click)="logout()">
+          Terminar Sessão
+        </button>
+      </section>
 
-      <h2>Configurações da Conta</h2>
-
-      <button class="setting-button">
-        Alterar Palavra-passe
-      </button>
-
-      <button class="setting-button">
-        Notificações
-      </button>
-
-      <button class="setting-button">
-        Privacidade e Segurança
-      </button>
-
-      <button
-        class="setting-button danger"
-        (click)="logout()">
-        Terminar Sessão
-      </button>
-
-    </section>
+    </ng-container>
 
   </div>
 

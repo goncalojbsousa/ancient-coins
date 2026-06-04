@@ -1,7 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { Coin } from '../models/coin.model';
+import { User } from '../models/user.model';
 import { AuthService } from '../services/auth.service';
+import { CoinsService } from '../services/coins.service';
 
 @Component({
   selector: 'app-tab5',
@@ -9,63 +12,107 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./tab5.page.scss'],
   standalone: false,
 })
-export class Tab5Page {
-
+export class Tab5Page implements OnInit {
   private authService = inject(AuthService);
+  private coinsService = inject(CoinsService);
   private router = inject(Router);
 
-  utilizador = {
-    nome: 'Rui Mendonça',
-    email: 'rui@example.com',
-    membroDesde: '2024',
-    avaliacao: 4.9,
-    totalAvaliacoes: 18
-  };
+  loading = true;
+  erro = '';
+
+  utilizador?: User;
+  moedasDoUtilizador: Coin[] = [];
 
   estatisticas = {
-    vendas: 12,
-    trocas: 8,
-    satisfacao: 96,
-    gastos: 2680
+    moedas: 0,
+    vendas: 0,
+    trocas: 0,
+    satisfacao: 0,
+    valorTotal: 0
   };
 
   conquistas = [
     {
       emoji: '🏆',
-      titulo: 'Vendedor Confiável',
-      descricao: '+10 vendas bem-sucedidas'
+      titulo: 'Colecionador Ativo',
+      descricao: 'Tem moedas registadas na coleção'
     },
     {
       emoji: '⭐',
-      titulo: 'Avaliação 5 Estrelas',
-      descricao: 'Mantém excelente reputação'
+      titulo: 'Boa Reputação',
+      descricao: 'Mantém avaliações positivas'
     },
     {
       emoji: '🤝',
-      titulo: 'Negociador Expert',
-      descricao: '+5 trocas realizadas'
+      titulo: 'Disponível para Trocas',
+      descricao: 'Tem moedas publicadas para troca'
     },
     {
-      emoji: '📚',
-      titulo: 'Colecionador Ativo',
-      descricao: 'Membro há mais de 1 ano'
+      emoji: '💰',
+      titulo: 'Vendedor',
+      descricao: 'Tem moedas publicadas para venda'
     }
   ];
 
-  avaliacoes = [
-    {
-      nome: 'Pedro Santos',
-      data: '15/03',
-      comentario:
-        'Excelente vendedor! Moeda chegou bem embalada e conforme descrito.'
-    },
-    {
-      nome: 'Maria Oliveira',
-      data: '20/02',
-      comentario:
-        'Muito profissional. Recomendo!'
+  async ngOnInit(): Promise<void> {
+    await this.carregarPerfil();
+  }
+
+  async ionViewWillEnter(): Promise<void> {
+    await this.carregarPerfil();
+  }
+
+  async carregarPerfil(): Promise<void> {
+    try {
+      this.loading = true;
+      this.erro = '';
+
+      await this.authService.init();
+
+      const user = await this.authService.getCurrentUser();
+
+      if (!user) {
+        this.erro = 'Não foi possível carregar o utilizador autenticado.';
+        return;
+      }
+
+      this.utilizador = user;
+      this.moedasDoUtilizador = await this.coinsService.getCoinsByOwner(user.id);
+
+      this.calcularEstatisticas();
+
+    } catch (error) {
+      console.error('Erro ao carregar perfil:', error);
+      this.erro = 'Não foi possível carregar os dados do perfil.';
+    } finally {
+      this.loading = false;
     }
-  ];
+  }
+
+  calcularEstatisticas(): void {
+    const moedasVenda = this.moedasDoUtilizador.filter(moeda => moeda.available_for_sale);
+    const moedasTroca = this.moedasDoUtilizador.filter(moeda => moeda.available_for_trade);
+
+    const valorTotal = this.moedasDoUtilizador.reduce((total, moeda) => {
+      return total + (moeda.price ?? 0);
+    }, 0);
+
+    this.estatisticas = {
+      moedas: this.moedasDoUtilizador.length,
+      vendas: moedasVenda.length,
+      trocas: moedasTroca.length,
+      satisfacao: this.utilizador ? Math.round((this.utilizador.rating / 5) * 100) : 0,
+      valorTotal
+    };
+  }
+
+  getInicial(): string {
+    return this.utilizador?.name.charAt(0).toUpperCase() ?? '?';
+  }
+
+  getMembroDesde(): string {
+    return '2026';
+  }
 
   async logout(): Promise<void> {
     await this.authService.logout();
