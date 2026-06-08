@@ -85,10 +85,12 @@
     </div>
   </div>
 
+  @if (!isOwnCoin()) {
   <div class="action-row">
     <button class="btn-primary" type="button" (click)="iniciarNegociacao()">
       <ion-icon name="chatbubble-outline"></ion-icon>
       Iniciar negociação
     </button>
   </div>
+  }
 </ion-content>

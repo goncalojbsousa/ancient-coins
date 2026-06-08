@@ -16,6 +16,7 @@ import { MessagesService } from '../../services/messages.service';
 export class MarketDetailModalComponent {
   @Input() coin!: Coin;
   @Input() seller?: User;
+  @Input() currentUserId: number | null = null;
 
   constructor(
     private authService: AuthService,
@@ -96,6 +97,10 @@ export class MarketDetailModalComponent {
 
   getTotalReviewsVendedor(): number {
     return this.seller?.total_reviews ?? 0;
+  }
+
+  isOwnCoin(): boolean {
+    return this.currentUserId === this.coin.owner_id;
   }
 
   private async showMessage(message: string): Promise<void> {
