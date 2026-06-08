@@ -62,7 +62,7 @@
       <p class="modal-description">{{ coin.description }}</p>
     }
   </div>
-  <form class="modal-card manage-card market-form" [formGroup]="marketForm">
+  <form class="modal-card manage-card market-form" [formGroup]="marketForm" (ngSubmit)="saveMarketData()">
     <p class="manage-hint">Esta é a sua moeda. Gira como ela aparece no marketplace.</p>
     <div class="toggle-row">
       <div class="toggle-row_info">
@@ -72,7 +72,7 @@
       <ion-toggle class="market-toggle" formControlName="availableForSale"></ion-toggle>
     </div>
 
-    @if (marketForm.controls.availableForSale.value) {
+    @if (availableForSale.value) {
       <div class="form-field market-field">
         <ion-input
           label="Preço"
@@ -98,7 +98,7 @@
       <ion-toggle class="market-toggle" formControlName="availableForTrade"></ion-toggle>
     </div>
 
-    @if (marketForm.controls.availableForTrade.value) {
+    @if (availableForTrade.value) {
       <div class="form-field market-field">
         <ion-input
           label="Preferência de troca"
@@ -115,6 +115,9 @@
     }
 
     <div class="action-row">
+      <button class="btn-save" type="submit" [disabled]="isSavingMarket">
+        {{ isSavingMarket ? 'A guardar...' : 'Guardar mercado' }}
+      </button>
       <button class="btn-edit" type="button" (click)="openEditCoinModal()">Editar</button>
       <button class="btn-remove" type="button" (click)="confirmDeleteCoin()">Remover</button>
     </div>

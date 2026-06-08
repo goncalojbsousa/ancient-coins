@@ -1,7 +1,6 @@
-import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
-import { AbstractControl, NonNullableFormBuilder, ValidationErrors } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { AbstractControl, FormGroup, NonNullableFormBuilder, ValidationErrors } from '@angular/forms';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
-import { Subscription, debounceTime } from 'rxjs';
 
 import { Coin } from '../../models/coin.model';
 import { CoinsService } from '../../services/coins.service';
@@ -22,51 +21,56 @@ interface EditCoinModalResult {
   styleUrls: ['./coin-detail-modal.component.scss'],
   standalone: false,
 })
-export class CoinDetailModalComponent implements OnInit, OnDestroy {
-  private alertController = inject(AlertController);
-  private coinsService = inject(CoinsService);
-  private formBuilder = inject(NonNullableFormBuilder);
-  private modalController = inject(ModalController);
-  private toastController = inject(ToastController);
-
+export class CoinDetailModalComponent implements OnInit {
   @Input() coin!: Coin;
-  private updatedCoin?: Coin;
-  private lastSavedMarketState = '';
-  private marketFormSubscription?: Subscription;
 
-  marketForm = this.formBuilder.group({
-    availableForSale: [false],
-    price: [0],
-    availableForTrade: [false],
-    tradePreference: [''],
-  }, {
-    validators: this.marketFieldsValidator,
-  });
+  marketForm: FormGroup;
+  isSavingMarket = false;
+  private updatedCoin?: Coin;
+
+  constructor(
+    private alertController: AlertController,
+    private coinsService: CoinsService,
+    private formBuilder: NonNullableFormBuilder,
+    private modalController: ModalController,
+    private toastController: ToastController
+  ) {
+    this.marketForm = this.formBuilder.group({
+      availableForSale: [false],
+      price: [0],
+      availableForTrade: [false],
+      tradePreference: [''],
+    }, {
+      validators: this.marketFieldsValidator,
+    });
+  }
 
   ngOnInit(): void {
     this.fillMarketFormWithCoinData();
-    this.lastSavedMarketState = this.getMarketState();
-    this.watchMarketFormChanges();
-  }
-
-  ngOnDestroy(): void {
-    this.marketFormSubscription?.unsubscribe();
   }
 
   get price(): AbstractControl {
-    return this.marketForm.controls.price;
+    return this.marketForm.controls['price'];
   }
 
   get tradePreference(): AbstractControl {
-    return this.marketForm.controls.tradePreference;
+    return this.marketForm.controls['tradePreference'];
+  }
+
+  get availableForSale(): AbstractControl {
+    return this.marketForm.controls['availableForSale'];
+  }
+
+  get availableForTrade(): AbstractControl {
+    return this.marketForm.controls['availableForTrade'];
   }
 
   get priceIsRequired(): boolean {
-    return this.marketForm.controls.availableForSale.value && this.marketForm.hasError('priceRequired');
+    return this.marketForm.hasError('priceRequired') && (this.price.touched || this.availableForSale.touched);
   }
 
   get tradePreferenceIsRequired(): boolean {
-    return this.marketForm.controls.availableForTrade.value && this.marketForm.hasError('tradePreferenceRequired');
+    return this.marketForm.hasError('tradePreferenceRequired') && (this.tradePreference.touched || this.availableForTrade.touched);
   }
 
   async dismiss(result?: CoinDetailModalResult): Promise<void> {
@@ -114,26 +118,19 @@ export class CoinDetailModalComponent implements OnInit, OnDestroy {
       this.coin = data.updatedCoin;
       this.updatedCoin = data.updatedCoin;
       this.fillMarketFormWithCoinData();
-      this.lastSavedMarketState = this.getMarketState();
     }
   }
 
-  private watchMarketFormChanges(): void {
-    this.marketFormSubscription = this.marketForm.valueChanges
-      .pipe(debounceTime(400))
-      .subscribe(() => {
-        void this.updateMarketAvailability();
-      });
-  }
+  async saveMarketData(): Promise<void> {
+    if (this.marketForm.invalid || this.isSavingMarket) {
+      this.marketForm.markAllAsTouched();
+      return;
+    }
 
-  private async updateMarketAvailability(): Promise<void> {
+    this.isSavingMarket = true;
+
     try {
-      if (this.marketForm.invalid || this.getMarketState() === this.lastSavedMarketState) {
-        return;
-      }
-
-      const coinToUpdate = this.createCoinWithMarketData();
-      const updatedCoin = await this.coinsService.updateCoin(coinToUpdate);
+      const updatedCoin = await this.coinsService.updateCoin(this.createCoinWithMarketData());
 
       if (!updatedCoin) {
         throw new Error('Coin market update failed');
@@ -142,10 +139,11 @@ export class CoinDetailModalComponent implements OnInit, OnDestroy {
       this.coin = updatedCoin;
       this.updatedCoin = updatedCoin;
       this.fillMarketFormWithCoinData();
-      this.lastSavedMarketState = this.getMarketState();
       await this.showOperationMessage('Estado da moeda atualizado.', 'success-toast');
     } catch {
       await this.showOperationMessage('Não foi possível atualizar o estado da moeda.', 'error-toast');
+    } finally {
+      this.isSavingMarket = false;
     }
   }
 
@@ -165,8 +163,6 @@ export class CoinDetailModalComponent implements OnInit, OnDestroy {
       price: this.coin.price ?? 0,
       availableForTrade: this.coin.available_for_trade,
       tradePreference: this.coin.trade_preference ?? '',
-    }, {
-      emitEvent: false,
     });
   }
 
@@ -187,29 +183,17 @@ export class CoinDetailModalComponent implements OnInit, OnDestroy {
     const price = Number(control.get('price')?.value);
     const availableForTrade = control.get('availableForTrade')?.value;
     const tradePreference = String(control.get('tradePreference')?.value ?? '').trim();
-    const validationErrors: ValidationErrors = {};
-    const hasValidPrice = Number.isFinite(price) && price > 0;
+    let errors: ValidationErrors | null = null;
 
-    if (availableForSale && !hasValidPrice) {
-      validationErrors['priceRequired'] = true;
+    if (availableForSale && (!Number.isFinite(price) || price <= 0)) {
+      errors = { ...(errors ?? {}), priceRequired: true };
     }
 
     if (availableForTrade && !tradePreference) {
-      validationErrors['tradePreferenceRequired'] = true;
+      errors = { ...(errors ?? {}), tradePreferenceRequired: true };
     }
 
-    return Object.keys(validationErrors).length > 0 ? validationErrors : null;
-  }
-
-  private getMarketState(): string {
-    const formValue = this.marketForm.getRawValue();
-
-    return JSON.stringify({
-      availableForSale: formValue.availableForSale,
-      price: formValue.availableForSale ? Number(formValue.price) : null,
-      availableForTrade: formValue.availableForTrade,
-      tradePreference: formValue.availableForTrade ? formValue.tradePreference.trim() : null,
-    });
+    return errors;
   }
 
   private getModalResult(): CoinDetailModalResult | undefined {
