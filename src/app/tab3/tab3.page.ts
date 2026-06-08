@@ -154,7 +154,7 @@ export class Tab3Page implements OnInit {
   }
 
   getFotoPrincipal(moeda: Coin): string {
-    return moeda.photos?.length ? moeda.photos[0] : 'assets/img/logo.png';
+    return moeda.photos?.length ? moeda.photos[0] : '';
   }
 
   getPrecoFormatado(moeda: Coin): string {
@@ -197,4 +197,5 @@ export class Tab3Page implements OnInit {
     return this.getNomeVendedor(moeda).charAt(0).toUpperCase();
   }
 }
+
 

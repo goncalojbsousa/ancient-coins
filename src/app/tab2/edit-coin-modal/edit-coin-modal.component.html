@@ -39,11 +39,12 @@
         </div>
 
         <div class="form-field">
-          <ion-input label="Ano *" label-placement="stacked" placeholder="312" formControlName="year">
+          <ion-input label="Ano *" label-placement="stacked" placeholder="312" inputmode="numeric"
+            formControlName="year">
           </ion-input>
           @if (year.invalid && year.touched) {
           <ion-text class="validation-message">
-            <small>Indique o ano.</small>
+            <small>Indique um ano válido, apenas com números.</small>
           </ion-text>
           }
         </div>
