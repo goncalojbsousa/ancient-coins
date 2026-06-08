@@ -11,46 +11,38 @@
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="E-mail"
-          label-placement="stacked"
-          type="email"
-          placeholder="nome@exemplo.com"
+        <ion-input label="E-mail *" label-placement="stacked" type="email" placeholder="nome@exemplo.com"
           formControlName="email">
         </ion-input>
 
         @if (email.touched && email.invalid) {
-          <ion-text class="validation-message">
-            @if (email.errors?.['required']) {
-              <small>Preencha o e-mail para continuar.</small>
-            }
-            @if (email.errors?.['email']) {
-              <small>Use um e-mail no formato nome@exemplo.com.</small>
-            }
-          </ion-text>
+        <ion-text class="validation-message">
+          @if (email.errors?.['required']) {
+          <small>Preencha o e-mail para continuar.</small>
+          }
+          @if (email.errors?.['email']) {
+          <small>Use um e-mail no formato nome@exemplo.com.</small>
+          }
+        </ion-text>
         }
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="Palavra-passe"
-          label-placement="stacked"
-          type="password"
-          placeholder="••••••••"
+        <ion-input label="Palavra-passe *" label-placement="stacked" type="password" placeholder="••••••••"
           formControlName="password">
         </ion-input>
 
         @if (password.touched && password.invalid) {
-          <ion-text class="validation-message">
-            <small>Preencha a palavra-passe para continuar.</small>
-          </ion-text>
+        <ion-text class="validation-message">
+          <small>Preencha a palavra-passe para continuar.</small>
+        </ion-text>
         }
       </div>
 
       @if (errorMessage) {
-        <ion-text class="validation-message form-error" aria-live="polite">
-          <small>{{ errorMessage }}</small>
-        </ion-text>
+      <ion-text class="validation-message form-error" aria-live="polite">
+        <small>{{ errorMessage }}</small>
+      </ion-text>
       }
 
       <ion-button expand="block" type="submit" class="login-button">

@@ -36,7 +36,7 @@ export class AddCoinModalComponent {
     this.addCoinForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       origin: ['', [Validators.required]],
-      year: ['', [Validators.required]],
+      year: ['', [Validators.required, Validators.pattern('^[0-9]+$'), this.yearValidator]],
       material: ['', [Validators.required]],
       condition: ['Bom' as CoinCondition, [Validators.required]],
       description: ['', [Validators.required]],
@@ -193,6 +193,21 @@ export class AddCoinModalComponent {
     }
 
     return errors;
+  }
+
+  private yearValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+
+    const year = Number(control.value);
+    const currentYear = new Date().getFullYear();
+
+    if (year < 1 || year > currentYear) {
+      return { invalidYear: true };
+    }
+
+    return null;
   }
 
   private async showOperationMessage(message: string, cssClass: string): Promise<void> {

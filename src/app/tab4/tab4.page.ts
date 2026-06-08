@@ -98,7 +98,11 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       this.users = await this.usersService.getUsers();
       this.readMessageIds = await this.chatStorageService.getReadMessageIds(this.currentUser.id);
 
-      await this.loadConversations();
+      const conversationId = Number(
+        this.activatedRoute.snapshot.queryParamMap.get('conversationId')
+      );
+
+      await this.loadConversations(conversationId);
 
     } catch (error) {
       console.error(error);
@@ -110,24 +114,27 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
 
 
   // Carrega as conversas do utilizador.
-  async loadConversations(): Promise<void> {
+  async loadConversations(conversationId?: number): Promise<void> {
     if (!this.currentUser) {
       return;
     }
 
+    // Guarda a conversa que estava aberta quando o pedido comecou.
+    const previousConversation = this.selectedConversation;
     // Contas as mensagens antes de carregar novas.
-    const previousMessageCount = this.selectedConversation?.messages.length;
+    const previousMessageCount = previousConversation?.messages.length;
 
     this.conversations = await this.messagesService.getConversationsByUser(this.currentUser.id);
 
-    // Mantem a conversa aberta durante a atualizacao automatica.
-    // Ao entrar na pagina pela primeira vez, o id e lido do URL.
-    const conversationId = this.selectedConversation?.id || Number(
-      this.activatedRoute.snapshot.queryParamMap.get('conversationId')
-    );
+    // Se o utilizador abriu ou fechou uma conversa durante o pedido, nao altera essa escolha.
+    if (previousConversation !== this.selectedConversation) {
+      return;
+    }
+
+    // O id da rota so e recebido no primeiro carregamento.
+    conversationId = conversationId || previousConversation?.id;
 
     if (!conversationId) {
-      this.selectedConversation = undefined;
       return;
     }
 
