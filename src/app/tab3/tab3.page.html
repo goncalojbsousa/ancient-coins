@@ -18,10 +18,7 @@
     </section>
 
     <section class="controls">
-      <ion-searchbar
-        [(ngModel)]="pesquisa"
-        placeholder="Pesquisar moedas..."
-        show-clear-button="focus">
+      <ion-searchbar [(ngModel)]="pesquisa" placeholder="Pesquisar moedas..." show-clear-button="focus">
       </ion-searchbar>
 
       <button type="button" class="sort-button" (click)="mudarOrdenacao()">
@@ -31,24 +28,15 @@
     </section>
 
     <section class="filters">
-      <button
-        type="button"
-        [class.active]="filtroAtual === 'Todas'"
-        (click)="mudarFiltro('Todas')">
+      <button type="button" [class.active]="filtroAtual === 'Todas'" (click)="mudarFiltro('Todas')">
         Todas
       </button>
 
-      <button
-        type="button"
-        [class.active]="filtroAtual === 'À Venda'"
-        (click)="mudarFiltro('À Venda')">
+      <button type="button" [class.active]="filtroAtual === 'À Venda'" (click)="mudarFiltro('À Venda')">
         À Venda
       </button>
 
-      <button
-        type="button"
-        [class.active]="filtroAtual === 'Para Troca'"
-        (click)="mudarFiltro('Para Troca')">
+      <button type="button" [class.active]="filtroAtual === 'Para Troca'" (click)="mudarFiltro('Para Troca')">
         Para Troca
       </button>
     </section>
@@ -73,15 +61,10 @@
 
       <section class="coin-list" *ngIf="moedasFiltradas.length > 0">
 
-        <ion-card
-          class="coin-card"
-          *ngFor="let moeda of moedasFiltradas"
-          (click)="abrirDetalhe(moeda)">
+        <ion-card class="coin-card" *ngFor="let moeda of moedasFiltradas" (click)="abrirDetalhe(moeda)">
 
           <div class="coin-image">
-            <img
-              *ngIf="getFotoPrincipal(moeda); else coinPlaceholder"
-              [src]="getFotoPrincipal(moeda)"
+            <img *ngIf="getFotoPrincipal(moeda); else coinPlaceholder" [src]="getFotoPrincipal(moeda)"
               [attr.alt]="moeda.name">
 
             <ng-template #coinPlaceholder>
@@ -106,9 +89,7 @@
               <span>{{ moeda.material }}</span>
               <span>{{ moeda.condition }}</span>
 
-              <span
-                class="tag--listing"
-                [class.tag--sale]="moeda.available_for_sale && !moeda.available_for_trade"
+              <span class="tag--listing" [class.tag--sale]="moeda.available_for_sale && !moeda.available_for_trade"
                 [class.tag--trade]="!moeda.available_for_sale && moeda.available_for_trade"
                 [class.tag--both]="moeda.available_for_sale && moeda.available_for_trade">
                 {{ getTipoMercado(moeda) }}
@@ -154,10 +135,7 @@
     </button>
 
     <div class="hero">
-      <img
-        *ngIf="getFotoPrincipal(moeda); else detailPlaceholder"
-        class="hero_img"
-        [src]="getFotoPrincipal(moeda)"
+      <img *ngIf="getFotoPrincipal(moeda); else detailPlaceholder" class="hero_img" [src]="getFotoPrincipal(moeda)"
         [attr.alt]="moeda.name">
 
       <ng-template #detailPlaceholder>
@@ -234,20 +212,14 @@
           </span>
         </div>
 
-        <button
-          type="button"
-          class="profile-button"
-          (click)="verPerfil(moeda)">
+        <button type="button" class="profile-button" (click)="verPerfil(moeda)">
           Ver Perfil
         </button>
       </div>
     </div>
 
     <div class="action-row">
-      <button
-        class="btn-primary"
-        type="button"
-        (click)="iniciarNegociacao(moeda)">
+      <button class="btn-primary" type="button" (click)="iniciarNegociacao(moeda)">
         <ion-icon name="chatbubble-outline"></ion-icon>
         Iniciar Negociação
       </button>

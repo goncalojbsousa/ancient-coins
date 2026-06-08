@@ -18,89 +18,65 @@
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="Nome"
-          label-placement="stacked"
-          placeholder="Denário Romano"
-          formControlName="name">
+        <ion-input label="Nome *" label-placement="stacked" placeholder="Denário Romano" formControlName="name">
         </ion-input>
         @if (name.invalid && name.touched) {
-          <ion-text class="validation-message">
-            <small>Indique o nome da moeda.</small>
-          </ion-text>
+        <ion-text class="validation-message">
+          <small>Indique o nome da moeda.</small>
+        </ion-text>
         }
       </div>
 
       <div class="form-grid">
         <div class="form-field">
-          <ion-input
-            label="Origem"
-            label-placement="stacked"
-            placeholder="Roma"
-            formControlName="origin">
+          <ion-input label="Origem *" label-placement="stacked" placeholder="Roma" formControlName="origin">
           </ion-input>
           @if (origin.invalid && origin.touched) {
-            <ion-text class="validation-message">
-              <small>Indique a origem.</small>
-            </ion-text>
+          <ion-text class="validation-message">
+            <small>Indique a origem.</small>
+          </ion-text>
           }
         </div>
 
         <div class="form-field">
-          <ion-input
-            label="Ano"
-            label-placement="stacked"
-            placeholder="312"
-            formControlName="year">
+          <ion-input label="Ano *" label-placement="stacked" placeholder="312" formControlName="year">
           </ion-input>
           @if (year.invalid && year.touched) {
-            <ion-text class="validation-message">
-              <small>Indique o ano.</small>
-            </ion-text>
+          <ion-text class="validation-message">
+            <small>Indique o ano.</small>
+          </ion-text>
           }
         </div>
       </div>
 
       <div class="form-grid">
         <div class="form-field">
-          <ion-input
-            label="Material"
-            label-placement="stacked"
-            placeholder="Prata"
-            formControlName="material">
+          <ion-input label="Material *" label-placement="stacked" placeholder="Prata" formControlName="material">
           </ion-input>
           @if (material.invalid && material.touched) {
-            <ion-text class="validation-message">
-              <small>Indique o material.</small>
-            </ion-text>
+          <ion-text class="validation-message">
+            <small>Indique o material.</small>
+          </ion-text>
           }
         </div>
 
         <div class="form-field">
-          <ion-select
-            label="Condição"
-            label-placement="stacked"
-            interface="popover"
-            formControlName="condition">
+          <ion-select label="Condição *" label-placement="stacked" interface="popover" formControlName="condition">
             @for (condition of coinConditions; track condition) {
-              <ion-select-option [value]="condition">{{ condition }}</ion-select-option>
+            <ion-select-option [value]="condition">{{ condition }}</ion-select-option>
             }
           </ion-select>
         </div>
       </div>
 
       <div class="form-field">
-        <ion-textarea
-          label="Descrição"
-          label-placement="stacked"
-          placeholder="Descreva o estado, detalhes e história da moeda."
-          auto-grow="true"
-          formControlName="description">
+        <ion-textarea label="Descrição *" label-placement="stacked"
+          placeholder="Descreva o estado, detalhes e história da moeda." auto-grow="true" formControlName="description">
         </ion-textarea>
         @if (description.invalid && description.touched) {
-          <ion-text class="validation-message">
-            <small>Adicione uma descrição breve.</small>
-          </ion-text>
+        <ion-text class="validation-message">
+          <small>Adicione uma descrição breve.</small>
+        </ion-text>
         }
       </div>
 
@@ -108,12 +84,12 @@
         <label class="field-label">Imagem</label>
 
         @if (selectedPhotoPreview) {
-          <div class="photo-preview">
-            <img [src]="selectedPhotoPreview" alt="Imagem selecionada">
-            <ion-button fill="clear" size="small" type="button" (click)="removeSelectedPhoto()">
-              Remover
-            </ion-button>
-          </div>
+        <div class="photo-preview">
+          <img [src]="selectedPhotoPreview" alt="Imagem selecionada">
+          <ion-button fill="clear" size="small" type="button" (click)="removeSelectedPhoto()">
+            Remover
+          </ion-button>
+        </div>
         }
 
         <div class="photo-actions">
@@ -126,11 +102,7 @@
           <ion-button fill="outline" size="small" type="button">
             <ion-icon slot="start" name="camera-outline"></ion-icon>
             Foto
-            <input
-              class="photo-input"
-              type="file"
-              accept="image/*"
-              capture="environment"
+            <input class="photo-input" type="file" accept="image/*" capture="environment"
               (change)="onPhotoSelected($event)">
           </ion-button>
         </div>
@@ -152,21 +124,16 @@
       </div>
 
       @if (availableForSale.value) {
-        <div class="form-field">
-          <ion-input
-            label="Preço"
-            label-placement="stacked"
-            type="number"
-            min="0"
-            placeholder="120"
-            formControlName="price">
-          </ion-input>
-          @if (priceIsRequired) {
-            <ion-text class="validation-message">
-              <small>Indique um preço superior a zero.</small>
-            </ion-text>
-          }
-        </div>
+      <div class="form-field">
+        <ion-input label="Preço *" label-placement="stacked" type="number" min="0" placeholder="120"
+          formControlName="price">
+        </ion-input>
+        @if (priceIsRequired) {
+        <ion-text class="validation-message">
+          <small>Indique um preço superior a zero.</small>
+        </ion-text>
+        }
+      </div>
       }
 
       <div class="toggle-field">
@@ -178,19 +145,16 @@
       </div>
 
       @if (availableForTrade.value) {
-        <div class="form-field">
-          <ion-input
-            label="Preferência de troca"
-            label-placement="stacked"
-            placeholder="Moedas romanas ou gregas"
-            formControlName="tradePreference">
-          </ion-input>
-          @if (tradePreferenceIsRequired) {
-            <ion-text class="validation-message">
-              <small>Indique a preferência de troca.</small>
-            </ion-text>
-          }
-        </div>
+      <div class="form-field">
+        <ion-input label="Preferência de troca *" label-placement="stacked" placeholder="Moedas romanas ou gregas"
+          formControlName="tradePreference">
+        </ion-input>
+        @if (tradePreferenceIsRequired) {
+        <ion-text class="validation-message">
+          <small>Indique a preferência de troca.</small>
+        </ion-text>
+        }
+      </div>
       }
     </section>
 
