@@ -63,9 +63,10 @@ export class MarketDetailModalComponent {
         textoInicial
       );
 
-      localStorage.setItem('selectedConversationId', String(conversation.id));
       await this.dismiss();
-      await this.router.navigateByUrl('/tabs/tab4');
+      await this.router.navigate(['/tabs/tab4'], {
+        queryParams: { conversationId: conversation.id }
+      });
     } catch {
       await this.showMessage('Não foi possível iniciar a negociação.');
     }
