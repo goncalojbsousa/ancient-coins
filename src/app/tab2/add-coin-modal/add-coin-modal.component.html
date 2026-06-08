@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="add-coin-toolbar">
-    <ion-title>Adicionar moeda</ion-title>
+    <ion-title>Adicionar Moeda</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="dismiss()" aria-label="Fechar">
         <ion-icon slot="icon-only" name="close-outline"></ion-icon>
@@ -13,7 +13,7 @@
   <form class="add-coin-form" [formGroup]="addCoinForm" (ngSubmit)="submitCoinForm()">
     <section class="form-card">
       <div class="form-header">
-        <h1>Nova moeda</h1>
+        <h1>Nova Moeda</h1>
         <p>Preencha os dados principais para adicionar a moeda à sua coleção.</p>
       </div>
 
@@ -160,7 +160,7 @@
     </section>
 
     <ion-button class="submit-button" expand="block" type="submit" [disabled]="isSaving">
-      {{ isSaving ? 'A guardar...' : 'Guardar moeda' }}
+      {{ isSaving ? 'A guardar...' : 'Guardar Moeda' }}
     </ion-button>
   </form>
 </ion-content>

@@ -63,7 +63,7 @@
 
     <div class="highlight-list">
       @for (coin of recentCoins; track coin.id) {
-      <ion-card class="highlight-card">
+      <ion-card class="highlight-card" (click)="openMarketCoin(coin)">
         <div class="highlight-visual">
           @if (coin.photos.length > 0) {
           <img [src]="coin.photos[0]" [alt]="coin.name">
