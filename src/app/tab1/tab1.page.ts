@@ -1,15 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { AddCoinModalComponent } from '../tab2/add-coin-modal/add-coin-modal.component';
-import { Coin } from '../models/coin.model';
 import { AuthService } from '../services/auth.service';
 import { MarketService } from '../services/market.service';
-
-interface AddCoinModalResult {
-  createdCoin?: Coin;
-}
+import { AddCoinModalComponent } from '../tab2/add-coin-modal/add-coin-modal.component';
+import { Coin } from '../models/coin.model';
 
 @Component({
   selector: 'app-tab1',
@@ -18,13 +13,14 @@ interface AddCoinModalResult {
   standalone: false,
 })
 export class Tab1Page implements OnInit {
-  private marketService = inject(MarketService);
-  private authService = inject(AuthService);
-  private modalController = inject(ModalController);
-  private router = inject(Router);
-
   recentCoins: Coin[] = [];
   userName = '';
+
+  constructor(
+    private authService: AuthService,
+    private marketService: MarketService,
+    private modalController: ModalController
+  ) {}
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
@@ -35,32 +31,26 @@ export class Tab1Page implements OnInit {
     await this.loadHomeData();
   }
 
-  private async loadHomeData(): Promise<void> {
+  async loadHomeData(): Promise<void> {
+    const currentUser = await this.authService.getCurrentUser();
+
     this.recentCoins = await this.marketService.getRecentMarketCoins(2);
-    this.userName = (await this.authService.getCurrentUser())?.name.split(' ')[0] ?? '';
+    this.userName = currentUser ? currentUser.name.split(' ')[0] : '';
   }
 
   async openAddCoinModal(): Promise<void> {
     const modal = await this.modalController.create({
       component: AddCoinModalComponent,
       breakpoints: [0, 1],
-      initialBreakpoint: 1
+      initialBreakpoint: 1,
     });
 
     await modal.present();
 
-    const { data } = await modal.onWillDismiss<AddCoinModalResult>();
+    const result = await modal.onWillDismiss();
 
-    if (data?.createdCoin) {
-      this.recentCoins = await this.marketService.getRecentMarketCoins(2);
+    if (result.data?.createdCoin) {
+      await this.loadHomeData();
     }
-  }
-
-  async openCollectionPage(): Promise<void> {
-    await this.router.navigate(['/tabs/tab2'], {
-      queryParams: {
-        origem: 'inicio',
-      },
-    });
   }
 }

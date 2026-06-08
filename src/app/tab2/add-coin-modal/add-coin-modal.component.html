@@ -151,7 +151,7 @@
         <ion-toggle formControlName="availableForSale"></ion-toggle>
       </div>
 
-      @if (addCoinForm.controls.availableForSale.value) {
+      @if (availableForSale.value) {
         <div class="form-field">
           <ion-input
             label="Preço"
@@ -177,7 +177,7 @@
         <ion-toggle formControlName="availableForTrade"></ion-toggle>
       </div>
 
-      @if (addCoinForm.controls.availableForTrade.value) {
+      @if (availableForTrade.value) {
         <div class="form-field">
           <ion-input
             label="Preferência de troca"

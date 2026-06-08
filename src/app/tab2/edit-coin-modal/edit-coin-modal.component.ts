@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
-import { AbstractControl, NonNullableFormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { AbstractControl, FormGroup, NonNullableFormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ModalController, ToastController } from '@ionic/angular';
 
 import { Coin, CoinCondition } from '../../models/coin.model';
@@ -18,11 +18,6 @@ const COIN_CONDITIONS: CoinCondition[] = ['Excelente', 'Muito Bom', 'Bom', 'Regu
   standalone: false,
 })
 export class EditCoinModalComponent implements OnInit {
-  private coinsService = inject(CoinsService);
-  private formBuilder = inject(NonNullableFormBuilder);
-  private modalController = inject(ModalController);
-  private toastController = inject(ToastController);
-
   @Input() coin!: Coin;
 
   readonly coinConditions = COIN_CONDITIONS;
@@ -30,52 +25,68 @@ export class EditCoinModalComponent implements OnInit {
   selectedPhotoFile?: File;
   selectedPhotoPreview = '';
   isSaving = false;
+  editCoinForm: FormGroup;
 
-  editCoinForm = this.formBuilder.group({
-    name: ['', [Validators.required]],
-    origin: ['', [Validators.required]],
-    year: ['', [Validators.required]],
-    material: ['', [Validators.required]],
-    condition: ['Bom' as CoinCondition, [Validators.required]],
-    description: ['', [Validators.required]],
-    availableForSale: [false],
-    price: [0],
-    availableForTrade: [false],
-    tradePreference: [''],
-  }, {
-    validators: this.marketFieldsValidator,
-  });
+  constructor(
+    private coinsService: CoinsService,
+    private formBuilder: NonNullableFormBuilder,
+    private modalController: ModalController,
+    private toastController: ToastController
+  ) {
+    this.editCoinForm = this.formBuilder.group({
+      name: ['', [Validators.required]],
+      origin: ['', [Validators.required]],
+      year: ['', [Validators.required]],
+      material: ['', [Validators.required]],
+      condition: ['Bom' as CoinCondition, [Validators.required]],
+      description: ['', [Validators.required]],
+      availableForSale: [false],
+      price: [0],
+      availableForTrade: [false],
+      tradePreference: [''],
+    }, {
+      validators: this.marketFieldsValidator,
+    });
+  }
 
   ngOnInit(): void {
     this.fillFormWithCoinData();
   }
 
   get name(): AbstractControl {
-    return this.editCoinForm.controls.name;
+    return this.editCoinForm.controls['name'];
   }
 
   get origin(): AbstractControl {
-    return this.editCoinForm.controls.origin;
+    return this.editCoinForm.controls['origin'];
   }
 
   get year(): AbstractControl {
-    return this.editCoinForm.controls.year;
+    return this.editCoinForm.controls['year'];
   }
 
   get material(): AbstractControl {
-    return this.editCoinForm.controls.material;
+    return this.editCoinForm.controls['material'];
   }
 
   get description(): AbstractControl {
-    return this.editCoinForm.controls.description;
+    return this.editCoinForm.controls['description'];
+  }
+
+  get availableForSale(): AbstractControl {
+    return this.editCoinForm.controls['availableForSale'];
+  }
+
+  get availableForTrade(): AbstractControl {
+    return this.editCoinForm.controls['availableForTrade'];
   }
 
   get price(): AbstractControl {
-    return this.editCoinForm.controls.price;
+    return this.editCoinForm.controls['price'];
   }
 
   get tradePreference(): AbstractControl {
-    return this.editCoinForm.controls.tradePreference;
+    return this.editCoinForm.controls['tradePreference'];
   }
 
   get priceIsRequired(): boolean {
@@ -193,18 +204,17 @@ export class EditCoinModalComponent implements OnInit {
     const price = Number(control.get('price')?.value);
     const availableForTrade = control.get('availableForTrade')?.value;
     const tradePreference = String(control.get('tradePreference')?.value ?? '').trim();
-    const validationErrors: ValidationErrors = {};
-    const hasValidPrice = Number.isFinite(price) && price > 0;
+    let errors: ValidationErrors | null = null;
 
-    if (availableForSale && !hasValidPrice) {
-      validationErrors['priceRequired'] = true;
+    if (availableForSale && (!Number.isFinite(price) || price <= 0)) {
+      errors = { ...(errors ?? {}), priceRequired: true };
     }
 
     if (availableForTrade && !tradePreference) {
-      validationErrors['tradePreferenceRequired'] = true;
+      errors = { ...(errors ?? {}), tradePreferenceRequired: true };
     }
 
-    return Object.keys(validationErrors).length > 0 ? validationErrors : null;
+    return errors;
   }
 
   private async showOperationMessage(message: string, cssClass: string): Promise<void> {

@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { AbstractControl, NonNullableFormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { AbstractControl, FormGroup, NonNullableFormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
@@ -14,35 +14,38 @@ const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
   standalone: false,
 })
 export class RegisterPage {
-  private authService = inject(AuthService);
-  private formBuilder = inject(NonNullableFormBuilder);
-  private router = inject(Router);
-
-  registerForm = this.formBuilder.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.pattern(PASSWORD_RULE)]],
-    confirmPassword: ['', [Validators.required]],
-  }, {
-    validators: this.passwordsMatchValidator,
-  });
-
+  registerForm: FormGroup;
   feedbackMessage = '';
 
+  constructor(
+    private authService: AuthService,
+    private formBuilder: NonNullableFormBuilder,
+    private router: Router
+  ) {
+    this.registerForm = this.formBuilder.group({
+      name: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.pattern(PASSWORD_RULE)]],
+      confirmPassword: ['', [Validators.required]],
+    }, {
+      validators: this.passwordsMatchValidator,
+    });
+  }
+
   get name(): AbstractControl {
-    return this.registerForm.controls.name;
+    return this.registerForm.controls['name'];
   }
 
   get email(): AbstractControl {
-    return this.registerForm.controls.email;
+    return this.registerForm.controls['email'];
   }
 
   get password(): AbstractControl {
-    return this.registerForm.controls.password;
+    return this.registerForm.controls['password'];
   }
 
   get confirmPassword(): AbstractControl {
-    return this.registerForm.controls.confirmPassword;
+    return this.registerForm.controls['confirmPassword'];
   }
 
   get passwordsDoNotMatch(): boolean {

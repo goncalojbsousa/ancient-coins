@@ -1,7 +1,5 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Subscription } from 'rxjs';
 
 import { Coin } from '../models/coin.model';
 import { AuthService } from '../services/auth.service';
@@ -9,70 +7,74 @@ import { CoinsService } from '../services/coins.service';
 import { AddCoinModalComponent } from './add-coin-modal/add-coin-modal.component';
 import { CoinDetailModalComponent } from './coin-detail-modal/coin-detail-modal.component';
 
-interface CoinDetailModalResult {
-  wasDeleted?: boolean;
-  updatedCoin?: Coin;
-}
-
-interface AddCoinModalResult {
-  createdCoin?: Coin;
-}
-
-type CollectionFilter = 'Todas' | 'À Venda' | 'Para Troca' | 'Não listadas';
-
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
   standalone: false,
 })
-export class Tab2Page implements OnInit, OnDestroy {
-  private activatedRoute = inject(ActivatedRoute);
-  private authService = inject(AuthService);
-  private coinsService = inject(CoinsService);
-  private modalController = inject(ModalController);
-  private routeParamsSubscription?: Subscription;
-
-  navigationSource = '';
+export class Tab2Page implements OnInit {
   searchTerm = '';
-  activeFilter: CollectionFilter = 'Todas';
+  activeFilter = 'Todas';
   userCoins: Coin[] = [];
+
+  constructor(
+    private authService: AuthService,
+    private coinsService: CoinsService,
+    private modalController: ModalController
+  ) {}
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
-    this.watchRouteParams();
     await this.loadUserCoins();
-  }
-
-  ngOnDestroy(): void {
-    this.routeParamsSubscription?.unsubscribe();
   }
 
   async ionViewWillEnter(): Promise<void> {
     await this.loadUserCoins();
   }
 
-  private async loadUserCoins(): Promise<void> {
+  async loadUserCoins(): Promise<void> {
     const currentUser = await this.authService.getCurrentUser();
 
-    this.userCoins = currentUser
-      ? await this.coinsService.getCoinsByOwner(currentUser.id)
-      : [];
+    if (currentUser) {
+      this.userCoins = await this.coinsService.getCoinsByOwner(currentUser.id);
+    } else {
+      this.userCoins = [];
+    }
   }
 
   get filteredCoins(): Coin[] {
-    const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
+    let coins = this.userCoins;
+    const search = this.searchTerm.trim().toLowerCase();
 
-    return this.userCoins.filter(coin =>
-      this.matchesSearch(coin, normalizedSearchTerm) &&
-      this.matchesFilter(coin)
-    );
+    if (search) {
+      coins = coins.filter(coin =>
+        coin.name.toLowerCase().includes(search) ||
+        coin.origin.toLowerCase().includes(search)
+      );
+    }
+
+    if (this.activeFilter === 'À Venda') {
+      coins = coins.filter(coin => coin.available_for_sale);
+    }
+
+    if (this.activeFilter === 'Para Troca') {
+      coins = coins.filter(coin => coin.available_for_trade);
+    }
+
+    if (this.activeFilter === 'Não listadas') {
+      coins = coins.filter(coin => !coin.available_for_sale && !coin.available_for_trade);
+    }
+
+    return coins;
   }
 
   get collectionCountText(): string {
-    const coinCount = this.userCoins.length;
+    if (this.userCoins.length === 1) {
+      return '1 moeda registada';
+    }
 
-    return coinCount === 1 ? '1 moeda registada' : `${coinCount} moedas registadas`;
+    return `${this.userCoins.length} moedas registadas`;
   }
 
   async openCoinDetail(coin: Coin): Promise<void> {
@@ -85,13 +87,9 @@ export class Tab2Page implements OnInit, OnDestroy {
 
     await modal.present();
 
-    const { data } = await modal.onWillDismiss<CoinDetailModalResult>();
+    const result = await modal.onWillDismiss();
 
-    if (data?.wasDeleted) {
-      this.userCoins = this.userCoins.filter(userCoin => userCoin.id !== coin.id);
-    }
-
-    if (data?.updatedCoin) {
+    if (result.data?.wasDeleted || result.data?.updatedCoin) {
       await this.loadUserCoins();
     }
   }
@@ -105,43 +103,10 @@ export class Tab2Page implements OnInit, OnDestroy {
 
     await modal.present();
 
-    const { data } = await modal.onWillDismiss<AddCoinModalResult>();
+    const result = await modal.onWillDismiss();
 
-    if (data?.createdCoin) {
-      this.userCoins = [data.createdCoin, ...this.userCoins];
+    if (result.data?.createdCoin) {
+      await this.loadUserCoins();
     }
-  }
-
-  private matchesSearch(coin: Coin, searchTerm: string): boolean {
-    if (!searchTerm) {
-      return true;
-    }
-
-    return coin.name.toLowerCase().includes(searchTerm) ||
-      coin.origin.toLowerCase().includes(searchTerm);
-  }
-
-  private matchesFilter(coin: Coin): boolean {
-    if (this.activeFilter === 'À Venda') {
-      return coin.available_for_sale;
-    }
-
-    if (this.activeFilter === 'Para Troca') {
-      return coin.available_for_trade;
-    }
-
-    if (this.activeFilter === 'Não listadas') {
-      return !coin.available_for_sale && !coin.available_for_trade;
-    }
-
-    return true;
-  }
-
-  private watchRouteParams(): void {
-    this.routeParamsSubscription = this.activatedRoute.queryParamMap.subscribe(params => {
-      const routeOrigin = params.get('origem');
-
-      this.navigationSource = routeOrigin ?? '';
-    });
   }
 }

@@ -183,6 +183,7 @@
   padding-top: 2px;
 }
 
+.btn-save,
 .btn-edit,
 .btn-remove {
   flex: 1;
@@ -195,6 +196,12 @@
   transition: opacity .15s ease;
 
   &:active { opacity: .75; }
+}
+
+.btn-save {
+  background: #f57b25;
+  color: #fff;
+  border-color: #f57b25;
 }
 
 .btn-edit {
