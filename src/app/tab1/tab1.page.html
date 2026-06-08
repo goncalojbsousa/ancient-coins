@@ -79,7 +79,7 @@
           <div class="highlight-market">
             @if (coin.available_for_sale && coin.price) {
             <span class="market-pill market-pill--sale">
-              {{ coin.price | currency:'EUR':'symbol':'1.2-2' }}
+              {{ coin.price | number:'1.0-2' }} €
             </span>
             }
             @if (coin.available_for_trade) {

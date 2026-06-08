@@ -45,7 +45,7 @@
       @if (coin.available_for_sale && coin.price) {
         <div class="info-item">
           <span class="info-item_label">Preço</span>
-          <span class="info-item_value price-value">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <span class="info-item_value price-value">{{ coin.price | number:'1.0-2' }} €</span>
         </div>
       }
       @if (coin.available_for_trade && coin.trade_preference) {

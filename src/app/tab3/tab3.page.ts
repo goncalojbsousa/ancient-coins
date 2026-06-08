@@ -157,9 +157,9 @@ export class Tab3Page implements OnInit {
     return moeda.photos?.length ? moeda.photos[0] : 'assets/img/logo.png';
   }
 
-  getPreco(moeda: Coin): string {
+  getPrecoFormatado(moeda: Coin): string {
     if (moeda.available_for_sale && moeda.price !== null && moeda.price !== undefined) {
-      return `â‚¬${moeda.price}`;
+      return `${moeda.price} €`;
     }
 
     return 'Para Troca';
@@ -197,3 +197,4 @@ export class Tab3Page implements OnInit {
     return this.getNomeVendedor(moeda).charAt(0).toUpperCase();
   }
 }
+

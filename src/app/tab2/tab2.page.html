@@ -45,7 +45,7 @@
             <p>{{ coin.origin }} · {{ coin.year }}</p>
           </div>
           @if (coin.available_for_sale && coin.price) {
-          <span class="coin-price">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <span class="coin-price">{{ coin.price | number:'1.0-2' }} €</span>
           }
         </div>
         <div class="coin-body_tags">

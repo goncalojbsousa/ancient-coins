@@ -98,7 +98,7 @@
               </div>
 
               <span class="coin-price">
-                {{ getPreco(moeda) }}
+                {{ getPrecoFormatado(moeda) }}
               </span>
             </div>
 
@@ -170,7 +170,7 @@
     <div class="title-row">
       <p class="section-label">Detalhes da moeda</p>
       <h1 class="coin-title">{{ moeda.name }}</h1>
-      <p class="detail-price">{{ getPreco(moeda) }}</p>
+      <p class="detail-price">{{ getPrecoFormatado(moeda) }}</p>
     </div>
 
     <div class="modal-card">
@@ -201,7 +201,7 @@
         <div class="info-item" *ngIf="moeda.available_for_sale && moeda.price">
           <span class="info-item_label">Preço</span>
           <span class="info-item_value price-value">
-            {{ moeda.price | currency:'EUR':'symbol':'1.2-2' }}
+            {{ moeda.price | number:'1.0-2' }} €
           </span>
         </div>
 
