@@ -12,12 +12,8 @@ const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 export class AuthService {
   private usersService = inject(UsersService);
   private supabaseClient = getSupabase();
-  private currentUserId: number | null;
+  private currentUserId: number | null = null;
 
-  constructor() {
-    this.currentUserId = null;
-    this.init();
-  }
 
   async init(): Promise<void> {
     const { data, error } = await this.supabaseClient.auth.getSession();
@@ -31,9 +27,11 @@ export class AuthService {
     this.currentUserId = user?.id ?? null;
   }
 
+
   isAuthenticated(): boolean {
     return this.currentUserId !== null;
   }
+
 
   async getCurrentUser(): Promise<User | undefined> {
     if (this.currentUserId === null) {
@@ -43,9 +41,11 @@ export class AuthService {
     return this.usersService.getUserById(this.currentUserId);
   }
 
+
   isPasswordValid(password: string): boolean {
     return PASSWORD_RULE.test(password);
   }
+
 
   async login(email: string, password: string): Promise<User | undefined> {
     const { data, error } = await this.supabaseClient.auth.signInWithPassword({
@@ -63,11 +63,13 @@ export class AuthService {
     return user;
   }
 
+
   async logout(): Promise<void> {
     await this.supabaseClient.auth.signOut();
     this.currentUserId = null;
   }
 
+  
   async register(registerUser: RegisterUser): Promise<User | undefined> {
     if (!this.isPasswordValid(registerUser.password)) {
       return undefined;

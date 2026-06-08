@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
 import { ChatStorageService } from '../services/chat-storage.service';
 import { CoinsService } from '../services/coins.service';
 import { MessagesService } from '../services/messages.service';
+import { ReviewsService } from '../services/reviews.service';
 import { UsersService } from '../services/users.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
   private chatStorageService = inject(ChatStorageService);
   private coinsService = inject(CoinsService);
   private messagesService = inject(MessagesService);
+  private reviewsService = inject(ReviewsService);
   private router = inject(Router);
   private usersService = inject(UsersService);
 
@@ -80,7 +82,7 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
 
       this.conversations = await this.messagesService.getConversationsByUser(this.currentUser.id);
       await this.loadReadMessageIds();
-      this.reviews = await this.loadUserReviews(this.currentUser.id);
+      this.reviews = await this.reviewsService.getReviewsByReviewer(this.currentUser.id);
       this.users = await this.usersService.getUsers();
       await this.loadConversationCoins();
       await this.selectConversationFromRoute();
@@ -241,13 +243,22 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
 
     this.showReviewForm = false;
 
-    await this.messagesService.insertReview(
-      conversationId,
-      reviewerId,
-      reviewedUserId,
-      stars,
-      comment
-    );
+    const existingReview = this.getReviewForConversation(this.selectedConversation);
+
+    if (existingReview) {
+      existingReview.stars = stars;
+      existingReview.comment = comment;
+      await this.reviewsService.updateReview(existingReview);
+    } else {
+      await this.reviewsService.insertReview({
+        conversation_id: conversationId,
+        reviewer_id: reviewerId,
+        reviewed_user_id: reviewedUserId,
+        stars,
+        comment,
+        created_at: new Date().toISOString(),
+      });
+    }
 
     this.reviewComment = '';
     await this.loadConversations(false);
@@ -335,16 +346,6 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
     );
 
     this.coins = coins.filter((coin): coin is Coin => coin !== undefined);
-  }
-
-  private async loadUserReviews(userId: number): Promise<Review[]> {
-    const reviews = await Promise.all(
-      this.conversations.map(conversation =>
-        this.messagesService.getReviewByConversationAndReviewer(conversation.id, userId)
-      )
-    );
-
-    return reviews.filter((review): review is Review => review !== undefined && review !== null);
   }
 
   private async loadReadMessageIds(): Promise<void> {

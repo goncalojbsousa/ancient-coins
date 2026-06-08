@@ -9,6 +9,7 @@ import { getSupabase } from './supabase.client';
 export class UsersService {
   private supabaseClient = getSupabase();
 
+  
   async getUsers(): Promise<User[]> {
     const { data, error } = await this.supabaseClient
       .from('users')
@@ -21,6 +22,7 @@ export class UsersService {
 
     return data as User[];
   }
+
 
   async getUserById(id: number): Promise<User | undefined> {
     const { data, error } = await this.supabaseClient
@@ -36,19 +38,6 @@ export class UsersService {
     return data as User | undefined;
   }
 
-  async getUserByEmail(email: string): Promise<User | undefined> {
-    const { data, error } = await this.supabaseClient
-      .from('users')
-      .select('*')
-      .eq('email', email.trim().toLowerCase())
-      .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-
-    return data as User | undefined;
-  }
 
   async getUserByAuthId(auth_id: string): Promise<User | undefined> {
     const { data, error } = await this.supabaseClient
@@ -64,6 +53,7 @@ export class UsersService {
     return data as User | undefined;
   }
 
+  
   async updateUser(user: User): Promise<User> {
     const { data, error } = await this.supabaseClient
       .from('users')
