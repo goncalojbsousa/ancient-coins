@@ -144,8 +144,9 @@ export class Tab3Page implements OnInit {
         textoInicial
       );
 
-      localStorage.setItem('selectedConversationId', String(conversation.id));
-      await this.router.navigateByUrl('/tabs/tab4');
+      await this.router.navigate(['/tabs/tab4'], {
+        queryParams: { conversationId: conversation.id }
+      });
 
     } catch (error) {
       console.error('Erro ao iniciar negociação:', error);

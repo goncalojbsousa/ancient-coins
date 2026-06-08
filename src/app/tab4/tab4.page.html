@@ -9,7 +9,7 @@
     <ion-title>{{ getOtherUser(selectedConversation)?.name || 'Conversa' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button class="review-button" fill="outline" (click)="openReviewForm()">
-        {{ hasReviewedConversation(selectedConversation) ? 'Atualizar' : 'Avaliar' }}
+        {{ getConversationReview(selectedConversation) ? 'Atualizar' : 'Avaliar' }}
       </ion-button>
     </ion-buttons>
     } @else {
@@ -46,7 +46,7 @@
         <div class="message-bubble">
           {{ message.text }}
         </div>
-        <span>{{ getMessageTime(message) }}</span>
+        <span>{{ message.created_at | date:'HH:mm' }}</span>
       </div>
       }
     </div>
@@ -70,7 +70,8 @@
   } @else if (filteredConversations.length > 0) {
   <div class="conversation-list">
     @for (conversation of filteredConversations; track conversation.id) {
-    <button type="button" class="conversation-card" [class.conversation-card--unread]="hasUnreadMessage(conversation)"
+    <button type="button" class="conversation-card"
+      [class.conversation-card--unread]="getUnreadMessageCount(conversation) > 0"
       (click)="selectConversation(conversation)">
       <div class="avatar">
         {{ getInitials(getOtherUser(conversation)?.name) }}
@@ -78,7 +79,7 @@
       <div class="conversation-card_body">
         <div class="conversation-card_top">
           <h2>{{ getOtherUser(conversation)?.name || 'Utilizador' }}</h2>
-          <span>{{ getConversationDate(conversation) }}</span>
+          <span>{{ conversation.updated_at | date:'dd/MM' }}</span>
         </div>
         <p class="coin-name">{{ getCoin(conversation)?.name || 'Moeda em negociacao' }}</p>
         <p class="last-message">{{ getLastMessage(conversation)?.text || 'Sem mensagens.' }}</p>
@@ -108,7 +109,7 @@
         <div class="review-card_header">
           <div>
             <p class="review-card_label">Avaliacao</p>
-            <h2>{{ hasReviewedConversation(selectedConversation) ? 'Atualizar avaliacao' : 'Avaliar utilizador' }}</h2>
+            <h2>{{ getConversationReview(selectedConversation) ? 'Atualizar avaliacao' : 'Avaliar utilizador' }}</h2>
           </div>
         </div>
 
