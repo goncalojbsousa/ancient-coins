@@ -26,6 +26,7 @@ ion-searchbar {
 
 .conversation-list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   padding: 14px 16px 0;
 }
@@ -33,10 +34,14 @@ ion-searchbar {
 .conversation-card {
   position: relative;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 94px;
   display: flex;
   gap: 12px;
   padding: 16px 14px;
+  overflow: hidden;
+  box-sizing: border-box;
   border: 1px solid #eadfd2;
   border-radius: 14px;
   background: #fff;
@@ -64,9 +69,11 @@ ion-searchbar {
 .conversation-card_body {
   min-width: 0;
   flex: 1;
+  overflow: hidden;
 }
 
 .conversation-card_top {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -74,6 +81,7 @@ ion-searchbar {
 }
 
 .conversation-card_top h2 {
+  min-width: 0;
   margin: 0;
   color: #111;
   font-size: .94rem;
@@ -91,6 +99,7 @@ ion-searchbar {
 
 .coin-name,
 .last-message {
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -242,6 +251,8 @@ ion-searchbar {
 .message-bubble {
   max-width: 78%;
   padding: 12px 14px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   border-radius: 16px 16px 16px 4px;
   background: #fff;
   color: #111;
