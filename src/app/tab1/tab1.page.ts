@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 
 import { AuthService } from '../services/auth.service';
@@ -19,7 +20,8 @@ export class Tab1Page implements OnInit {
   constructor(
     private authService: AuthService,
     private marketService: MarketService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -52,5 +54,10 @@ export class Tab1Page implements OnInit {
     if (result.data?.createdCoin) {
       await this.loadHomeData();
     }
+  }
+
+  async openMarketCoin(coin: Coin): Promise<void> {
+    localStorage.setItem('selectedMarketCoinId', String(coin.id));
+    await this.router.navigateByUrl('/tabs/tab3');
   }
 }

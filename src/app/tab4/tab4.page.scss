@@ -214,6 +214,9 @@ ion-searchbar {
   border-radius: 10px;
   overflow: hidden;
   background: #1a0e05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .coin-summary_image img {
@@ -224,6 +227,7 @@ ion-searchbar {
 
 .coin-summary_image ion-icon {
   color: #f57b25;
+  font-size: 2rem;
 }
 
 .message-list {
