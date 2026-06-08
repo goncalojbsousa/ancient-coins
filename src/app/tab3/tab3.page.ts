@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 
 import { Coin } from '../models/coin.model';
 import { User } from '../models/user.model';
+import { AuthService } from '../services/auth.service';
 import { MarketService } from '../services/market.service';
 import { UsersService } from '../services/users.service';
 import { MarketDetailModalComponent } from './market-detail-modal/market-detail-modal.component';
@@ -23,8 +24,10 @@ export class Tab3Page implements OnInit {
 
   moedas: Coin[] = [];
   vendedores = new Map<number, User>();
+  currentUserId: number | null = null;
 
   constructor(
+    private authService: AuthService,
     private marketService: MarketService,
     private modalController: ModalController,
     private usersService: UsersService
@@ -45,11 +48,15 @@ export class Tab3Page implements OnInit {
       this.loading = true;
       this.erro = '';
 
+      await this.authService.init();
+      const currentUser = await this.authService.getCurrentUser();
+
       const [moedas, utilizadores] = await Promise.all([
         this.marketService.getMarketCoins(),
         this.usersService.getUsers(),
       ]);
 
+      this.currentUserId = currentUser?.id ?? null;
       this.moedas = this.marketService.sortByNewest(moedas);
 
       this.vendedores.clear();
@@ -107,6 +114,7 @@ export class Tab3Page implements OnInit {
       componentProps: {
         coin: moeda,
         seller: this.getVendedor(moeda.owner_id),
+        currentUserId: this.currentUserId,
       },
       breakpoints: [0, 1],
       initialBreakpoint: 1,
