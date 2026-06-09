@@ -2,11 +2,11 @@
   <ion-toolbar class="messages-toolbar">
     @if (selectedConversation) {
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="closeConversation()">
+      <ion-button (click)="closeConversation()">
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ getOtherUser(selectedConversation)?.name || 'Conversa' }}</ion-title>
+    <ion-title>{{ getOtherUser(selectedConversation)?.name }}</ion-title>
     <ion-buttons slot="end">
       <ion-button class="review-button" fill="outline" (click)="openReviewForm()">
         {{ getConversationReview(selectedConversation) ? 'Atualizar' : 'Avaliar' }}
@@ -22,7 +22,6 @@
 
   @if (selectedConversation) {
   <div class="chat-view">
-
 
     @if (getCoin(selectedConversation); as coin) {
     <div class="coin-summary">
@@ -52,7 +51,7 @@
     </div>
   </div>
   } @else {
-  <div class="controls" style="padding-top: 16px;">
+  <div class="controls">
     <ion-searchbar placeholder="Pesquisar conversas..." [(ngModel)]="searchTerm" debounce="200">
     </ion-searchbar>
   </div>
@@ -78,10 +77,10 @@
       </div>
       <div class="conversation-card_body">
         <div class="conversation-card_top">
-          <h2>{{ getOtherUser(conversation)?.name || 'Utilizador' }}</h2>
+          <h2>{{ getOtherUser(conversation)?.name}}</h2>
           <span>{{ conversation.updated_at | date:'dd/MM' }}</span>
         </div>
-        <p class="coin-name">{{ getCoin(conversation)?.name || 'Moeda em negociacao' }}</p>
+        <p class="coin-name">{{ getCoin(conversation)?.name }}</p>
         <p class="last-message">{{ getLastMessage(conversation)?.text || 'Sem mensagens.' }}</p>
       </div>
       @if (getUnreadMessageCount(conversation); as unreadCount) {

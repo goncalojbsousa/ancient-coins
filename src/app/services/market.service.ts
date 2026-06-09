@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Coin } from '../models/coin.model';
 import { CoinsService } from './coins.service';
@@ -7,7 +7,9 @@ import { CoinsService } from './coins.service';
   providedIn: 'root',
 })
 export class MarketService {
-  private coinsService = inject(CoinsService);
+  constructor(
+    private coinsService: CoinsService
+  ) { }
 
 
   async getMarketCoins(): Promise<Coin[]> {
@@ -25,7 +27,7 @@ export class MarketService {
     return [...coins].sort((a, b) => (a.price || 0) - (b.price || 0));
   }
 
-  
+
   async getRecentMarketCoins(limit = 2): Promise<Coin[]> {
     const coins = await this.getMarketCoins();
     return this.sortByNewest(coins).slice(0, limit);
