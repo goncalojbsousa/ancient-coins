@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 
@@ -6,8 +6,12 @@ import * as CordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
   providedIn: 'root',
 })
 export class ChatStorageService {
-  private storage = inject(Storage);
   private storageReady = false;
+
+
+  constructor(
+    private storage: Storage
+  ) { }
 
 
   async init(): Promise<void> {
@@ -41,7 +45,7 @@ export class ChatStorageService {
     return readMessageIds;
   }
 
-  
+
   private getReadStorageKey(userId: number): string {
     return `readMessages.${userId}`;
   }

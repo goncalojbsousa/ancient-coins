@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { RegisterUser, User } from '../models/user.model';
 import { getSupabase } from './supabase.client';
@@ -10,9 +10,13 @@ const PASSWORD_RULE = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
   providedIn: 'root',
 })
 export class AuthService {
-  private usersService = inject(UsersService);
   private supabaseClient = getSupabase();
   private currentUserId: number | null = null;
+
+
+  constructor(
+    private usersService: UsersService
+  ) { }
 
 
   async init(): Promise<void> {
@@ -69,7 +73,7 @@ export class AuthService {
     this.currentUserId = null;
   }
 
-  
+
   async register(registerUser: RegisterUser): Promise<User | undefined> {
     if (!this.isPasswordValid(registerUser.password)) {
       return undefined;
