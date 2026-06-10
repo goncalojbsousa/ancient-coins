@@ -2,7 +2,7 @@
   <ion-toolbar class="edit-coin-toolbar">
     <ion-title>Editar Moeda</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="dismiss()" aria-label="Fechar">
+      <ion-button fill="clear" (click)="closeModal()" aria-label="Fechar">
         <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content class="edit-coin-content">
-  <form class="edit-coin-form" [formGroup]="editCoinForm" (ngSubmit)="submitEditCoinForm()">
+  <form class="edit-coin-form" [formGroup]="editCoinForm" (ngSubmit)="updateCoin()">
     <section class="form-card">
       <div class="form-header">
         <h1>Dados da Moeda</h1>
@@ -63,9 +63,10 @@
 
         <div class="form-field">
           <ion-select label="Condição *" label-placement="stacked" interface="popover" formControlName="condition">
-            @for (condition of coinConditions; track condition) {
-            <ion-select-option [value]="condition">{{ condition }}</ion-select-option>
-            }
+            <ion-select-option value="Excelente">Excelente</ion-select-option>
+            <ion-select-option value="Muito Bom">Muito Bom</ion-select-option>
+            <ion-select-option value="Bom">Bom</ion-select-option>
+            <ion-select-option value="Regular">Regular</ion-select-option>
           </ion-select>
         </div>
       </div>
@@ -84,9 +85,9 @@
       <div class="form-field">
         <label class="field-label">Imagem</label>
 
-        @if (selectedPhotoPreview) {
+        @if (photoPreviewUrl) {
         <div class="photo-preview">
-          <img [src]="selectedPhotoPreview" alt="Imagem selecionada">
+          <img [src]="photoPreviewUrl" alt="Imagem selecionada">
           <ion-button fill="clear" size="small" type="button" (click)="removeSelectedPhoto()">
             Remover
           </ion-button>
@@ -97,14 +98,15 @@
           <ion-button fill="outline" size="small" type="button">
             <ion-icon slot="start" name="image-outline"></ion-icon>
             Escolher
-            <input class="photo-input" type="file" accept="image/*" (change)="onPhotoSelected($event)">
+            <input #galleryPhotoInput class="photo-input" type="file" accept="image/*"
+              (change)="onPhotoSelected(galleryPhotoInput.files?.[0]); galleryPhotoInput.value = ''">
           </ion-button>
 
           <ion-button fill="outline" size="small" type="button">
             <ion-icon slot="start" name="camera-outline"></ion-icon>
             Foto
-            <input class="photo-input" type="file" accept="image/*" capture="environment"
-              (change)="onPhotoSelected($event)">
+            <input #cameraPhotoInput class="photo-input" type="file" accept="image/*" capture="environment"
+              (change)="onPhotoSelected(cameraPhotoInput.files?.[0]); cameraPhotoInput.value = ''">
           </ion-button>
         </div>
       </div>
@@ -129,7 +131,7 @@
         <ion-input label="Preço *" label-placement="stacked" type="number" min="0" placeholder="120"
           formControlName="price">
         </ion-input>
-        @if (priceIsRequired) {
+        @if (editCoinForm.hasError('priceRequired') && price.touched) {
         <ion-text class="validation-message">
           <small>Indique um preço superior a zero.</small>
         </ion-text>
@@ -150,7 +152,7 @@
         <ion-input label="Preferência de troca *" label-placement="stacked" placeholder="Moedas romanas ou gregas"
           formControlName="tradePreference">
         </ion-input>
-        @if (tradePreferenceIsRequired) {
+        @if (editCoinForm.hasError('tradePreferenceRequired') && tradePreference.touched) {
         <ion-text class="validation-message">
           <small>Indique a preferência de troca.</small>
         </ion-text>
@@ -159,8 +161,8 @@
       }
     </section>
 
-    <ion-button class="submit-button" expand="block" type="submit" [disabled]="isSaving">
-      {{ isSaving ? 'A guardar...' : 'Guardar Alterações' }}
+    <ion-button class="submit-button" expand="block" type="submit" [disabled]="isSavingCoin">
+      {{ isSavingCoin ? 'A guardar...' : 'Guardar Alterações' }}
     </ion-button>
   </form>
 </ion-content>

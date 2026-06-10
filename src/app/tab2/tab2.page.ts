@@ -22,7 +22,7 @@ export class Tab2Page implements OnInit {
     private authService: AuthService,
     private coinsService: CoinsService,
     private modalController: ModalController
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
@@ -86,12 +86,8 @@ export class Tab2Page implements OnInit {
     });
 
     await modal.present();
-
-    const result = await modal.onWillDismiss();
-
-    if (result.data?.wasDeleted || result.data?.updatedCoin) {
-      await this.loadUserCoins();
-    }
+    await modal.onWillDismiss();
+    await this.loadUserCoins();
   }
 
   async openAddCoinModal(): Promise<void> {

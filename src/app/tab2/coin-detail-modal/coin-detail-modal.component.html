@@ -2,7 +2,7 @@
   <ion-toolbar class="detail-coin-toolbar">
     <ion-title>Detalhes da Moeda</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="dismiss()" aria-label="Fechar">
+      <ion-button fill="clear" (click)="closeModal()" aria-label="Fechar">
         <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -62,7 +62,8 @@
     <p class="modal-description">{{ coin.description }}</p>
     }
   </div>
-  <form class="modal-card manage-card market-form" [formGroup]="marketForm" (ngSubmit)="saveMarketData()">
+  <form class="modal-card manage-card market-form" [formGroup]="marketplaceForm"
+    (ngSubmit)="saveMarketplaceSettings()">
     <p class="manage-hint">Esta é a sua moeda. Gira como ela aparece no marketplace.</p>
     <div class="toggle-row">
       <div class="toggle-row_info">
@@ -77,7 +78,7 @@
       <ion-input label="Preço *" label-placement="stacked" type="number" min="0" placeholder="120"
         formControlName="price">
       </ion-input>
-      @if (priceIsRequired) {
+      @if (marketplaceForm.hasError('priceRequired') && (price.touched || availableForSale.touched)) {
       <ion-text class="validation-message">
         <small>Indique um preço superior a zero.</small>
       </ion-text>
@@ -98,7 +99,8 @@
       <ion-input label="Preferência de troca *" label-placement="stacked" placeholder="Moedas romanas ou gregas"
         formControlName="tradePreference">
       </ion-input>
-      @if (tradePreferenceIsRequired) {
+      @if (marketplaceForm.hasError('tradePreferenceRequired') && (tradePreference.touched ||
+      availableForTrade.touched)) {
       <ion-text class="validation-message">
         <small>Indique a preferência de troca.</small>
       </ion-text>
@@ -107,11 +109,11 @@
     }
 
     <div class="action-row">
-      <button class="btn-save" type="submit" [disabled]="isSavingMarket">
-        {{ isSavingMarket ? 'A guardar...' : 'Guardar Moeda' }}
+      <button class="btn-save" type="submit" [disabled]="isSavingMarketplace">
+        {{ isSavingMarketplace ? 'A guardar...' : 'Guardar Moeda' }}
       </button>
-      <button class="btn-edit" type="button" (click)="openEditCoinModal()">Editar</button>
-      <button class="btn-remove" type="button" (click)="confirmDeleteCoin()">Remover</button>
+      <button class="btn-edit" type="button" (click)="openCoinEditModal()">Editar</button>
+      <button class="btn-remove" type="button" (click)="confirmCoinDeletion()">Remover</button>
     </div>
   </form>
 
