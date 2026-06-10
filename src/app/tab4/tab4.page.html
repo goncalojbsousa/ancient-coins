@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="messages-toolbar">
+  <ion-toolbar class="messages-toolbar app-toolbar">
     @if (selectedConversation) {
     <ion-buttons slot="start">
       <ion-button (click)="closeConversation()">
@@ -18,7 +18,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="messages-content">
+<ion-content [fullscreen]="true" class="messages-content app-content">
 
   @if (selectedConversation) {
   <div class="chat-view">
@@ -52,7 +52,7 @@
   </div>
   } @else {
   <div class="controls">
-    <ion-searchbar placeholder="Pesquisar conversas..." [(ngModel)]="searchTerm" debounce="200">
+    <ion-searchbar class="app-searchbar" placeholder="Pesquisar conversas..." [(ngModel)]="searchTerm" debounce="200">
     </ion-searchbar>
   </div>
 

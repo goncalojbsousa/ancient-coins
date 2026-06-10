@@ -14,4 +14,6 @@
 
 7. Foi utilizado apoio de IA para resolver problemas de execução em dispositivo Android, nomeadamente configuração de Java/Gradle e utilização do Capacitor.
 
-8. O código gerado ou sugerido por IA foi revisto, adaptado e integrado manualmente no projeto, mantendo a estrutura e os requisitos definidos pela equipa.
+8. Foi utilizada IA para desenvolver o script `seed-supabase.mjs`, responsável por inserir os dados de exemplo no Supabase.
+
+9. O código gerado ou sugerido por IA foi revisto, adaptado e integrado manualmente no projeto, mantendo a estrutura e os requisitos definidos pela equipa.

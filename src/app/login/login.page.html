@@ -1,10 +1,10 @@
 <ion-content [fullscreen]="true">
-  <main class="login-page">
-    <section class="brand-block" aria-label="AncientCoins">
+  <main class="login-page auth-page">
+    <section class="brand-block auth-brand" aria-label="AncientCoins">
       <img src="assets/img/Vectorized_logo_removed_bg.svg" alt="AncientCoins">
     </section>
 
-    <form class="login-card" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form class="login-card auth-card" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-header">
         <h1>Entrar na conta</h1>
         <p>Introduza o seu e-mail e palavra-passe para aceder à plataforma.</p>
@@ -45,11 +45,11 @@
       </ion-text>
       }
 
-      <ion-button expand="block" type="submit" class="login-button">
+      <ion-button expand="block" type="submit" class="login-button primary-button">
         Entrar
       </ion-button>
 
-      <div class="create-account">
+      <div class="create-account auth-link">
         <span>Não tem conta?</span>
         <button type="button" routerLink="/register">Criar conta</button>
       </div>

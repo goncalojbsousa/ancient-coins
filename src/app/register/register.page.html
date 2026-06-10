@@ -1,10 +1,10 @@
 <ion-content [fullscreen]="true">
-  <main class="register-page">
-    <section class="brand-block" aria-label="AncientCoins">
+  <main class="register-page auth-page">
+    <section class="brand-block auth-brand" aria-label="AncientCoins">
       <img src="assets/img/Vectorized_logo_removed_bg.svg" alt="AncientCoins">
     </section>
 
-    <form class="register-card" [formGroup]="registerForm" (ngSubmit)="submitRegisterForm()">
+    <form class="register-card auth-card" [formGroup]="registerForm" (ngSubmit)="submitRegisterForm()">
       <div class="form-header">
         <h1>Criar conta</h1>
         <p>Registe-se gratuitamente e junte-se à comunidade de colecionadores.</p>
@@ -85,11 +85,11 @@
       </ion-text>
       }
 
-      <ion-button expand="block" type="submit" class="register-button">
+      <ion-button expand="block" type="submit" class="register-button primary-button">
         Criar conta
       </ion-button>
 
-      <div class="login-link">
+      <div class="login-link auth-link">
         <span>Já tem conta?</span>
         <button type="button" routerLink="/login">Entrar</button>
       </div>

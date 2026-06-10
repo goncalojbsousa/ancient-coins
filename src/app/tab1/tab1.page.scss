@@ -1,13 +1,9 @@
-.home-content {
-  --background: #fafaf9;
-}
-
 .greeting {
   margin: 16px 16px 0;
   padding: 20px;
   background: #fff;
-  border: 1px solid #eadfd2;
-  border-left: 3px solid #f57b25;
+  border: 1px solid var(--ac-border);
+  border-left: 3px solid var(--ac-accent);
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(17, 17, 17, .07);
 }
@@ -19,20 +15,15 @@
   font-weight: 700;
 }
 
+.greeting_name {
+  color: var(--ac-accent);
+}
+
 .greeting_sub {
   margin: 0;
   color: #666;
   font-size: .88rem;
   line-height: 1.45;
-}
-
-.section-label {
-  margin: 0;
-  color: #f57b25;
-  font-size: .75rem;
-  font-weight: 700;
-  letter-spacing: .07em;
-  text-transform: uppercase;
 }
 
 .section-sub {
@@ -57,7 +48,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px 14px;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 2px 12px rgba(17, 17, 17, .06);
@@ -110,7 +101,7 @@
   background: #fff3e8;
 
   ion-icon {
-    color: #f57b25;
+    color: var(--ac-accent);
   }
 }
 
@@ -126,7 +117,7 @@
   background: #fff0e6;
 
   ion-icon {
-    color: #c65f1a;
+    color: var(--ac-accent-dark);
   }
 }
 
@@ -153,7 +144,7 @@
 
 .highlight-card {
   margin: 0;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(17, 17, 17, .06);
   --background: #fff;
@@ -170,7 +161,7 @@
 
   ion-icon {
     font-size: 3.5rem;
-    color: #f57b25;
+    color: var(--ac-accent);
   }
 
   img {
@@ -227,7 +218,7 @@
 
 .market-pill--sale {
   background: #fff3e8;
-  color: #c65f1a;
+  color: var(--ac-accent-dark);
 }
 
 .market-pill--trade {

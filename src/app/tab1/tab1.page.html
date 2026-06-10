@@ -1,12 +1,12 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="home-toolbar">
+  <ion-toolbar class="home-toolbar app-toolbar">
     <ion-title>Início</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="home-content">
+<ion-content [fullscreen]="true" class="home-content app-content">
   <div class="greeting">
-    <p class="greeting_title">Bem-vindo, <span style="color:#f57b25">{{ userName }}</span> 👋</p>
+    <p class="greeting_title">Bem-vindo, <span class="greeting_name">{{ userName }}</span> 👋</p>
     <p class="greeting_sub">Organize a sua coleção e explore o mercado de moedas antigas</p>
   </div>
   <div class="quick-actions-section">

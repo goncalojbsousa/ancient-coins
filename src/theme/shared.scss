@@ -1,0 +1,441 @@
+.app-toolbar {
+  --background: var(--ac-bg);
+  --border-color: transparent;
+  --color: var(--ac-text);
+}
+
+.app-content {
+  --background: var(--ac-bg);
+}
+
+.page-shell {
+  width: 100%;
+  padding: 16px 16px 110px;
+}
+
+.section-label {
+  margin: 0;
+  color: var(--ac-accent);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.summary-card {
+  padding: 18px 20px;
+  border: 1px solid var(--ac-border);
+  border-left: 3px solid var(--ac-accent);
+  border-radius: 16px;
+  background: var(--ac-surface);
+  box-shadow: var(--ac-shadow-md);
+}
+
+.surface-card {
+  border: 1px solid var(--ac-border);
+  border-radius: 16px;
+  background: var(--ac-surface);
+  box-shadow: var(--ac-shadow-md);
+}
+
+.summary-card_sub {
+  margin: 4px 0 0;
+  color: var(--ac-text-muted);
+  font-size: .86rem;
+}
+
+.app-searchbar {
+  padding: 0;
+  --background: var(--ac-surface);
+  --border-radius: 12px;
+  --box-shadow: var(--ac-shadow-sm);
+  --color: var(--ac-text);
+  --icon-color: var(--ac-text-faint);
+  --placeholder-color: var(--ac-text-faint);
+  border: 1px solid var(--ac-border);
+  border-radius: 12px;
+}
+
+.coin-list {
+  display: grid;
+  gap: 12px;
+}
+
+.coin-card {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--ac-border);
+  border-radius: 16px;
+  --background: var(--ac-surface);
+  box-shadow: var(--ac-shadow-sm);
+}
+
+.coin-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--ac-media-bg);
+}
+
+.coin-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coin-image ion-icon {
+  color: var(--ac-accent);
+  font-size: 3rem;
+}
+
+.coin-body {
+  padding: 14px 16px 16px !important;
+}
+
+.coin-body_header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.coin-body_meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.coin-body_meta h3 {
+  margin: 0 0 3px;
+  color: var(--ac-text);
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.coin-body_meta p {
+  margin: 0;
+  color: var(--ac-text-soft);
+  font-size: .8rem;
+}
+
+.coin-price {
+  flex-shrink: 0;
+  color: var(--ac-accent);
+  font-size: .95rem;
+  font-weight: 700;
+}
+
+.coin-body_tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.coin-body_tags span,
+.pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ac-accent-soft);
+  color: var(--ac-accent-dark);
+  font-size: .72rem;
+  font-weight: 600;
+}
+
+.tag--listing {
+  font-weight: 700 !important;
+}
+
+.tag--sale {
+  background: var(--ac-success-soft) !important;
+  color: var(--ac-success) !important;
+}
+
+.tag--trade {
+  background: #e3f2fd !important;
+  color: #1565c0 !important;
+}
+
+.tag--both {
+  background: #f3e5f5 !important;
+  color: #6a1b9a !important;
+}
+
+.tag--unlisted {
+  background: #f5f5f5 !important;
+  color: #999 !important;
+}
+
+.empty-state {
+  padding: 32px 20px;
+  border: 1px solid var(--ac-border);
+  border-radius: 16px;
+  background: var(--ac-surface);
+  text-align: center;
+}
+
+.empty-state ion-icon {
+  color: var(--ac-accent);
+  font-size: 2.8rem;
+}
+
+.empty-state h3 {
+  margin: 8px 0 4px;
+  color: var(--ac-text);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--ac-text-muted);
+  font-size: .86rem;
+  line-height: 1.45;
+}
+
+.detail-toolbar {
+  --background: var(--ac-surface);
+  --border-color: var(--ac-border);
+  --color: var(--ac-text);
+}
+
+.detail-content {
+  --background: var(--ac-bg);
+  --padding-bottom: 40px;
+}
+
+.detail-hero {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  background: var(--ac-media-bg);
+}
+
+.detail-hero_img,
+.detail-hero_placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.detail-hero_img {
+  display: block;
+  object-fit: cover;
+}
+
+.detail-hero_placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-hero_placeholder ion-icon {
+  color: var(--ac-accent);
+  font-size: 4rem;
+}
+
+.detail-title-row {
+  padding: 14px 20px 4px;
+}
+
+.detail-title {
+  margin: 0;
+  color: var(--ac-text);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.detail-card {
+  margin: 10px 16px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--ac-border);
+  border-left: 3px solid var(--ac-accent);
+  border-radius: 16px;
+  background: var(--ac-surface);
+  box-shadow: var(--ac-shadow-sm);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.detail-item,
+.detail-card .info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.detail-item--full,
+.detail-card .info-item--full {
+  grid-column: 1 / -1;
+}
+
+.detail-item_label,
+.detail-card .info-item_label {
+  color: var(--ac-text-faint);
+  font-size: .68rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.detail-item_value,
+.detail-card .info-item_value {
+  color: var(--ac-text);
+  font-size: .86rem;
+  font-weight: 600;
+}
+
+.detail-badge,
+.detail-card .condition-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--ac-accent-soft);
+  color: var(--ac-accent-dark);
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+.detail-price,
+.detail-card .price-value {
+  color: var(--ac-accent);
+  font-size: .92rem;
+  font-weight: 700;
+}
+
+.detail-divider {
+  margin: 12px 0 10px;
+  border: 0;
+  border-top: 1px solid var(--ac-divider);
+}
+
+.detail-description {
+  margin: 0;
+  color: #555;
+  font-size: .84rem;
+  line-height: 1.5;
+}
+
+.modal-form {
+  display: grid;
+  gap: 14px;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 18px 18px 28px;
+}
+
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  width: min(100%, 420px);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 34px 22px;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-brand img {
+  display: block;
+  width: min(210px, 72%);
+  height: auto;
+}
+
+.auth-card {
+  display: grid;
+  gap: var(--auth-card-gap, 18px);
+  padding: 26px 20px 22px;
+  border: 1px solid var(--ac-border);
+  border-radius: 16px;
+  background: var(--ac-surface);
+  box-shadow: 0 16px 34px rgba(17, 17, 17, .08);
+}
+
+.auth-card .form-header h1 {
+  margin: 0;
+  color: var(--ac-text);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.auth-card .form-header p {
+  margin: 8px 0 0;
+  color: var(--ac-text-muted);
+  font-size: .9rem;
+  line-height: 1.45;
+}
+
+.form-field {
+  display: grid;
+  gap: 7px;
+}
+
+.form-field ion-input,
+.form-field ion-select,
+.form-field ion-textarea {
+  --background: var(--ac-field-bg);
+  --border-radius: 10px;
+  --color: var(--ac-text);
+  --highlight-color-focused: var(--ac-accent);
+  --padding-end: 14px;
+  --padding-start: 14px;
+  min-height: 58px;
+  color: var(--ac-text);
+  font-size: .9rem;
+}
+
+.validation-message {
+  padding-left: 2px;
+  color: var(--ac-accent-dark);
+  line-height: 1.3;
+}
+
+.primary-button {
+  --background: var(--ac-accent);
+  --background-activated: var(--ac-accent-dark);
+  --background-hover: #dc6a18;
+  --border-radius: 10px;
+  --box-shadow: none;
+  height: 46px;
+  margin: 2px 0 0;
+  font-size: .9rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.auth-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-top: 17px;
+  border-top: 1px solid var(--ac-border);
+  color: var(--ac-text-muted);
+  font-size: .82rem;
+}
+
+.auth-link button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #8f3f12;
+  font: inherit;
+  font-weight: 700;
+}
+
+@media (min-width: 700px) {
+  .auth-page {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+}
