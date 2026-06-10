@@ -1,12 +1,12 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 import { Coin } from '../models/coin.model';
 import { User } from '../models/user.model';
 import { AuthService } from '../services/auth.service';
 import { MarketService } from '../services/market.service';
-import { MessagesService } from '../services/messages.service';
 import { UsersService } from '../services/users.service';
+import { MarketDetailModalComponent } from './market-detail-modal/market-detail-modal.component';
 
 @Component({
   selector: 'app-tab3',
@@ -15,12 +15,6 @@ import { UsersService } from '../services/users.service';
   styleUrls: ['tab3.page.scss'],
 })
 export class Tab3Page implements OnInit {
-  private authService = inject(AuthService);
-  private marketService = inject(MarketService);
-  private messagesService = inject(MessagesService);
-  private router = inject(Router);
-  private usersService = inject(UsersService);
-
   filtroAtual = 'Todas';
   pesquisa = '';
   ordenacao = 'recentes';
@@ -29,16 +23,24 @@ export class Tab3Page implements OnInit {
   erro = '';
 
   moedas: Coin[] = [];
-  moedaSelecionada: Coin | null = null;
-
   vendedores = new Map<number, User>();
+  currentUserId: number | null = null;
+
+  constructor(
+    private authService: AuthService,
+    private marketService: MarketService,
+    private modalController: ModalController,
+    private usersService: UsersService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     await this.carregarMercado();
+    await this.abrirMoedaDaPaginaInicial();
   }
 
   async ionViewWillEnter(): Promise<void> {
     await this.carregarMercado();
+    await this.abrirMoedaDaPaginaInicial();
   }
 
   async carregarMercado(): Promise<void> {
@@ -46,21 +48,23 @@ export class Tab3Page implements OnInit {
       this.loading = true;
       this.erro = '';
 
+      await this.authService.init();
+      const currentUser = await this.authService.getCurrentUser();
+
       const [moedas, utilizadores] = await Promise.all([
         this.marketService.getMarketCoins(),
-        this.usersService.getUsers()
+        this.usersService.getUsers(),
       ]);
 
+      this.currentUserId = currentUser?.id ?? null;
       this.moedas = this.marketService.sortByNewest(moedas);
 
       this.vendedores.clear();
       utilizadores.forEach(user => {
         this.vendedores.set(user.id, user);
       });
-
-    } catch (error) {
-      console.error('Erro ao carregar mercado:', error);
-      this.erro = 'Não foi possível carregar as moedas do mercado.';
+    } catch {
+      this.erro = 'Nao foi possivel carregar as moedas do mercado.';
     } finally {
       this.loading = false;
     }
@@ -104,62 +108,44 @@ export class Tab3Page implements OnInit {
     this.ordenacao = this.ordenacao === 'recentes' ? 'preco' : 'recentes';
   }
 
-  abrirDetalhe(moeda: Coin): void {
-    this.moedaSelecionada = moeda;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  async abrirDetalhe(moeda: Coin): Promise<void> {
+    const modal = await this.modalController.create({
+      component: MarketDetailModalComponent,
+      componentProps: {
+        coin: moeda,
+        seller: this.getVendedor(moeda.owner_id),
+        currentUserId: this.currentUserId,
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1,
+    });
+
+    await modal.present();
   }
 
-  voltarMercado(): void {
-    this.moedaSelecionada = null;
-  }
+  async abrirMoedaDaPaginaInicial(): Promise<void> {
+    const coinId = Number(localStorage.getItem('selectedMarketCoinId'));
 
-  async verPerfil(moeda: Coin): Promise<void> {
-    localStorage.setItem('selectedProfileUserId', String(moeda.owner_id));
-    await this.router.navigateByUrl('/tabs/tab5');
-  }
+    if (!coinId) {
+      return;
+    }
 
-  async iniciarNegociacao(moeda: Coin): Promise<void> {
-    try {
-      await this.authService.init();
+    localStorage.removeItem('selectedMarketCoinId');
 
-      const currentUser = await this.authService.getCurrentUser();
+    const moeda = this.moedas.find(moedaAtual => moedaAtual.id === coinId);
 
-      if (!currentUser) {
-        this.erro = 'Inicie sessão para iniciar uma negociação.';
-        await this.router.navigateByUrl('/login');
-        return;
-      }
-
-      if (currentUser.id === moeda.owner_id) {
-        this.erro = 'Não pode iniciar negociação com a sua própria moeda.';
-        return;
-      }
-
-      const textoInicial = `Olá! Tenho interesse na moeda "${moeda.name}". Ainda está disponível?`;
-
-      const conversation = await this.messagesService.startNegotiation(
-        moeda.id,
-        currentUser.id,
-        moeda.owner_id,
-        textoInicial
-      );
-
-      localStorage.setItem('selectedConversationId', String(conversation.id));
-      await this.router.navigateByUrl('/tabs/tab4');
-
-    } catch (error) {
-      console.error('Erro ao iniciar negociação:', error);
-      this.erro = 'Não foi possível iniciar a negociação.';
+    if (moeda) {
+      await this.abrirDetalhe(moeda);
     }
   }
 
   getFotoPrincipal(moeda: Coin): string {
-    return moeda.photos?.length ? moeda.photos[0] : 'assets/img/logo.png';
+    return moeda.photos?.length ? moeda.photos[0] : '';
   }
 
-  getPreco(moeda: Coin): string {
+  getPrecoFormatado(moeda: Coin): string {
     if (moeda.available_for_sale && moeda.price !== null && moeda.price !== undefined) {
-      return `€${moeda.price}`;
+      return `${moeda.price} ${String.fromCharCode(8364)}`;
     }
 
     return 'Para Troca';
@@ -187,13 +173,5 @@ export class Tab3Page implements OnInit {
 
   getRatingVendedor(moeda: Coin): number {
     return this.getVendedor(moeda.owner_id)?.rating ?? 0;
-  }
-
-  getTotalReviewsVendedor(moeda: Coin): number {
-    return this.getVendedor(moeda.owner_id)?.total_reviews ?? 0;
-  }
-
-  getInicialVendedor(moeda: Coin): string {
-    return this.getNomeVendedor(moeda).charAt(0).toUpperCase();
   }
 }

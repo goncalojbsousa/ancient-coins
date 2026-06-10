@@ -1,47 +1,5 @@
-.market-toolbar {
-  --background: #fafaf9;
-  --border-color: transparent;
-  --color: #111;
-}
-
-.market-content {
-  --background: #fafaf9;
-}
-
-.market-page,
-.detail-page {
-  width: 100%;
-  padding: 16px;
-  padding-bottom: 110px;
-}
-
-.section-label {
-  margin: 0;
-  color: #f57b25;
-  font-size: .75rem;
-  font-weight: 700;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-}
-
-.summary-card,
-.modal-card {
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-left: 3px solid #f57b25;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(17,17,17,.07);
-}
-
 .summary-card {
-  padding: 18px 20px;
   margin-bottom: 14px;
-}
-
-.summary-card_sub {
-  margin: 4px 0 0;
-  color: #666;
-  font-size: .86rem;
 }
 
 .controls {
@@ -50,159 +8,67 @@
   margin-bottom: 12px;
 }
 
-ion-searchbar {
-  padding: 0;
-  --background: #fff;
-  --border-radius: 12px;
-  --box-shadow: 0 2px 12px rgba(17,17,17,.06);
-  --color: #111;
-  --icon-color: #aaa;
-  --placeholder-color: #aaa;
-  border: 1px solid #eadfd2;
-  border-radius: 12px;
-}
-
 .sort-button {
   height: 40px;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 12px;
   background: #fff;
-  color: #666;
+  color: var(--ac-text-muted);
   font-size: .82rem;
   font-weight: 600;
 }
 
 .filters {
   display: flex;
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-radius: 999px;
-  padding: 5px;
   gap: 6px;
   margin-bottom: 14px;
+  padding: 5px;
+  border: 1px solid var(--ac-border);
+  border-radius: 999px;
+  background: #fff;
 }
 
 .filters button {
   flex: 1;
-  border: none;
-  background: transparent;
-  border-radius: 999px;
   padding: 9px 12px;
-  color: #666;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ac-text-muted);
   font-size: .78rem;
   font-weight: 700;
 }
 
 .filters button.active {
-  background: #fff3e8;
-  color: #c65f1a;
+  background: var(--ac-accent-soft);
+  color: var(--ac-accent-dark);
 }
 
 .market-count {
   margin: 0 0 14px;
-  color: #888;
+  color: var(--ac-text-soft);
   font-size: .86rem;
 }
 
 .coin-list {
-  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
 }
 
 .coin-card {
-  margin: 0;
-  border: 1px solid #eadfd2;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(17,17,17,.06);
-  --background: #fff;
-  overflow: hidden;
   cursor: pointer;
 }
 
 .coin-image {
   height: 230px;
-  background: linear-gradient(160deg, #1a0e05 0%, #111 100%);
-  overflow: hidden;
-}
-
-.coin-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.coin-image ion-icon {
-  font-size: 3rem;
-  color: #f57b25;
-}
-
-.coin-body {
-  padding: 14px 16px 16px !important;
-}
-
-.coin-body_header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.coin-body_meta h3 {
-  margin: 0 0 3px;
-  color: #111;
-  font-size: .95rem;
-  font-weight: 700;
-}
-
-.coin-body_meta p {
-  margin: 0;
-  color: #888;
-  font-size: .8rem;
-}
-
-.coin-price {
-  color: #f57b25;
-  font-size: .95rem;
-  font-weight: 700;
-}
-
-.coin-body_tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.coin-body_tags span {
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: #fff3e8;
-  color: #c65f1a;
-  font-size: .72rem;
-  font-weight: 600;
-}
-
-.tag--sale {
-  background: #e8f5e9 !important;
-  color: #2e7d32 !important;
-}
-
-.tag--trade {
-  background: #e3f2fd !important;
-  color: #1565c0 !important;
-}
-
-.tag--both {
-  background: #f3e5f5 !important;
-  color: #6a1b9a !important;
 }
 
 .seller-row {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid #f0ebe3;
   display: flex;
   justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ac-divider);
   color: #777;
   font-size: .78rem;
 }
@@ -213,227 +79,10 @@ ion-searchbar {
 
 .empty-state {
   margin-top: 20px;
-  padding: 32px 20px;
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-radius: 16px;
-  text-align: center;
-}
-
-.empty-state ion-icon {
-  font-size: 2.8rem;
-  color: #f57b25;
-}
-
-.empty-state h3 {
-  margin: 8px 0 4px;
-  color: #111;
-}
-
-.empty-state p {
-  margin: 0;
-  color: #666;
-}
-
-/* DETALHE */
-
-.back-button {
-  margin-bottom: 14px;
-  border: 1px solid #eadfd2;
-  background: #fff;
-  color: #666;
-  border-radius: 10px;
-  padding: 9px 14px;
-  font-weight: 600;
-}
-
-.hero {
-  height: 420px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: linear-gradient(160deg, #1a0e05 0%, #111 100%);
-}
-
-.hero_img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero_placeholder {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero_placeholder ion-icon {
-  font-size: 4rem;
-  color: #f57b25;
-}
-
-.title-row {
-  padding: 16px 4px 6px;
-}
-
-.coin-title {
-  margin: 4px 0 0;
-  color: #111;
-  font-size: 1.35rem;
-}
-
-.detail-price {
-  margin: 6px 0 0;
-  color: #f57b25;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.modal-card {
-  margin-top: 12px;
-  padding: 16px;
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.info-item--full {
-  grid-column: 1 / -1;
-}
-
-.info-item_label {
-  color: #aaa;
-  font-size: .68rem;
-  text-transform: uppercase;
-}
-
-.info-item_value {
-  color: #111;
-  font-size: .86rem;
-  font-weight: 600;
-}
-
-.condition-badge {
-  padding: 2px 9px;
-  border-radius: 999px;
-  background: #fff3e8;
-  color: #c65f1a;
-  font-size: .74rem;
-  font-weight: 700;
-}
-
-.price-value {
-  color: #f57b25;
-}
-
-.description-divider {
-  margin: 12px 0 10px;
-  border-top: 1px solid #f0ebe3;
-}
-
-.modal-description {
-  margin: 0;
-  color: #555;
-  font-size: .84rem;
-  line-height: 1.5;
-}
-
-.seller-content {
-  margin-top: 12px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.seller-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #fff3e8;
-  color: #c65f1a;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.seller-data {
-  flex: 1;
-}
-
-.seller-data strong {
-  display: block;
-  color: #111;
-}
-
-.seller-data span {
-  color: #888;
-  font-size: .76rem;
-}
-
-.profile-button {
-  border: 1px solid #eadfd2;
-  background: #fff;
-  border-radius: 10px;
-  padding: 9px 12px;
-  color: #666;
-  font-weight: 600;
-}
-
-.action-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.btn-primary {
-  flex: 1;
-  height: 42px;
-  border: none;
-  border-radius: 10px;
-  background: #f57b25;
-  color: #fff;
-  font-weight: 700;
-}
-
-.btn-secondary {
-  width: 48px;
-  border: 1px solid #eadfd2;
-  border-radius: 10px;
-  background: #fff;
 }
 
 @media (max-width: 800px) {
   .coin-list {
     grid-template-columns: 1fr;
-  }
-
-  .hero {
-    height: 300px;
-  }
-
-  .btn-secondary-profile {
-  flex: 1;
-  height: 42px;
-  border: 1px solid #eadfd2;
-  border-radius: 10px;
-  background: #fff;
-  color: #666;
-  font-size: .84rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
   }
 }

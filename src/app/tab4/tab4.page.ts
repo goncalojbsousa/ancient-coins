@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IonContent, ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 
@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
 import { ChatStorageService } from '../services/chat-storage.service';
 import { CoinsService } from '../services/coins.service';
 import { MessagesService } from '../services/messages.service';
+import { ReviewsService } from '../services/reviews.service';
 import { UsersService } from '../services/users.service';
 
 @Component({
@@ -22,126 +23,142 @@ import { UsersService } from '../services/users.service';
 export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
   @ViewChild(IonContent) content?: IonContent;
 
-  private activatedRoute = inject(ActivatedRoute);
-  private authService = inject(AuthService);
-  private chatStorageService = inject(ChatStorageService);
-  private coinsService = inject(CoinsService);
-  private messagesService = inject(MessagesService);
-  private router = inject(Router);
-  private usersService = inject(UsersService);
-
   conversations: Conversation[] = [];
   coins: Coin[] = [];
   reviews: Review[] = [];
   users: User[] = [];
+
   currentUser?: User;
   selectedConversation?: Conversation;
+
   searchTerm = '';
   newMessage = '';
   errorMessage = '';
   isLoading = false;
+
   showReviewForm = false;
   reviewStars = 5;
   reviewComment = '';
+
+
+  // Guarda o id da ultima mensagem lida em cada conversa. { 2: 10 } significa que, na conversa 2, a mensagem 10 ja foi lida.
   private readMessageIds: Record<number, number> = {};
+
+
+  // Guarda o temporizador que atualiza as conversas de tres em tres segundos.
   private refreshTimer?: ReturnType<typeof setInterval>;
 
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
+    private chatStorageService: ChatStorageService,
+    private coinsService: CoinsService,
+    private messagesService: MessagesService,
+    private reviewsService: ReviewsService,
+    private router: Router,
+    private usersService: UsersService
+  ) { }
+
+
   async ionViewWillEnter(): Promise<void> {
-    await this.loadConversations();
-    await this.openConversationFromMarket();
+    await this.loadPage();
     this.startAutoRefresh();
   }
+
 
   ionViewWillLeave(): void {
     this.stopAutoRefresh();
   }
 
+
   ngOnDestroy(): void {
     this.stopAutoRefresh();
   }
 
-  async loadConversations(showLoading = true): Promise<void> {
-    if (showLoading) {
-      this.isLoading = true;
-    }
 
+  // Carrega os dados gerais apenas quando o utilizador entra na pagina.
+  async loadPage(): Promise<void> {
+    this.isLoading = true;
     this.errorMessage = '';
-    const selectedConversationId = this.selectedConversation?.id;
-    const selectedMessageCount = this.selectedConversation?.messages.length ?? 0;
 
     try {
       await this.authService.init();
       this.currentUser = await this.authService.getCurrentUser();
 
+      // Limpa as conversas se nao existe um utilizador autenticado.
       if (!this.currentUser) {
         this.conversations = [];
         return;
       }
 
-      this.conversations = await this.messagesService.getConversationsByUser(this.currentUser.id);
-      await this.loadReadMessageIds();
-      this.reviews = await this.loadUserReviews(this.currentUser.id);
+      // Carregar dados dos services
+      this.coins = await this.coinsService.getCoins();
+      this.reviews = await this.reviewsService.getReviewsByReviewer(this.currentUser.id);
       this.users = await this.usersService.getUsers();
-      await this.loadConversationCoins();
-      await this.selectConversationFromRoute();
+      this.readMessageIds = await this.chatStorageService.getReadMessageIds(this.currentUser.id);
 
-      if (selectedConversationId) {
-        const updatedConversation = this.conversations.find(
-          conversation => conversation.id === selectedConversationId
-        );
+      const conversationId = Number(
+        this.activatedRoute.snapshot.queryParamMap.get('conversationId')
+      );
 
-        this.selectedConversation = updatedConversation;
+      await this.loadConversations(conversationId);
 
-        if (updatedConversation && updatedConversation.messages.length !== selectedMessageCount) {
-          await this.markConversationAsRead(updatedConversation);
-          setTimeout(() => this.content?.scrollToBottom(250), 100);
-        }
-      }
     } catch (error) {
       console.error(error);
       this.errorMessage = 'Não foi possível carregar as mensagens.';
     } finally {
-      if (showLoading) {
-        this.isLoading = false;
-      }
+      this.isLoading = false;
     }
   }
 
-  async openConversationFromMarket(): Promise<void> {
-    const storedConversationId = localStorage.getItem('selectedConversationId');
 
-    if (!storedConversationId) {
+  // Carrega as conversas do utilizador.
+  async loadConversations(conversationId?: number): Promise<void> {
+    if (!this.currentUser) {
       return;
     }
 
-    localStorage.removeItem('selectedConversationId');
+    // Guarda a conversa que estava aberta quando o pedido comecou.
+    const previousConversation = this.selectedConversation;
+    // Contas as mensagens antes de carregar novas.
+    const previousMessageCount = previousConversation?.messages.length;
 
-    const conversationId = Number(storedConversationId);
+    this.conversations = await this.messagesService.getConversationsByUser(this.currentUser.id);
 
-    if (!Number.isFinite(conversationId)) {
+    // Se o utilizador abriu ou fechou uma conversa durante o pedido, nao altera essa escolha.
+    if (previousConversation !== this.selectedConversation) {
       return;
     }
 
-    let conversation = this.conversations.find(item => item.id === conversationId);
+    // O id da rota so e recebido no primeiro carregamento.
+    conversationId = conversationId || previousConversation?.id;
 
-    if (!conversation) {
-      conversation = await this.messagesService.getConversationById(conversationId);
-
-      if (conversation) {
-        this.conversations = [conversation, ...this.conversations];
-        await this.loadConversationCoins();
-      }
+    if (!conversationId) {
+      return;
     }
 
-    if (conversation) {
-      await this.selectConversation(conversation);
+    this.selectedConversation = this.conversations.find(
+      conversation => conversation.id === conversationId
+    );
+
+    if (!this.selectedConversation) {
+      return;
+    }
+
+    await this.markConversationAsRead(this.selectedConversation);
+
+    // roda para o fim se existirem mensagens novas
+    if (this.selectedConversation.messages.length !== previousMessageCount) {
+      this.scrollToLastMessage();
     }
   }
+
 
   get filteredConversations(): Conversation[] {
-    const normalizedSearchTerm = this.searchTerm.trim().toLowerCase();
+    const search = this.searchTerm.trim().toLowerCase();
 
-    if (!normalizedSearchTerm) {
+    if (!search) {
       return this.conversations;
     }
 
@@ -151,48 +168,32 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       const lastMessage = this.getLastMessage(conversation);
 
       return (
-        user?.name.toLowerCase().includes(normalizedSearchTerm) ||
-        coin?.name.toLowerCase().includes(normalizedSearchTerm) ||
-        lastMessage?.text.toLowerCase().includes(normalizedSearchTerm)
+        user?.name.toLowerCase().includes(search) ||
+        coin?.name.toLowerCase().includes(search) ||
+        lastMessage?.text.toLowerCase().includes(search)
       );
     });
   }
 
+
   async selectConversation(conversation: Conversation): Promise<void> {
-    await this.router.navigate(['/tabs/tab4'], {
-      queryParams: { conversationId: conversation.id },
-    });
     this.selectedConversation = conversation;
-    this.showReviewForm = false;
-    this.reviewComment = '';
+
+    // navega para a conversa
+    await this.router.navigate(['/tabs/tab4'], {
+      queryParams: { conversationId: conversation.id }
+    });
+
     await this.markConversationAsRead(conversation);
-    setTimeout(() => this.content?.scrollToBottom(250), 100);
+    this.scrollToLastMessage();
   }
 
   async closeConversation(): Promise<void> {
-    await this.router.navigate(['/tabs/tab4'], {
-      queryParams: {},
-    });
     this.selectedConversation = undefined;
-    this.closeReviewForm();
     this.newMessage = '';
-  }
 
-  openReviewForm(): void {
-    if (!this.selectedConversation) {
-      return;
-    }
-
-    const review = this.getReviewForConversation(this.selectedConversation);
-    this.reviewStars = review?.stars ?? 5;
-    this.reviewComment = review?.comment ?? '';
-    this.showReviewForm = true;
-    this.stopAutoRefresh();
-  }
-
-  closeReviewForm(): void {
-    this.showReviewForm = false;
-    this.startAutoRefresh();
+    // Volta para a tab de mensagens
+    await this.router.navigate(['/tabs/tab4']);
   }
 
   async sendMessage(): Promise<void> {
@@ -202,28 +203,34 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       return;
     }
 
-    const conversationId = this.selectedConversation.id;
+    await this.messagesService.insertMessage(
+      this.selectedConversation.id,
+      this.currentUser.id,
+      text
+    );
 
-    await this.messagesService.insertMessage(conversationId, this.currentUser.id, text);
     this.newMessage = '';
-    await this.loadConversations(false);
+    await this.loadConversations();
+  }
 
-    const updatedConversation = await this.messagesService.getConversationById(conversationId);
-    this.selectedConversation = updatedConversation;
-
-    if (updatedConversation) {
-      await this.markConversationAsRead(updatedConversation);
+  // Abre o formulario
+  openReviewForm(): void {
+    if (!this.selectedConversation) {
+      return;
     }
 
-    setTimeout(() => this.content?.scrollToBottom(250), 100);
+    const review = this.getConversationReview(this.selectedConversation);
+    this.reviewStars = review?.stars ?? 5;
+    this.reviewComment = review?.comment ?? '';
+    this.showReviewForm = true;
+  }
+
+  closeReviewForm(): void {
+    this.showReviewForm = false;
   }
 
   async submitReview(): Promise<void> {
-    if (
-      !this.currentUser ||
-      !this.selectedConversation ||
-      !this.reviewComment.trim()
-    ) {
+    if (!this.currentUser || !this.selectedConversation || !this.reviewComment.trim()) {
       return;
     }
 
@@ -233,25 +240,27 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       return;
     }
 
-    const conversationId = this.selectedConversation.id;
-    const reviewerId = this.currentUser.id;
-    const reviewedUserId = otherUser.id;
-    const stars = this.reviewStars;
+    const review = this.getConversationReview(this.selectedConversation);
     const comment = this.reviewComment.trim();
 
+    if (review) {
+      review.stars = this.reviewStars;
+      review.comment = comment;
+      await this.reviewsService.updateReview(review);
+    } else {
+      await this.reviewsService.insertReview({
+        conversation_id: this.selectedConversation.id,
+        reviewer_id: this.currentUser.id,
+        reviewed_user_id: otherUser.id,
+        stars: this.reviewStars,
+        comment,
+        created_at: new Date().toISOString(),
+      });
+    }
+
     this.showReviewForm = false;
-
-    await this.messagesService.insertReview(
-      conversationId,
-      reviewerId,
-      reviewedUserId,
-      stars,
-      comment
-    );
-
     this.reviewComment = '';
-    await this.loadConversations(false);
-    this.startAutoRefresh();
+    this.reviews = await this.reviewsService.getReviewsByReviewer(this.currentUser.id);
   }
 
   getOtherUser(conversation: Conversation): User | undefined {
@@ -270,20 +279,6 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
     return conversation.messages[conversation.messages.length - 1];
   }
 
-  getConversationDate(conversation: Conversation): string {
-    return new Date(conversation.updated_at).toLocaleDateString('pt-PT', {
-      day: '2-digit',
-      month: '2-digit',
-    });
-  }
-
-  getMessageTime(message: Message): string {
-    return new Date(message.created_at).toLocaleTimeString('pt-PT', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  }
-
   getInitials(name?: string): string {
     if (!name) {
       return '?';
@@ -297,13 +292,10 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       .toUpperCase();
   }
 
-  hasUnreadMessage(conversation: Conversation): boolean {
-    return this.getUnreadMessageCount(conversation) > 0;
-  }
-
   getUnreadMessageCount(conversation: Conversation): number {
     const lastReadMessageId = this.readMessageIds[conversation.id] ?? 0;
 
+    // Conta todas as mensagens recebidas desde a ultima mensagem lida. 
     return conversation.messages.filter(message =>
       message.sender_id !== this.currentUser?.id &&
       message.id > lastReadMessageId
@@ -314,46 +306,11 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
     return message.sender_id === this.currentUser?.id;
   }
 
-  hasReviewedConversation(conversation: Conversation): boolean {
-    return this.getReviewForConversation(conversation) !== undefined;
-  }
-
-  getReviewForConversation(conversation: Conversation): Review | undefined {
+  getConversationReview(conversation: Conversation): Review | undefined {
     return this.reviews.find(review =>
-      review !== undefined &&
-      review !== null &&
       review.conversation_id === conversation.id &&
       review.reviewer_id === this.currentUser?.id
     );
-  }
-
-  private async loadConversationCoins(): Promise<void> {
-    const coinIds = [...new Set(this.conversations.map(conversation => conversation.coin_id))];
-
-    const coins = await Promise.all(
-      coinIds.map(coinId => this.coinsService.getCoinById(coinId))
-    );
-
-    this.coins = coins.filter((coin): coin is Coin => coin !== undefined);
-  }
-
-  private async loadUserReviews(userId: number): Promise<Review[]> {
-    const reviews = await Promise.all(
-      this.conversations.map(conversation =>
-        this.messagesService.getReviewByConversationAndReviewer(conversation.id, userId)
-      )
-    );
-
-    return reviews.filter((review): review is Review => review !== undefined && review !== null);
-  }
-
-  private async loadReadMessageIds(): Promise<void> {
-    if (!this.currentUser) {
-      this.readMessageIds = {};
-      return;
-    }
-
-    this.readMessageIds = await this.chatStorageService.getReadMessageIds(this.currentUser.id);
   }
 
   private async markConversationAsRead(conversation: Conversation): Promise<void> {
@@ -363,37 +320,23 @@ export class Tab4Page implements ViewWillEnter, ViewWillLeave, OnDestroy {
       return;
     }
 
-    this.readMessageIds = await this.chatStorageService.setLastReadMessageId(
-      this.currentUser.id,
-      conversation.id,
-      lastMessage.id
-    );
+    // O Ionic Storage guarda no dispositivo a ultima mensagem lida.
+    this.readMessageIds = await this.chatStorageService.setLastReadMessageId(this.currentUser.id, conversation.id, lastMessage.id);
   }
 
-  private async selectConversationFromRoute(): Promise<void> {
-    const conversationIdParam = this.activatedRoute.snapshot.queryParamMap.get('conversationId');
-
-    if (!conversationIdParam || this.selectedConversation) {
-      return;
-    }
-
-    const conversationId = Number(conversationIdParam);
-    const conversation = this.conversations.find(item => item.id === conversationId);
-
-    if (conversation) {
-      this.selectedConversation = conversation;
-      await this.markConversationAsRead(conversation);
-      setTimeout(() => this.content?.scrollToBottom(250), 100);
-    }
+  private scrollToLastMessage(): void {
+    this.content?.scrollToBottom(250)
   }
 
   private startAutoRefresh(): void {
     this.stopAutoRefresh();
 
-    this.refreshTimer = setInterval(async () => {
-      if (!this.isLoading) {
-        await this.loadConversations(false);
-      }
+    // Consulta novas mensagens de tres em tres segundos.
+    this.refreshTimer = setInterval(() => {
+      this.loadConversations().catch(error => {
+        console.error(error);
+        this.errorMessage = 'Não foi possível atualizar as mensagens.';
+      });
     }, 3000);
   }
 

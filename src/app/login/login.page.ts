@@ -1,6 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NonNullableFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 
 import { AuthService } from '../services/auth.service';
 
@@ -11,31 +11,34 @@ import { AuthService } from '../services/auth.service';
   standalone: false,
 })
 export class LoginPage implements OnInit {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private formBuilder = inject(NonNullableFormBuilder);
-
-  loginForm = this.formBuilder.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]],
-  });
-
+  loginForm: FormGroup;
   errorMessage = '';
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private formBuilder: NonNullableFormBuilder
+  ) {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+    });
+  }
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
 
     if (this.authService.isAuthenticated()) {
-      await this.router.navigateByUrl('/tabs/tab1');
+      await this.router.navigateByUrl('/tabs/tab1', { replaceUrl: true });
     }
   }
 
-  get email() {
-    return this.loginForm.controls.email;
+  get email(): AbstractControl {
+    return this.loginForm.controls['email'];
   }
 
-  get password() {
-    return this.loginForm.controls.password;
+  get password(): AbstractControl {
+    return this.loginForm.controls['password'];
   }
 
   async onSubmit(): Promise<void> {
@@ -50,7 +53,7 @@ export class LoginPage implements OnInit {
     const user = await this.authService.login(email, password);
 
     if (user) {
-      await this.router.navigateByUrl('/tabs/tab1');
+      await this.router.navigateByUrl('/tabs/tab1', { replaceUrl: true });
       return;
     }
 

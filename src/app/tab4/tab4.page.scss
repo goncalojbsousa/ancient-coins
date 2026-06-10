@@ -1,10 +1,8 @@
 .messages-toolbar {
-  --background: #fafaf9;
-  --border-color: #eadfd2;
+  --border-color: var(--ac-border);
 }
 
 .messages-content {
-  --background: #fafaf9;
   --padding-bottom: 24px;
 }
 
@@ -12,20 +10,9 @@
   padding: 16px 16px 0;
 }
 
-ion-searchbar {
-  padding: 0;
-  --background: #fff;
-  --border-radius: 12px;
-  --box-shadow: 0 2px 12px rgba(17, 17, 17, .06);
-  --color: #111;
-  --icon-color: #aaa;
-  --placeholder-color: #aaa;
-  border: 1px solid #eadfd2;
-  border-radius: 12px;
-}
-
 .conversation-list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   padding: 14px 16px 0;
 }
@@ -33,11 +20,15 @@ ion-searchbar {
 .conversation-card {
   position: relative;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 94px;
   display: flex;
   gap: 12px;
   padding: 16px 14px;
-  border: 1px solid #eadfd2;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid var(--ac-border);
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 2px 12px rgba(17, 17, 17, .05);
@@ -45,7 +36,7 @@ ion-searchbar {
 }
 
 .conversation-card--unread {
-  border-color: #f57b25;
+  border-color: var(--ac-accent);
 }
 
 .avatar {
@@ -64,9 +55,11 @@ ion-searchbar {
 .conversation-card_body {
   min-width: 0;
   flex: 1;
+  overflow: hidden;
 }
 
 .conversation-card_top {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -74,6 +67,7 @@ ion-searchbar {
 }
 
 .conversation-card_top h2 {
+  min-width: 0;
   margin: 0;
   color: #111;
   font-size: .94rem;
@@ -91,6 +85,7 @@ ion-searchbar {
 
 .coin-name,
 .last-message {
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -116,7 +111,7 @@ ion-searchbar {
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: #f57b25;
+  background: var(--ac-accent);
   color: #fff;
   display: grid;
   place-items: center;
@@ -126,29 +121,17 @@ ion-searchbar {
 
 .empty-state {
   margin: 24px 16px 0;
-  padding: 32px 20px;
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-radius: 16px;
-  text-align: center;
 }
 
 .empty-state ion-icon {
-  color: #f57b25;
+  font-size: inherit;
 }
 
 .empty-state h3 {
   margin: 0;
-  color: #111;
-  font-size: 1rem;
-  font-weight: 700;
 }
 
 .empty-state p {
-  margin: 0;
-  color: #666;
-  font-size: .86rem;
-  line-height: 1.45;
   max-width: 260px;
 }
 
@@ -156,11 +139,11 @@ ion-searchbar {
   --background: #fff;
   --background-hover: #fff7f0;
   --background-activated: #fff2e8;
-  --border-color: #eadfd2;
+  --border-color: var(--ac-border);
   --border-radius: 10px;
   --border-width: 1px;
   --box-shadow: none;
-  --color: #c65f1a;
+  --color: var(--ac-accent-dark);
   height: 34px;
   margin-right: 8px;
   font-size: .78rem;
@@ -177,7 +160,7 @@ ion-searchbar {
   margin: 0 16px 12px;
   padding: 14px;
   background: #fff;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 14px;
   display: flex;
   align-items: center;
@@ -193,7 +176,7 @@ ion-searchbar {
 
 .coin-summary p {
   margin: 5px 0 0;
-  color: #c65f1a;
+  color: var(--ac-accent-dark);
   font-size: .8rem;
   font-weight: 600;
 }
@@ -205,6 +188,9 @@ ion-searchbar {
   border-radius: 10px;
   overflow: hidden;
   background: #1a0e05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .coin-summary_image img {
@@ -214,7 +200,8 @@ ion-searchbar {
 }
 
 .coin-summary_image ion-icon {
-  color: #f57b25;
+  color: var(--ac-accent);
+  font-size: 2rem;
 }
 
 .message-list {
@@ -242,6 +229,8 @@ ion-searchbar {
 .message-bubble {
   max-width: 78%;
   padding: 12px 14px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   border-radius: 16px 16px 16px 4px;
   background: #fff;
   color: #111;
@@ -251,14 +240,14 @@ ion-searchbar {
 }
 
 .message-row--mine .message-bubble {
-  background: #f57b25;
+  background: var(--ac-accent);
   color: #fff;
   border-radius: 16px 16px 4px 16px;
 }
 
 .composer-footer ion-toolbar {
-  --background: #fafaf9;
-  --border-color: #eadfd2;
+  --background: var(--ac-bg);
+  --border-color: var(--ac-border);
 }
 
 .composer {
@@ -275,13 +264,13 @@ ion-searchbar {
   --background: #fff;
   --color: #111;
   --placeholder-color: #999;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 12px;
 }
 
 .send-button {
-  --background: #f57b25;
-  --background-activated: #c65f1a;
+  --background: var(--ac-accent);
+  --background-activated: var(--ac-accent-dark);
   --box-shadow: none;
   --border-radius: 12px;
   width: 42px;
@@ -294,14 +283,14 @@ ion-searchbar {
 }
 
 .review-modal-content {
-  --background: #fafaf9;
+  --background: var(--ac-bg);
 }
 
 .review-card {
   margin: 14px 16px 0;
   padding: 18px;
   background: #fff;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(17, 17, 17, .07);
 }
@@ -315,7 +304,7 @@ ion-searchbar {
 
 .review-card_label {
   margin: 0 0 4px;
-  color: #f57b25;
+  color: var(--ac-accent);
   font-size: .72rem;
   font-weight: 800;
   letter-spacing: .07em;
@@ -344,7 +333,7 @@ ion-searchbar {
 }
 
 .review-modal-stars ion-button {
-  --background: #fafaf9;
+  --background: var(--ac-bg);
   --border-radius: 12px;
   --color: #d6c5b3;
   width: 42px;
@@ -353,7 +342,7 @@ ion-searchbar {
 }
 
 .review-modal-stars .star-active {
-  --color: #f57b25;
+  --color: var(--ac-accent);
 }
 
 .review-modal-textarea {
@@ -364,7 +353,7 @@ ion-searchbar {
   --padding-end: 14px;
   --padding-top: 10px;
   --padding-bottom: 10px;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 12px;
   margin-bottom: 16px;
   font-size: .9rem;
@@ -372,8 +361,8 @@ ion-searchbar {
 }
 
 .submit-review-button {
-  --background: #f57b25;
-  --background-activated: #c65f1a;
+  --background: var(--ac-accent);
+  --background-activated: var(--ac-accent-dark);
   --border-radius: 12px;
   --box-shadow: none;
   height: 42px;

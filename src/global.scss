@@ -1,3 +1,5 @@
+@use "./theme/shared";
+
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -42,7 +44,7 @@ ion-app {
 }
 
 ion-content {
-	--background: #FAFAF9;
+	--background: var(--ac-bg);
 }
 
 .ancient-confirm-alert {
@@ -50,7 +52,7 @@ ion-content {
 }
 
 .ancient-confirm-alert .alert-wrapper {
-	border: 1px solid #eadfd2;
+	border: 1px solid var(--ac-border);
 	border-radius: 16px;
 	background: #ffffff;
 	box-shadow: 0 16px 34px rgba(17, 17, 17, .12);
@@ -81,14 +83,14 @@ ion-content {
 }
 
 .ancient-confirm-alert .confirm-delete-button {
-	color: #f57b25;
+	color: var(--ac-accent);
 	font-weight: 700;
 }
 
 .success-toast,
 .error-toast {
 	--background: #ffffff;
-	--border-color: #eadfd2;
+	--border-color: var(--ac-border);
 	--border-radius: 12px;
 	--border-style: solid;
 	--border-width: 1px;
@@ -101,5 +103,5 @@ ion-content {
 }
 
 .error-toast {
-	--color: #c65f1a;
+	--color: var(--ac-accent-dark);
 }

@@ -1,68 +1,69 @@
 <ion-header>
-  <ion-toolbar class="detail-coin-toolbar">
-    <ion-title>Detalhes da moeda</ion-title>
+  <ion-toolbar class="detail-coin-toolbar detail-toolbar">
+    <ion-title>Detalhes da Moeda</ion-title>
     <ion-buttons slot="end">
-      <ion-button fill="clear" (click)="dismiss()" aria-label="Fechar">
+      <ion-button fill="clear" (click)="closeModal()" aria-label="Fechar">
         <ion-icon slot="icon-only" name="close-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="modal-content">
-  <div class="hero">
+<ion-content class="modal-content detail-content">
+  <div class="hero detail-hero">
     @if (coin.photos && coin.photos.length > 0) {
-      <img class="hero_img" [src]="coin.photos[0]" [alt]="coin.name">
+    <img class="hero_img detail-hero_img" [src]="coin.photos[0]" [alt]="coin.name">
     } @else {
-      <div class="hero_placeholder">
-        <ion-icon name="cash-outline"></ion-icon>
-      </div>
+    <div class="hero_placeholder detail-hero_placeholder">
+      <ion-icon name="cash-outline"></ion-icon>
+    </div>
     }
   </div>
-  <div class="title-row">
-    <h1 class="coin-title">{{ coin.name }}</h1>
+  <div class="title-row detail-title-row">
+    <h1 class="coin-title detail-title">{{ coin.name }}</h1>
   </div>
-  <div class="modal-card">
-    <div class="info-grid">
-      <div class="info-item">
-        <span class="info-item_label">Origem</span>
-        <span class="info-item_value">{{ coin.origin }}</span>
+  <div class="modal-card detail-card">
+    <div class="info-grid detail-grid">
+      <div class="info-item detail-item">
+        <span class="info-item_label detail-item_label">Origem</span>
+        <span class="info-item_value detail-item_value">{{ coin.origin }}</span>
       </div>
-      <div class="info-item">
-        <span class="info-item_label">Ano</span>
-        <span class="info-item_value">{{ coin.year }}</span>
+      <div class="info-item detail-item">
+        <span class="info-item_label detail-item_label">Ano</span>
+        <span class="info-item_value detail-item_value">{{ coin.year }}</span>
       </div>
-      <div class="info-item">
-        <span class="info-item_label">Material</span>
-        <span class="info-item_value">{{ coin.material }}</span>
+      <div class="info-item detail-item">
+        <span class="info-item_label detail-item_label">Material</span>
+        <span class="info-item_value detail-item_value">{{ coin.material }}</span>
       </div>
-      <div class="info-item">
+      <div class="info-item detail-item">
         <span class="info-item_label">Condição</span>
-        <span class="info-item_value">
-          <span class="condition-badge">{{ coin.condition }}</span>
+        <span class="info-item_value detail-item_value">
+          <span class="condition-badge detail-badge">{{ coin.condition }}</span>
         </span>
       </div>
       @if (coin.available_for_sale && coin.price) {
-        <div class="info-item">
-          <span class="info-item_label">Preço</span>
-          <span class="info-item_value price-value">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
-        </div>
+      <div class="info-item detail-item">
+        <span class="info-item_label">Preço</span>
+        <span class="info-item_value price-value">{{ coin.price | number:'1.0-2' }} €</span>
+      </div>
       }
       @if (coin.available_for_trade && coin.trade_preference) {
-        <div class="info-item info-item--full">
-          <span class="info-item_label">Preferência de Troca</span>
-          <span class="info-item_value">{{ coin.trade_preference }}</span>
-        </div>
+      <div class="info-item info-item--full detail-item detail-item--full">
+        <span class="info-item_label">Preferência de Troca</span>
+        <span class="info-item_value detail-item_value">{{ coin.trade_preference }}</span>
+      </div>
       }
     </div>
 
     @if (coin.description) {
-      <div class="description-divider"></div>
-      <p class="section-label">Descrição</p>
-      <p class="modal-description">{{ coin.description }}</p>
+    <div class="description-divider detail-divider"></div>
+    <p class="section-label">Descrição</p>
+    <p class="modal-description detail-description">{{ coin.description }}</p>
     }
   </div>
-  <form class="modal-card manage-card market-form" [formGroup]="marketForm">
+  <form class="modal-card detail-card manage-card market-form" [formGroup]="marketplaceForm"
+    (ngSubmit)="saveMarketplaceSettings()">
     <p class="manage-hint">Esta é a sua moeda. Gira como ela aparece no marketplace.</p>
     <div class="toggle-row">
       <div class="toggle-row_info">
@@ -72,22 +73,17 @@
       <ion-toggle class="market-toggle" formControlName="availableForSale"></ion-toggle>
     </div>
 
-    @if (marketForm.controls.availableForSale.value) {
-      <div class="form-field market-field">
-        <ion-input
-          label="Preço"
-          label-placement="stacked"
-          type="number"
-          min="0"
-          placeholder="120"
-          formControlName="price">
-        </ion-input>
-        @if (priceIsRequired) {
-          <ion-text class="validation-message">
-            <small>Indique um preço superior a zero.</small>
-          </ion-text>
-        }
-      </div>
+    @if (availableForSale.value) {
+    <div class="form-field market-field">
+      <ion-input label="Preço *" label-placement="stacked" type="number" min="0" placeholder="120"
+        formControlName="price">
+      </ion-input>
+      @if (marketplaceForm.hasError('priceRequired') && (price.touched || availableForSale.touched)) {
+      <ion-text class="validation-message">
+        <small>Indique um preço superior a zero.</small>
+      </ion-text>
+      }
+    </div>
     }
 
     <div class="toggle-row">
@@ -98,25 +94,26 @@
       <ion-toggle class="market-toggle" formControlName="availableForTrade"></ion-toggle>
     </div>
 
-    @if (marketForm.controls.availableForTrade.value) {
-      <div class="form-field market-field">
-        <ion-input
-          label="Preferência de troca"
-          label-placement="stacked"
-          placeholder="Moedas romanas ou gregas"
-          formControlName="tradePreference">
-        </ion-input>
-        @if (tradePreferenceIsRequired) {
-          <ion-text class="validation-message">
-            <small>Indique a preferência de troca.</small>
-          </ion-text>
-        }
-      </div>
+    @if (availableForTrade.value) {
+    <div class="form-field market-field">
+      <ion-input label="Preferência de troca *" label-placement="stacked" placeholder="Moedas romanas ou gregas"
+        formControlName="tradePreference">
+      </ion-input>
+      @if (marketplaceForm.hasError('tradePreferenceRequired') && (tradePreference.touched ||
+      availableForTrade.touched)) {
+      <ion-text class="validation-message">
+        <small>Indique a preferência de troca.</small>
+      </ion-text>
+      }
+    </div>
     }
 
     <div class="action-row">
-      <button class="btn-edit" type="button" (click)="openEditCoinModal()">Editar</button>
-      <button class="btn-remove" type="button" (click)="confirmDeleteCoin()">Remover</button>
+      <button class="btn-save" type="submit" [disabled]="isSavingMarketplace">
+        {{ isSavingMarketplace ? 'A guardar...' : 'Guardar Moeda' }}
+      </button>
+      <button class="btn-edit" type="button" (click)="openCoinEditModal()">Editar</button>
+      <button class="btn-remove" type="button" (click)="confirmCoinDeletion()">Remover</button>
     </div>
   </form>
 

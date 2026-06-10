@@ -1,12 +1,12 @@
 <ion-header>
-  <ion-toolbar class="profile-toolbar">
+  <ion-toolbar class="profile-toolbar app-toolbar">
     <ion-title>{{ perfilPublico ? 'Perfil do Vendedor' : 'Perfil' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="profile-content">
+<ion-content class="profile-content app-content">
 
-  <div class="profile-page">
+  <div class="profile-page page-shell">
 
     <div class="empty-state" *ngIf="loading">
       <ion-icon name="person-circle-outline"></ion-icon>
@@ -16,7 +16,7 @@
 
     <div class="empty-state error-state" *ngIf="!loading && erro">
       <ion-icon name="alert-circle-outline"></ion-icon>
-      <h3>Erro ao carregar</h3>
+      <h3>Aviso</h3>
       <p>{{ erro }}</p>
     </div>
 
@@ -31,8 +31,8 @@
         Voltar ao meu perfil
       </button>
 
-      <section class="summary-card profile-summary">
-        <div class="avatar">
+      <section class="summary-card profile-summary-card">
+        <div class="profile-avatar">
           {{ getInicial() }}
         </div>
 
@@ -41,106 +41,127 @@
             {{ perfilPublico ? 'Vendedor' : 'Conta' }}
           </p>
 
-          <h1>{{ user.name }}</h1>
+          <h3>{{ user.name }}</h3>
           <p>{{ user.email }}</p>
 
           <div class="profile-tags">
-            <span>📍 {{ user.location }}</span>
-            <span>⭐ {{ user.rating }} / 5</span>
-            <span>{{ user.total_reviews }} avaliações</span>
+            <span>
+              <ion-icon name="location-outline"></ion-icon>
+              {{ user.location || 'Por definir' }}
+            </span>
+
+            <span>
+              <ion-icon name="star-outline"></ion-icon>
+              {{ user.rating }} / 5
+            </span>
+
+            <span>
+              <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+              {{ user.total_reviews }} avaliações
+            </span>
           </div>
         </div>
       </section>
 
-      <section class="stats-grid">
-
-        <div class="stat-card">
+      <section class="profile-stats">
+        <article class="stat-card surface-card">
           <p class="section-label">Coleção</p>
           <strong>{{ estatisticas.moedas }}</strong>
           <span>moedas registadas</span>
-        </div>
+        </article>
 
-        <div class="stat-card">
+        <article class="stat-card surface-card">
           <p class="section-label">Venda</p>
           <strong>{{ estatisticas.vendas }}</strong>
           <span>moedas publicadas</span>
-        </div>
+        </article>
 
-        <div class="stat-card">
+        <article class="stat-card surface-card">
           <p class="section-label">Troca</p>
           <strong>{{ estatisticas.trocas }}</strong>
           <span>moedas disponíveis</span>
-        </div>
-
+        </article>
       </section>
 
-      <section class="modal-card">
-        <div class="value-header">
-          <div>
-            <p class="section-label">Valor em Mercado</p>
-            <p class="modal-description">
-              Soma dos preços das moedas publicadas para venda.
-            </p>
-          </div>
-
-          <strong class="market-value">
-            €{{ estatisticas.valorTotal }}
-          </strong>
+      <section class="summary-card value-card">
+        <div>
+          <p class="section-label">Valor em Mercado</p>
+          <p class="summary-card_sub">
+            Soma dos preços das moedas publicadas para venda.
+          </p>
         </div>
+
+        <strong class="value-price">
+          {{ estatisticas.valorTotal }} €
+        </strong>
       </section>
 
-      <section class="modal-card">
-        <p class="section-label">Conquistas</p>
-
-        <div class="achievements-grid">
-
-          <div
-            class="achievement"
-            *ngFor="let conquista of conquistas">
-
-            <div class="achievement-icon">
-              {{ conquista.emoji }}
-            </div>
-
-            <div>
-              <h3>{{ conquista.titulo }}</h3>
-              <span>{{ conquista.descricao }}</span>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      <section class="modal-card">
+      <section class="summary-card reputation-card">
         <p class="section-label">Reputação</p>
 
-        <div class="review-card">
-          <div class="review-avatar">
-            {{ getInicial() }}
+        <div class="reputation-content">
+          <div class="reputation-icon">
+            <ion-icon name="star-outline"></ion-icon>
           </div>
 
-          <div class="review-info">
-            <h3>{{ user.name }}</h3>
-            <span>⭐ {{ user.rating }} / 5</span>
-            <p>
-              Taxa de satisfação estimada:
-              <strong>{{ estatisticas.satisfacao }}%</strong>
-            </p>
+          <div class="reputation-info">
+            <h3>{{ user.rating }} / 5</h3>
+            <p>Taxa de satisfação estimada: {{ estatisticas.satisfacao }}%</p>
+            <span>{{ user.total_reviews }} avaliações registadas</span>
           </div>
+        </div>
+      </section>
+
+      <section class="summary-card coins-card">
+        <p class="section-label">
+          {{ perfilPublico ? 'Moedas do vendedor' : 'As minhas moedas' }}
+        </p>
+
+        <div class="mini-coin-list" *ngIf="moedasDoUtilizador.length > 0">
+          <article
+            class="mini-coin"
+            *ngFor="let moeda of moedasDoUtilizador.slice(0, 3)">
+
+            <div class="mini-coin-image">
+              <img
+                *ngIf="moeda.photos.length > 0"
+                [src]="moeda.photos[0]"
+                [attr.alt]="moeda.name">
+
+              <ion-icon
+                *ngIf="moeda.photos.length === 0"
+                name="cash-outline">
+              </ion-icon>
+            </div>
+
+            <div class="mini-coin-info">
+              <h3>{{ moeda.name }}</h3>
+              <p>{{ moeda.origin }} • {{ moeda.year }}</p>
+              <span
+                class="mini-coin-badge"
+                *ngIf="moeda.available_for_sale || moeda.available_for_trade">
+                Mercado
+              </span>
+            </div>
+          </article>
+        </div>
+
+        <div class="mini-empty-state" *ngIf="moedasDoUtilizador.length === 0">
+          Nenhuma moeda registada.
         </div>
       </section>
 
       <section
-        class="modal-card settings-card"
+        class="summary-card session-card"
         *ngIf="!perfilPublico">
 
         <p class="section-label">Sessão</p>
 
         <button
-          class="setting-button danger"
+          class="logout-button"
           type="button"
           (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
           Terminar Sessão
         </button>
       </section>

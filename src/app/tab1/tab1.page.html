@@ -1,12 +1,12 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="home-toolbar">
+  <ion-toolbar class="home-toolbar app-toolbar">
     <ion-title>Início</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="home-content">
+<ion-content [fullscreen]="true" class="home-content app-content">
   <div class="greeting">
-    <p class="greeting_title">Bem-vindo, <span style="color:#f57b25">{{ userName }}</span> 👋</p>
+    <p class="greeting_title">Bem-vindo, <span class="greeting_name">{{ userName }}</span> 👋</p>
     <p class="greeting_sub">Organize a sua coleção e explore o mercado de moedas antigas</p>
   </div>
   <div class="quick-actions-section">
@@ -23,7 +23,7 @@
         </div>
       </button>
 
-      <button type="button" class="action-tile action-tile--collection" (click)="openCollectionPage()">
+      <button type="button" class="action-tile action-tile--collection" routerLink="/tabs/tab2">
         <div class="action-tile_icon">
           <ion-icon name="cube-outline"></ion-icon>
         </div>
@@ -63,7 +63,7 @@
 
     <div class="highlight-list">
       @for (coin of recentCoins; track coin.id) {
-      <ion-card class="highlight-card">
+      <ion-card class="highlight-card" (click)="openMarketCoin(coin)">
         <div class="highlight-visual">
           @if (coin.photos.length > 0) {
           <img [src]="coin.photos[0]" [alt]="coin.name">
@@ -79,7 +79,7 @@
           <div class="highlight-market">
             @if (coin.available_for_sale && coin.price) {
             <span class="market-pill market-pill--sale">
-              {{ coin.price | currency:'EUR':'symbol':'1.2-2' }}
+              {{ coin.price | number:'1.0-2' }} €
             </span>
             }
             @if (coin.available_for_trade) {

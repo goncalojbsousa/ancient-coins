@@ -1,139 +1,26 @@
 @use '../coin-form-modal';
 
-.detail-coin-toolbar {
-  --background: #fff;
-  --border-color: #eadfd2;
-  --color: #111;
-}
-
-.modal-content {
-  --background: #fafaf9;
-  --padding-bottom: 40px;
-}
-
 .section-label {
-  margin: 0 0 8px;
-  color: #f57b25;
+  margin-bottom: 8px;
   font-size: .7rem;
-  font-weight: 700;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-}
-
-.hero {
-  position: relative;
-  height: 280px;
-  overflow: hidden;
-  background: linear-gradient(160deg, #1a0e05 0%, #111 100%);
-
-  &_img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  &_placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    ion-icon { font-size: 4rem; color: #f57b25; }
-  }
-
-}
-
-.title-row {
-  padding: 14px 20px 4px;
-}
-
-.coin-title {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #111;
-  line-height: 1.25;
-}
-
-.modal-card {
-  margin: 10px 16px 0;
-  padding: 14px 16px;
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-left: 3px solid #f57b25;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(17,17,17,.06);
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-
-  &--full {
-    grid-column: 1 / -1;
-  }
-
-  &_label {
-    color: #aaa;
-    font-size: .68rem;
-    text-transform: uppercase;
-    letter-spacing: .05em;
-  }
-
-  &_value {
-    color: #111;
-    font-size: .86rem;
-    font-weight: 600;
-  }
-}
-
-.condition-badge {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 999px;
-  background: #fff3e8;
-  color: #c65f1a;
-  font-size: .74rem;
-  font-weight: 700;
 }
 
 .price-value {
-  color: #f57b25;
+  color: var(--ac-accent);
   font-size: .92rem;
   font-weight: 700;
-}
-
-.description-divider {
-  margin: 12px 0 10px;
-  border: none;
-  border-top: 1px solid #f0ebe3;
-}
-
-.modal-description {
-  margin: 0;
-  color: #555;
-  font-size: .84rem;
-  line-height: 1.5;
 }
 
 .manage-card {
   display: grid;
   gap: 12px;
-  border-left-color: #eadfd2;
   margin-bottom: 16px;
+  border-left-color: var(--ac-border);
 }
 
 .manage-hint {
   margin: 0 0 12px;
-  color: #888;
+  color: var(--ac-text-soft);
   font-size: .78rem;
   line-height: 1.45;
 }
@@ -144,23 +31,23 @@
   justify-content: space-between;
   gap: 12px;
   padding: 11px 0;
-  border-bottom: 1px solid #f0ebe3;
+  border-bottom: 1px solid var(--ac-divider);
 
   &_info {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: 2px;
-    flex: 1;
   }
 
   &_title {
-    color: #111;
+    color: var(--ac-text);
     font-size: .84rem;
     font-weight: 600;
   }
 
   &_sub {
-    color: #aaa;
+    color: var(--ac-text-faint);
     font-size: .74rem;
   }
 }
@@ -171,7 +58,7 @@
 
 .market-toggle {
   --track-background: #e0d8ce;
-  --track-background-checked: #f57b25;
+  --track-background-checked: var(--ac-accent);
   --handle-background: #fff;
   --handle-background-checked: #fff;
   flex-shrink: 0;
@@ -183,18 +70,27 @@
   padding-top: 2px;
 }
 
+.btn-save,
 .btn-edit,
 .btn-remove {
   flex: 1;
   height: 40px;
+  border: 1px solid var(--ac-border);
   border-radius: 10px;
-  border: 1px solid #eadfd2;
   font-size: .84rem;
   font-weight: 600;
   cursor: pointer;
   transition: opacity .15s ease;
 
-  &:active { opacity: .75; }
+  &:active {
+    opacity: .75;
+  }
+}
+
+.btn-save {
+  border-color: var(--ac-accent);
+  background: var(--ac-accent);
+  color: #fff;
 }
 
 .btn-edit {
@@ -203,7 +99,7 @@
 }
 
 .btn-remove {
+  border-color: var(--ac-danger-soft);
   background: #fff;
-  color: #d94040;
-  border-color: #f5d0d0;
+  color: var(--ac-danger);
 }

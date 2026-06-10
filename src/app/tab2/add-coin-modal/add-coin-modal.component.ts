@@ -1,16 +1,16 @@
-import { Component, inject } from '@angular/core';
-import { AbstractControl, NonNullableFormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import {
+  AbstractControl,
+  FormGroup,
+  NonNullableFormBuilder,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import { ModalController, ToastController } from '@ionic/angular';
 
 import { Coin, CoinCondition } from '../../models/coin.model';
 import { AuthService } from '../../services/auth.service';
 import { CoinsService } from '../../services/coins.service';
-
-interface AddCoinModalResult {
-  createdCoin?: Coin;
-}
-
-const COIN_CONDITIONS: CoinCondition[] = ['Excelente', 'Muito Bom', 'Bom', 'Regular'];
 
 @Component({
   selector: 'app-add-coin-modal',
@@ -19,96 +19,97 @@ const COIN_CONDITIONS: CoinCondition[] = ['Excelente', 'Muito Bom', 'Bom', 'Regu
   standalone: false,
 })
 export class AddCoinModalComponent {
-  private authService = inject(AuthService);
-  private coinsService = inject(CoinsService);
-  private formBuilder = inject(NonNullableFormBuilder);
-  private modalController = inject(ModalController);
-  private toastController = inject(ToastController);
+  selectedPhoto?: File;
+  photoPreviewUrl = '';
+  isSavingCoin = false;
+  addCoinForm: FormGroup;
 
-  readonly coinConditions = COIN_CONDITIONS;
-  formSubmitted = false;
-  selectedPhotoFile?: File;
-  selectedPhotoPreview = '';
-  isSaving = false;
-
-  addCoinForm = this.formBuilder.group({
-    name: ['', [Validators.required]],
-    origin: ['', [Validators.required]],
-    year: ['', [Validators.required]],
-    material: ['', [Validators.required]],
-    condition: ['Bom' as CoinCondition, [Validators.required]],
-    description: ['', [Validators.required]],
-    availableForSale: [false],
-    price: [0],
-    availableForTrade: [false],
-    tradePreference: [''],
-  }, {
-    validators: this.marketFieldsValidator,
-  });
+  constructor(
+    private authService: AuthService,
+    private coinsService: CoinsService,
+    private formBuilder: NonNullableFormBuilder,
+    private modalController: ModalController,
+    private toastController: ToastController
+  ) {
+    this.addCoinForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      origin: ['', Validators.required],
+      year: ['', [
+        Validators.required,
+        Validators.pattern('^[0-9]+$'),
+        Validators.min(1),
+        Validators.max(new Date().getFullYear())
+      ]],
+      material: ['', Validators.required],
+      condition: ['Bom' as CoinCondition, Validators.required],
+      description: ['', Validators.required],
+      availableForSale: [false],
+      price: [0],
+      availableForTrade: [false],
+      tradePreference: ['']
+    }, {
+      validators: this.marketFieldsValidator
+    });
+  }
 
   get name(): AbstractControl {
-    return this.addCoinForm.controls.name;
+    return this.addCoinForm.controls['name'];
   }
 
   get origin(): AbstractControl {
-    return this.addCoinForm.controls.origin;
+    return this.addCoinForm.controls['origin'];
   }
 
   get year(): AbstractControl {
-    return this.addCoinForm.controls.year;
+    return this.addCoinForm.controls['year'];
   }
 
   get material(): AbstractControl {
-    return this.addCoinForm.controls.material;
+    return this.addCoinForm.controls['material'];
   }
 
   get description(): AbstractControl {
-    return this.addCoinForm.controls.description;
+    return this.addCoinForm.controls['description'];
+  }
+
+  get availableForSale(): AbstractControl {
+    return this.addCoinForm.controls['availableForSale'];
   }
 
   get price(): AbstractControl {
-    return this.addCoinForm.controls.price;
+    return this.addCoinForm.controls['price'];
+  }
+
+  get availableForTrade(): AbstractControl {
+    return this.addCoinForm.controls['availableForTrade'];
   }
 
   get tradePreference(): AbstractControl {
-    return this.addCoinForm.controls.tradePreference;
+    return this.addCoinForm.controls['tradePreference'];
   }
 
-  get priceIsRequired(): boolean {
-    return this.addCoinForm.hasError('priceRequired') && (this.price.touched || this.formSubmitted);
-  }
-
-  get tradePreferenceIsRequired(): boolean {
-    return this.addCoinForm.hasError('tradePreferenceRequired') && (this.tradePreference.touched || this.formSubmitted);
-  }
-
-  onPhotoSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    if (!file) {
+  onPhotoSelected(selectedFile?: File): void {
+    if (!selectedFile) {
       return;
     }
 
     this.clearPhotoPreview();
-    this.selectedPhotoFile = file;
-    this.selectedPhotoPreview = URL.createObjectURL(file);
-    input.value = '';
+    this.selectedPhoto = selectedFile;
+    // Cria um URL temporario da imagem para preview.
+    this.photoPreviewUrl = URL.createObjectURL(selectedFile);
   }
 
   removeSelectedPhoto(): void {
-    this.selectedPhotoFile = undefined;
+    this.selectedPhoto = undefined;
     this.clearPhotoPreview();
   }
 
-  async dismiss(result?: AddCoinModalResult): Promise<void> {
-    await this.modalController.dismiss(result);
+  async closeModal(createdCoin?: Coin): Promise<void> {
+    await this.modalController.dismiss(createdCoin ? { createdCoin } : undefined);
   }
 
-  async submitCoinForm(): Promise<void> {
-    this.formSubmitted = true;
-
-    if (this.addCoinForm.invalid || this.isSaving) {
+  async addCoin(): Promise<void> {
+    if (this.addCoinForm.invalid || this.isSavingCoin) {
       this.addCoinForm.markAllAsTouched();
       return;
     }
@@ -116,83 +117,85 @@ export class AddCoinModalComponent {
     const currentUser = await this.authService.getCurrentUser();
 
     if (!currentUser) {
-      await this.showOperationMessage('Inicie sessão para adicionar moedas.', 'error-toast');
+      await this.showToastMessage('Inicie sessão para adicionar moedas.', 'error-toast');
       return;
     }
 
-    this.isSaving = true;
+    this.isSavingCoin = true;
 
     try {
-      const uploadedPhotoUrl = this.selectedPhotoFile
-        ? await this.coinsService.uploadCoinPhoto(this.selectedPhotoFile, currentUser.id)
+      const photoUrl = this.selectedPhoto
+        ? await this.coinsService.uploadCoinPhoto(this.selectedPhoto, currentUser.id)
         : '';
-      const newCoin = this.createCoinFromForm(currentUser.id, uploadedPhotoUrl);
-      const createdCoin = await this.coinsService.insertCoin(newCoin);
-      await this.showOperationMessage('Moeda adicionada com sucesso.', 'success-toast');
-      await this.dismiss({ createdCoin });
+      const coinToCreate = this.buildCoinFromForm(currentUser.id, photoUrl);
+      const createdCoin = await this.coinsService.insertCoin(coinToCreate);
+      await this.showToastMessage('Moeda adicionada com sucesso.', 'success-toast');
+      await this.closeModal(createdCoin);
     } catch {
-      await this.showOperationMessage('Não foi possível adicionar a moeda. Tente novamente.', 'error-toast');
+      await this.showToastMessage('Não foi possível adicionar a moeda. Tente novamente.', 'error-toast');
     } finally {
-      this.isSaving = false;
+      this.isSavingCoin = false;
     }
   }
 
-  private createCoinFromForm(ownerId: number, uploadedPhotoUrl: string): Coin {
-    const formValue = this.addCoinForm.getRawValue();
+  private buildCoinFromForm(ownerId: number, photoUrl: string): Coin {
+    const coinFormData = this.addCoinForm.getRawValue();
 
     return {
       id: 0,
       owner_id: ownerId,
-      name: formValue.name.trim(),
-      origin: formValue.origin.trim(),
-      year: formValue.year.trim(),
-      material: formValue.material.trim(),
-      condition: formValue.condition,
-      description: formValue.description.trim(),
-      photos: uploadedPhotoUrl ? [uploadedPhotoUrl] : [],
-      available_for_sale: formValue.availableForSale,
-      available_for_trade: formValue.availableForTrade,
-      price: formValue.availableForSale ? Number(formValue.price) : null,
-      trade_preference: formValue.availableForTrade ? formValue.tradePreference.trim() : null,
+      name: coinFormData.name.trim(),
+      origin: coinFormData.origin.trim(),
+      year: coinFormData.year.trim(),
+      material: coinFormData.material.trim(),
+      condition: coinFormData.condition,
+      description: coinFormData.description.trim(),
+      photos: photoUrl ? [photoUrl] : [],
+      available_for_sale: coinFormData.availableForSale,
+      available_for_trade: coinFormData.availableForTrade,
+      price: coinFormData.availableForSale ? Number(coinFormData.price) : null,
+      trade_preference: coinFormData.availableForTrade ? coinFormData.tradePreference.trim() : null,
       created_at: '',
       updated_at: '',
     };
   }
 
   private clearPhotoPreview(): void {
-    if (this.selectedPhotoPreview) {
-      URL.revokeObjectURL(this.selectedPhotoPreview);
-      this.selectedPhotoPreview = '';
+    if (this.photoPreviewUrl) {
+      // Liberta da memoria o URL temporario usado para mostrar a imagem local.
+      URL.revokeObjectURL(this.photoPreviewUrl);
+      this.photoPreviewUrl = '';
     }
   }
 
-  private marketFieldsValidator(control: AbstractControl): ValidationErrors | null {
-    const availableForSale = control.get('availableForSale')?.value;
-    const price = Number(control.get('price')?.value);
-    const availableForTrade = control.get('availableForTrade')?.value;
-    const tradePreference = String(control.get('tradePreference')?.value ?? '').trim();
+  private marketFieldsValidator(form: AbstractControl): ValidationErrors | null {
+    const availableForSale = form.get('availableForSale')?.value;
+    const salePrice = Number(form.get('price')?.value);
+    const availableForTrade = form.get('availableForTrade')?.value;
+    const tradePreference = form.get('tradePreference')?.value.trim();
     const validationErrors: ValidationErrors = {};
-    const hasValidPrice = Number.isFinite(price) && price > 0;
 
-    if (availableForSale && !hasValidPrice) {
+    // O preço so e obrigatorio quando a moeda esta disponivel para venda.
+    if (availableForSale && salePrice <= 0) {
       validationErrors['priceRequired'] = true;
     }
 
+    // A preferência sa e obrigatoria quando a moeda esta disponivel para troca.
     if (availableForTrade && !tradePreference) {
       validationErrors['tradePreferenceRequired'] = true;
     }
 
-    return Object.keys(validationErrors).length > 0 ? validationErrors : null;
+    return Object.keys(validationErrors).length ? validationErrors : null;
   }
 
-  private async showOperationMessage(message: string, cssClass: string): Promise<void> {
-    const operationToast = await this.toastController.create({
+  private async showToastMessage(message: string, cssClass: string): Promise<void> {
+    const toastMessage = await this.toastController.create({
       message,
       duration: 2200,
       position: 'bottom',
       cssClass,
     });
 
-    await operationToast.present();
+    await toastMessage.present();
   }
 }

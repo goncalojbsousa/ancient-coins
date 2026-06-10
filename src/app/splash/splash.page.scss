@@ -1,0 +1,22 @@
+.splash-content {
+  --background: var(--ac-bg);
+}
+
+.splash-page {
+  min-height: 100%;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.splash-page img {
+  width: 150px;
+  margin-bottom: 24px;
+}
+
+.splash-page ion-spinner {
+  color: var(--ac-accent);
+}

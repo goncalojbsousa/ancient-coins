@@ -1,10 +1,10 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="collection-toolbar">
+  <ion-toolbar class="collection-toolbar app-toolbar">
     <ion-title>Minha Coleção</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="collection-content">
+<ion-content [fullscreen]="true" class="collection-content app-content">
   <div class="summary-card">
     <div>
       <p class="section-label">A minha coleção</p>
@@ -16,7 +16,7 @@
     </ion-button>
   </div>
   <div class="controls">
-    <ion-searchbar placeholder="Pesquisar por nome ou origem..." [(ngModel)]="searchTerm" debounce="200">
+    <ion-searchbar class="app-searchbar" placeholder="Pesquisar por nome ou origem..." [(ngModel)]="searchTerm" debounce="200">
     </ion-searchbar>
   </div>
   <div class="filter-select">
@@ -45,7 +45,7 @@
             <p>{{ coin.origin }} · {{ coin.year }}</p>
           </div>
           @if (coin.available_for_sale && coin.price) {
-          <span class="coin-price">{{ coin.price | currency:'EUR':'symbol':'1.2-2' }}</span>
+          <span class="coin-price">{{ coin.price | number:'1.0-2' }} €</span>
           }
         </div>
         <div class="coin-body_tags">

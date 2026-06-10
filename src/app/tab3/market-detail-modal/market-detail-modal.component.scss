@@ -1,0 +1,86 @@
+.market-detail-toolbar ion-button {
+  --color: var(--ac-text-muted);
+}
+
+.section-label {
+  margin-bottom: 8px;
+  font-size: .7rem;
+}
+
+.price-value {
+  color: var(--ac-accent);
+  font-size: .92rem;
+  font-weight: 700;
+}
+
+.seller-card {
+  margin-bottom: 14px;
+}
+
+.seller-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.seller-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--ac-accent-soft);
+  color: var(--ac-accent-dark);
+  font-weight: 700;
+}
+
+.seller-data {
+  min-width: 0;
+  flex: 1;
+}
+
+.seller-data strong,
+.seller-data span {
+  display: block;
+}
+
+.seller-data strong {
+  color: var(--ac-text);
+  font-size: .88rem;
+}
+
+.seller-data span {
+  margin-top: 3px;
+  color: var(--ac-text-muted);
+  font-size: .76rem;
+}
+
+.profile-button {
+  padding: 9px 12px;
+  border: 1px solid var(--ac-border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ac-text-muted);
+  font-size: .84rem;
+  font-weight: 600;
+}
+
+.action-row {
+  display: flex;
+  margin: 14px 16px 16px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 8px;
+  height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--ac-accent);
+  color: #fff;
+  font-weight: 700;
+}

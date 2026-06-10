@@ -1,111 +1,95 @@
 <ion-content [fullscreen]="true">
-  <main class="register-page">
-    <section class="brand-block" aria-label="AncientCoins">
+  <main class="register-page auth-page">
+    <section class="brand-block auth-brand" aria-label="AncientCoins">
       <img src="assets/img/Vectorized_logo_removed_bg.svg" alt="AncientCoins">
     </section>
 
-    <form class="register-card" [formGroup]="registerForm" (ngSubmit)="submitRegisterForm()">
+    <form class="register-card auth-card" [formGroup]="registerForm" (ngSubmit)="submitRegisterForm()">
       <div class="form-header">
         <h1>Criar conta</h1>
         <p>Registe-se gratuitamente e junte-se à comunidade de colecionadores.</p>
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="Nome completo"
-          label-placement="stacked"
-          type="text"
-          placeholder="João Silva"
+        <ion-input label="Nome completo *" label-placement="stacked" type="text" placeholder="João Silva"
           formControlName="name">
         </ion-input>
 
         @if (name.invalid && name.touched) {
-          <ion-text class="validation-message">
-            @if (name.errors?.['required']) {
-              <small>Preencha o nome para continuar.</small>
-            }
-            @if (name.errors?.['minlength']) {
-              <small>Use pelo menos 2 caracteres no nome.</small>
-            }
-          </ion-text>
+        <ion-text class="validation-message">
+          @if (name.errors?.['required']) {
+          <small>Preencha o nome para continuar.</small>
+          }
+          @if (name.errors?.['minlength']) {
+          <small>Use pelo menos 2 caracteres no nome.</small>
+          }
+        </ion-text>
         }
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="E-mail"
-          label-placement="stacked"
-          type="email"
-          placeholder="nome@exemplo.com"
+        <ion-input label="E-mail *" label-placement="stacked" type="email" placeholder="nome@exemplo.com"
           formControlName="email">
         </ion-input>
 
         @if (email.invalid && email.touched) {
-          <ion-text class="validation-message">
-            @if (email.errors?.['required']) {
-              <small>Preencha o e-mail para continuar.</small>
-            }
-            @if (email.errors?.['email']) {
-              <small>Use um e-mail no formato nome@exemplo.com.</small>
-            }
-          </ion-text>
+        <ion-text class="validation-message">
+          @if (email.errors?.['required']) {
+          <small>Preencha o e-mail para continuar.</small>
+          }
+          @if (email.errors?.['email']) {
+          <small>Use um e-mail no formato nome@exemplo.com.</small>
+          }
+        </ion-text>
         }
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="Palavra-passe"
-          label-placement="stacked"
-          type="password"
-          placeholder="••••••••"
+        <ion-input label="Palavra-passe *" label-placement="stacked" type="password" placeholder="••••••••"
           formControlName="password">
         </ion-input>
 
         @if (password.invalid && password.touched) {
-          <ion-text class="validation-message">
-            @if (password.errors?.['required']) {
-              <small>Preencha a palavra-passe para continuar.</small>
-            }
-            @if (password.errors?.['pattern']) {
-              <small>Mínimo 8 caracteres, uma maiúscula, um número e um símbolo.</small>
-            }
-          </ion-text>
+        <ion-text class="validation-message">
+          @if (password.errors?.['required']) {
+          <small>Preencha a palavra-passe para continuar.</small>
+          }
+          @if (password.errors?.['pattern']) {
+          <small>Mínimo 8 caracteres, uma maiúscula, um número e um símbolo.</small>
+          }
+        </ion-text>
         }
       </div>
 
       <div class="form-field">
-        <ion-input
-          label="Confirmar palavra-passe"
-          label-placement="stacked"
-          type="password"
-          placeholder="••••••••"
+        <ion-input label="Confirmar palavra-passe *" label-placement="stacked" type="password" placeholder="••••••••"
           formControlName="confirmPassword">
         </ion-input>
 
         @if (confirmPassword.invalid && confirmPassword.touched) {
-          <ion-text class="validation-message">
-            <small>Confirme a palavra-passe para continuar.</small>
-          </ion-text>
+        <ion-text class="validation-message">
+          <small>Confirme a palavra-passe para continuar.</small>
+        </ion-text>
         }
 
         @if (passwordsDoNotMatch) {
-          <ion-text class="validation-message">
-            <small>As palavras-passe devem ser iguais.</small>
-          </ion-text>
+        <ion-text class="validation-message">
+          <small>As palavras-passe devem ser iguais.</small>
+        </ion-text>
         }
       </div>
 
       @if (feedbackMessage) {
-        <ion-text class="validation-message form-error" aria-live="polite">
-          <small>{{ feedbackMessage }}</small>
-        </ion-text>
+      <ion-text class="validation-message form-error" aria-live="polite">
+        <small>{{ feedbackMessage }}</small>
+      </ion-text>
       }
 
-      <ion-button expand="block" type="submit" class="register-button">
+      <ion-button expand="block" type="submit" class="register-button primary-button">
         Criar conta
       </ion-button>
 
-      <div class="login-link">
+      <div class="login-link auth-link">
         <span>Já tem conta?</span>
         <button type="button" routerLink="/login">Entrar</button>
       </div>

@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import { Coin } from '../models/coin.model';
 import { getSupabase } from './supabase.client';
 
-const COIN_IMAGES_BUCKET = 'coin-images';
-
 @Injectable({
   providedIn: 'root',
 })
 export class CoinsService {
   private supabaseClient = getSupabase();
+
 
   async getCoins(): Promise<Coin[]> {
     const { data, error } = await this.supabaseClient
@@ -23,6 +22,7 @@ export class CoinsService {
 
     return data as Coin[];
   }
+
 
   async getCoinById(id: number): Promise<Coin | undefined> {
     const { data, error } = await this.supabaseClient
@@ -38,6 +38,7 @@ export class CoinsService {
     return data as Coin | undefined;
   }
 
+
   async getCoinsByOwner(owner_id: number): Promise<Coin[]> {
     const { data, error } = await this.supabaseClient
       .from('coins')
@@ -51,6 +52,7 @@ export class CoinsService {
 
     return data as Coin[];
   }
+
 
   async insertCoin(coin: Coin): Promise<Coin> {
     const now = new Date().toISOString();
@@ -71,27 +73,32 @@ export class CoinsService {
     return data as Coin;
   }
 
+
   async uploadCoinPhoto(file: File, ownerId: number): Promise<string> {
+    // Cria um nome unico: data + sequencia aleatoria + extensao original.
     const fileExtension = file.name.split('.').pop() || 'jpg';
     const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExtension}`;
     const filePath = `${ownerId}/${fileName}`;
 
+    // Envia a imagem para o bucket coin-images do Supabase Storage.
     const { error } = await this.supabaseClient.storage
-      .from(COIN_IMAGES_BUCKET)
+      .from('coin-images')
       .upload(filePath, file);
 
     if (error) {
       throw error;
     }
 
+    // Devolve o URL publico 
     const { data } = this.supabaseClient.storage
-      .from(COIN_IMAGES_BUCKET)
+      .from('coin-images')
       .getPublicUrl(filePath);
 
     return data.publicUrl;
   }
 
-  async updateCoin(coin: Coin): Promise<Coin | undefined> {
+
+  async updateCoin(coin: Coin): Promise<Coin> {
     coin.updated_at = new Date().toISOString();
     const { id, ...coinData } = coin;
 
@@ -109,6 +116,7 @@ export class CoinsService {
     return data as Coin;
   }
 
+
   async deleteCoin(id: number): Promise<void> {
     const { error } = await this.supabaseClient
       .from('coins')
@@ -120,35 +128,5 @@ export class CoinsService {
     }
   }
 
-  async publishForSale(id: number, price: number): Promise<void> {
-    const coin = await this.getCoinById(id);
 
-    if (coin) {
-      coin.available_for_sale = true;
-      coin.price = price;
-      await this.updateCoin(coin);
-    }
-  }
-
-  async publishForTrade(id: number, trade_preference: string): Promise<void> {
-    const coin = await this.getCoinById(id);
-
-    if (coin) {
-      coin.available_for_trade = true;
-      coin.trade_preference = trade_preference;
-      await this.updateCoin(coin);
-    }
-  }
-
-  async removeFromMarket(id: number): Promise<void> {
-    const coin = await this.getCoinById(id);
-
-    if (coin) {
-      coin.available_for_sale = false;
-      coin.available_for_trade = false;
-      coin.price = null;
-      coin.trade_preference = null;
-      await this.updateCoin(coin);
-    }
-  }
 }

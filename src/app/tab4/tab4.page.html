@@ -1,15 +1,15 @@
 <ion-header [translucent]="true">
-  <ion-toolbar class="messages-toolbar">
+  <ion-toolbar class="messages-toolbar app-toolbar">
     @if (selectedConversation) {
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="closeConversation()">
+      <ion-button (click)="closeConversation()">
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ getOtherUser(selectedConversation)?.name || 'Conversa' }}</ion-title>
+    <ion-title>{{ getOtherUser(selectedConversation)?.name }}</ion-title>
     <ion-buttons slot="end">
       <ion-button class="review-button" fill="outline" (click)="openReviewForm()">
-        {{ hasReviewedConversation(selectedConversation) ? 'Atualizar' : 'Avaliar' }}
+        {{ getConversationReview(selectedConversation) ? 'Atualizar' : 'Avaliar' }}
       </ion-button>
     </ion-buttons>
     } @else {
@@ -18,11 +18,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="messages-content">
+<ion-content [fullscreen]="true" class="messages-content app-content">
 
   @if (selectedConversation) {
   <div class="chat-view">
-
 
     @if (getCoin(selectedConversation); as coin) {
     <div class="coin-summary">
@@ -46,14 +45,14 @@
         <div class="message-bubble">
           {{ message.text }}
         </div>
-        <span>{{ getMessageTime(message) }}</span>
+        <span>{{ message.created_at | date:'HH:mm' }}</span>
       </div>
       }
     </div>
   </div>
   } @else {
-  <div class="controls" style="padding-top: 16px;">
-    <ion-searchbar placeholder="Pesquisar conversas..." [(ngModel)]="searchTerm" debounce="200">
+  <div class="controls">
+    <ion-searchbar class="app-searchbar" placeholder="Pesquisar conversas..." [(ngModel)]="searchTerm" debounce="200">
     </ion-searchbar>
   </div>
 
@@ -70,17 +69,18 @@
   } @else if (filteredConversations.length > 0) {
   <div class="conversation-list">
     @for (conversation of filteredConversations; track conversation.id) {
-    <button type="button" class="conversation-card" [class.conversation-card--unread]="hasUnreadMessage(conversation)"
+    <button type="button" class="conversation-card"
+      [class.conversation-card--unread]="getUnreadMessageCount(conversation) > 0"
       (click)="selectConversation(conversation)">
       <div class="avatar">
         {{ getInitials(getOtherUser(conversation)?.name) }}
       </div>
       <div class="conversation-card_body">
         <div class="conversation-card_top">
-          <h2>{{ getOtherUser(conversation)?.name || 'Utilizador' }}</h2>
-          <span>{{ getConversationDate(conversation) }}</span>
+          <h2>{{ getOtherUser(conversation)?.name}}</h2>
+          <span>{{ conversation.updated_at | date:'dd/MM' }}</span>
         </div>
-        <p class="coin-name">{{ getCoin(conversation)?.name || 'Moeda em negociacao' }}</p>
+        <p class="coin-name">{{ getCoin(conversation)?.name }}</p>
         <p class="last-message">{{ getLastMessage(conversation)?.text || 'Sem mensagens.' }}</p>
       </div>
       @if (getUnreadMessageCount(conversation); as unreadCount) {
@@ -108,7 +108,7 @@
         <div class="review-card_header">
           <div>
             <p class="review-card_label">Avaliacao</p>
-            <h2>{{ hasReviewedConversation(selectedConversation) ? 'Atualizar avaliacao' : 'Avaliar utilizador' }}</h2>
+            <h2>{{ getConversationReview(selectedConversation) ? 'Atualizar avaliacao' : 'Avaliar utilizador' }}</h2>
           </div>
         </div>
 
