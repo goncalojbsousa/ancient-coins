@@ -32,31 +32,8 @@ export class Tab5Page implements OnInit {
     vendas: 0,
     trocas: 0,
     satisfacao: 0,
-    valorTotal: 0
+    valorTotal: 0,
   };
-
-  conquistas = [
-    {
-      emoji: '🏆',
-      titulo: 'Colecionador Ativo',
-      descricao: 'Tem moedas registadas na coleção'
-    },
-    {
-      emoji: '⭐',
-      titulo: 'Boa Reputação',
-      descricao: 'Mantém avaliações positivas'
-    },
-    {
-      emoji: '🤝',
-      titulo: 'Disponível para Trocas',
-      descricao: 'Tem moedas publicadas para troca'
-    },
-    {
-      emoji: '💰',
-      titulo: 'Vendedor',
-      descricao: 'Tem moedas publicadas para venda'
-    }
-  ];
 
   async ngOnInit(): Promise<void> {
     await this.carregarPerfil();
@@ -122,7 +99,7 @@ export class Tab5Page implements OnInit {
     const moedasVenda = this.moedasDoUtilizador.filter(moeda => moeda.available_for_sale);
     const moedasTroca = this.moedasDoUtilizador.filter(moeda => moeda.available_for_trade);
 
-    const valorTotal = this.moedasDoUtilizador.reduce((total, moeda) => {
+    const valorTotal = moedasVenda.reduce((total, moeda) => {
       return total + (moeda.price ?? 0);
     }, 0);
 
@@ -131,16 +108,12 @@ export class Tab5Page implements OnInit {
       vendas: moedasVenda.length,
       trocas: moedasTroca.length,
       satisfacao: this.utilizador ? Math.round((this.utilizador.rating / 5) * 100) : 0,
-      valorTotal
+      valorTotal,
     };
   }
 
   getInicial(): string {
     return this.utilizador?.name.charAt(0).toUpperCase() ?? '?';
-  }
-
-  getMembroDesde(): string {
-    return '2026';
   }
 
   voltarAoMeuPerfil(): void {
