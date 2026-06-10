@@ -137,13 +137,12 @@
             <div class="mini-coin-info">
               <h3>{{ moeda.name }}</h3>
               <p>{{ moeda.origin }} • {{ moeda.year }}</p>
+              <span
+                class="mini-coin-badge"
+                *ngIf="moeda.available_for_sale || moeda.available_for_trade">
+                Mercado
+              </span>
             </div>
-
-            <span
-              class="mini-coin-badge"
-              *ngIf="moeda.available_for_sale || moeda.available_for_trade">
-              Mercado
-            </span>
           </article>
         </div>
 
