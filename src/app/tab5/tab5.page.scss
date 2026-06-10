@@ -193,6 +193,7 @@
 
 .mini-coin-list {
   display: grid;
+  min-width: 0;
   gap: 10px;
   margin-top: 12px;
 }
@@ -200,6 +201,8 @@
 .mini-coin {
   display: flex;
   align-items: center;
+  min-width: 0;
+  width: 100%;
   gap: 12px;
   padding-bottom: 10px;
   border-bottom: 1px solid #f0ebe3;
@@ -255,6 +258,8 @@
 }
 
 .mini-coin-badge {
+  display: inline-block;
+  margin-top: 6px;
   padding: 3px 10px;
   border-radius: 999px;
   background: #fff3e8;
