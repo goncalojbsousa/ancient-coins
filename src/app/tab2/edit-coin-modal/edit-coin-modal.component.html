@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar class="edit-coin-toolbar">
+  <ion-toolbar class="edit-coin-toolbar detail-toolbar">
     <ion-title>Editar Moeda</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="closeModal()" aria-label="Fechar">
@@ -9,8 +9,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="edit-coin-content">
-  <form class="edit-coin-form" [formGroup]="editCoinForm" (ngSubmit)="updateCoin()">
+<ion-content class="edit-coin-content app-content">
+  <form class="edit-coin-form modal-form" [formGroup]="editCoinForm" (ngSubmit)="updateCoin()">
     <section class="form-card">
       <div class="form-header">
         <h1>Dados da Moeda</h1>
@@ -161,7 +161,7 @@
       }
     </section>
 
-    <ion-button class="submit-button" expand="block" type="submit" [disabled]="isSavingCoin">
+    <ion-button class="submit-button primary-button" expand="block" type="submit" [disabled]="isSavingCoin">
       {{ isSavingCoin ? 'A guardar...' : 'Guardar Alterações' }}
     </ion-button>
   </form>

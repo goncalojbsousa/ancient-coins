@@ -2,5 +2,35 @@
 // https://ionicframework.com/docs/theming/
 
 :root {
-	--ion-background-color: #ffffff;
+  // Brand
+  --ac-accent: #f57b25;
+  --ac-accent-dark: #c65f1a;
+  --ac-accent-soft: #fff3e8;
+
+  // Surfaces and borders
+  --ac-bg: #fafaf9;
+  --ac-surface: #fff;
+  --ac-field-bg: #f4f4f3;
+  --ac-border: #eadfd2;
+  --ac-divider: #f0ebe3;
+  --ac-media-bg: linear-gradient(160deg, #1a0e05 0%, #111 100%);
+
+  // Text
+  --ac-text: #111;
+  --ac-text-muted: #666;
+  --ac-text-soft: #888;
+  --ac-text-faint: #aaa;
+
+  // Feedback
+  --ac-danger: #d94040;
+  --ac-danger-soft: #f5d0d0;
+  --ac-success: #2e7d32;
+  --ac-success-soft: #e8f5e9;
+
+  // Elevation
+  --ac-shadow-sm: 0 2px 12px rgba(17, 17, 17, .06);
+  --ac-shadow-md: 0 4px 16px rgba(17, 17, 17, .07);
+
+  // Ionic theme
+  --ion-background-color: var(--ac-surface);
 }

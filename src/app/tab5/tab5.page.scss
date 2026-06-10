@@ -1,42 +1,5 @@
-.profile-toolbar {
-  --background: #fafaf9;
-  --border-color: transparent;
-  --color: #111;
-}
-
-.profile-content {
-  --background: #fafaf9;
-}
-
-.profile-page {
-  width: 100%;
-  padding: 16px;
-  padding-bottom: 110px;
-}
-
-.section-label {
-  margin: 0;
-  color: #f57b25;
-  font-size: .75rem;
-  font-weight: 700;
-  letter-spacing: .07em;
-  text-transform: uppercase;
-}
-
 .summary-card {
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-left: 3px solid #f57b25;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(17,17,17,.07);
-  padding: 18px 20px;
   margin-bottom: 14px;
-}
-
-.summary-card_sub {
-  margin: 4px 0 0;
-  color: #666;
-  font-size: .86rem;
 }
 
 .profile-summary-card {
@@ -51,7 +14,7 @@
   flex-shrink: 0;
   border-radius: 50%;
   background: #fff3e8;
-  color: #c65f1a;
+  color: var(--ac-accent-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,7 +57,7 @@
   padding: 3px 10px;
   border-radius: 999px;
   background: #fff3e8;
-  color: #c65f1a;
+  color: var(--ac-accent-dark);
   font-size: .72rem;
   font-weight: 600;
 }
@@ -111,10 +74,6 @@
 }
 
 .stat-card {
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(17,17,17,.07);
   padding: 18px 20px;
 }
 
@@ -141,7 +100,7 @@
 }
 
 .value-price {
-  color: #f57b25;
+  color: var(--ac-accent);
   font-size: 1.9rem;
   line-height: 1;
   font-weight: 700;
@@ -161,7 +120,7 @@
   flex-shrink: 0;
   border-radius: 50%;
   background: #fff3e8;
-  color: #c65f1a;
+  color: var(--ac-accent-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -233,7 +192,7 @@
 
 .mini-coin-image ion-icon {
   font-size: 1.6rem;
-  color: #f57b25;
+  color: var(--ac-accent);
 }
 
 .mini-coin-info {
@@ -263,7 +222,7 @@
   padding: 3px 10px;
   border-radius: 999px;
   background: #fff3e8;
-  color: #c65f1a;
+  color: var(--ac-accent-dark);
   font-size: .72rem;
   font-weight: 600;
 }
@@ -271,7 +230,7 @@
 .mini-empty-state {
   margin-top: 12px;
   padding: 18px;
-  border: 1px dashed #eadfd2;
+  border: 1px dashed var(--ac-border);
   border-radius: 12px;
   color: #888;
   font-size: .86rem;
@@ -279,17 +238,17 @@
 }
 
 .session-card {
-  border-left-color: #eadfd2;
+  border-left-color: var(--ac-border);
 }
 
 .logout-button {
   width: 100%;
   height: 40px;
   margin-top: 12px;
-  border: 1px solid #f5d0d0;
+  border: 1px solid var(--ac-danger-soft);
   border-radius: 12px;
   background: #fff;
-  color: #d94040;
+  color: var(--ac-danger);
   font-size: .82rem;
   font-weight: 600;
   display: flex;
@@ -305,43 +264,20 @@
 
 .empty-state {
   margin-top: 20px;
-  padding: 32px 20px;
-  background: #fff;
-  border: 1px solid #eadfd2;
-  border-radius: 16px;
-  text-align: center;
-}
-
-.empty-state ion-icon {
-  font-size: 2.8rem;
-  color: #f57b25;
-}
-
-.empty-state h3 {
-  margin: 8px 0 4px;
-  color: #111;
-  font-size: .95rem;
-  font-weight: 700;
-}
-
-.empty-state p {
-  margin: 0;
-  color: #666;
-  font-size: .86rem;
 }
 
 .error-state {
-  border-color: #f5d0d0;
+  border-color: var(--ac-danger-soft);
 }
 
 .error-state ion-icon {
-  color: #d94040;
+  color: var(--ac-danger);
 }
 
 .back-button {
   height: 40px;
   margin-bottom: 14px;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 12px;
   background: #fff;
   color: #666;

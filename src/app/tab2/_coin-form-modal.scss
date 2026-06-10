@@ -2,8 +2,8 @@
   display: grid;
   gap: 16px;
   padding: 20px;
-  border: 1px solid #eadfd2;
-  border-left: 3px solid #f57b25;
+  border: 1px solid var(--ac-border);
+  border-left: 3px solid var(--ac-accent);
   border-radius: 16px;
   background: #fff;
   box-shadow: 0 12px 28px rgba(17, 17, 17, .05);
@@ -24,7 +24,7 @@
   height: 3px;
   margin-bottom: 10px;
   border-radius: 999px;
-  background: #f57b25;
+  background: var(--ac-accent);
 }
 
 .form-header h1 {
@@ -52,40 +52,15 @@
   gap: 10px;
 }
 
-.form-field {
-  display: grid;
-  gap: 7px;
-}
-
 .field-label {
   color: #555;
   font-size: .78rem;
   font-weight: 600;
 }
 
-.form-field ion-input,
-.form-field ion-select,
-.form-field ion-textarea {
-  --background: #f4f4f3;
-  --border-radius: 10px;
-  --color: #111;
-  --highlight-color-focused: #f57b25;
-  --padding-end: 14px;
-  --padding-start: 14px;
-  min-height: 58px;
-  color: #111;
-  font-size: .9rem;
-}
-
 .form-field ion-textarea {
   --padding-bottom: 12px;
   --padding-top: 8px;
-}
-
-.validation-message {
-  padding-left: 2px;
-  color: #c65f1a;
-  line-height: 1.3;
 }
 
 .photo-actions {
@@ -97,9 +72,9 @@
 .photo-actions ion-button {
   position: relative;
   overflow: hidden;
-  --border-color: #eadfd2;
+  --border-color: var(--ac-border);
   --border-radius: 10px;
-  --color: #c65f1a;
+  --color: var(--ac-accent-dark);
   height: 42px;
   margin: 0;
   text-transform: none;
@@ -120,14 +95,14 @@
   width: 100%;
   aspect-ratio: 16 / 10;
   object-fit: cover;
-  border: 1px solid #eadfd2;
+  border: 1px solid var(--ac-border);
   border-radius: 10px;
-  background: #f4f4f3;
+  background: var(--ac-field-bg);
 }
 
 .photo-preview ion-button {
   justify-self: start;
-  --color: #c65f1a;
+  --color: var(--ac-accent-dark);
   min-height: 28px;
   margin: 0;
   text-transform: none;
@@ -162,19 +137,6 @@ ion-toggle {
   --handle-background: #fff;
   --handle-background-checked: #fff;
   --track-background: #e0d8ce;
-  --track-background-checked: #f57b25;
+  --track-background-checked: var(--ac-accent);
   flex-shrink: 0;
-}
-
-.submit-button {
-  --background: #f57b25;
-  --background-activated: #c65f1a;
-  --background-hover: #dc6a18;
-  --border-radius: 10px;
-  --box-shadow: none;
-  height: 46px;
-  margin: 2px 0 0;
-  font-size: .9rem;
-  font-weight: 700;
-  text-transform: none;
 }

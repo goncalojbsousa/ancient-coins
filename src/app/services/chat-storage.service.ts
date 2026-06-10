@@ -28,8 +28,8 @@ export class ChatStorageService {
   async getReadMessageIds(userId: number): Promise<Record<number, number>> {
     await this.init();
 
-    const readMessageIds = await this.storage.get(this.getReadStorageKey(userId));
-    return readMessageIds ?? {};
+    const readMessageIds = await this.storage.get(`readMessages.${userId}`);
+    return readMessageIds;
   }
 
 
@@ -40,13 +40,8 @@ export class ChatStorageService {
   ): Promise<Record<number, number>> {
     const readMessageIds = await this.getReadMessageIds(userId);
     readMessageIds[conversationId] = messageId;
-    await this.storage.set(this.getReadStorageKey(userId), readMessageIds);
+    await this.storage.set(`readMessages.${userId}`, readMessageIds);
 
     return readMessageIds;
-  }
-
-
-  private getReadStorageKey(userId: number): string {
-    return `readMessages.${userId}`;
   }
 }

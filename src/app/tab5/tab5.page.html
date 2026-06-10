@@ -1,12 +1,12 @@
 <ion-header>
-  <ion-toolbar class="profile-toolbar">
+  <ion-toolbar class="profile-toolbar app-toolbar">
     <ion-title>{{ perfilPublico ? 'Perfil do Vendedor' : 'Perfil' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="profile-content">
+<ion-content class="profile-content app-content">
 
-  <div class="profile-page">
+  <div class="profile-page page-shell">
 
     <div class="empty-state" *ngIf="loading">
       <ion-icon name="person-circle-outline"></ion-icon>
@@ -64,19 +64,19 @@
       </section>
 
       <section class="profile-stats">
-        <article class="stat-card">
+        <article class="stat-card surface-card">
           <p class="section-label">Coleção</p>
           <strong>{{ estatisticas.moedas }}</strong>
           <span>moedas registadas</span>
         </article>
 
-        <article class="stat-card">
+        <article class="stat-card surface-card">
           <p class="section-label">Venda</p>
           <strong>{{ estatisticas.vendas }}</strong>
           <span>moedas publicadas</span>
         </article>
 
-        <article class="stat-card">
+        <article class="stat-card surface-card">
           <p class="section-label">Troca</p>
           <strong>{{ estatisticas.trocas }}</strong>
           <span>moedas disponíveis</span>

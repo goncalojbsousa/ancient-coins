@@ -1,12 +1,12 @@
 <ion-header>
-  <ion-toolbar class="market-toolbar">
+  <ion-toolbar class="market-toolbar app-toolbar">
     <ion-title>Mercado</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="market-content">
+<ion-content class="market-content app-content">
 
-  <div class="market-page">
+  <div class="market-page page-shell">
 
     <section class="summary-card">
       <div>
@@ -18,7 +18,7 @@
     </section>
 
     <section class="controls">
-      <ion-searchbar [(ngModel)]="pesquisa" placeholder="Pesquisar moedas..." show-clear-button="focus">
+      <ion-searchbar class="app-searchbar" [(ngModel)]="pesquisa" placeholder="Pesquisar moedas..." show-clear-button="focus">
       </ion-searchbar>
 
       <button type="button" class="sort-button" (click)="mudarOrdenacao()">

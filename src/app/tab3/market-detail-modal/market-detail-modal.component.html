@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar class="market-detail-toolbar">
+  <ion-toolbar class="market-detail-toolbar detail-toolbar">
     <ion-title>Detalhes da Moeda</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="dismiss()" aria-label="Fechar">
@@ -9,68 +9,68 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="modal-content">
-  <div class="hero">
+<ion-content class="modal-content detail-content">
+  <div class="hero detail-hero">
     @if (getFotoPrincipal()) {
-    <img class="hero_img" [src]="getFotoPrincipal()" [alt]="coin.name">
+    <img class="hero_img detail-hero_img" [src]="getFotoPrincipal()" [alt]="coin.name">
     } @else {
-    <div class="hero_placeholder">
+    <div class="hero_placeholder detail-hero_placeholder">
       <ion-icon name="cash-outline"></ion-icon>
     </div>
     }
   </div>
 
-  <div class="title-row">
-    <h1 class="coin-title">{{ coin.name }}</h1>
+  <div class="title-row detail-title-row">
+    <h1 class="coin-title detail-title">{{ coin.name }}</h1>
   </div>
 
-  <div class="modal-card">
-    <div class="info-grid">
-      <div class="info-item">
-        <span class="info-item_label">Origem</span>
-        <span class="info-item_value">{{ coin.origin }}</span>
+  <div class="modal-card detail-card">
+    <div class="info-grid detail-grid">
+      <div class="info-item detail-item">
+        <span class="info-item_label detail-item_label">Origem</span>
+        <span class="info-item_value detail-item_value">{{ coin.origin }}</span>
       </div>
 
-      <div class="info-item">
-        <span class="info-item_label">Ano</span>
-        <span class="info-item_value">{{ coin.year }}</span>
+      <div class="info-item detail-item">
+        <span class="info-item_label detail-item_label">Ano</span>
+        <span class="info-item_value detail-item_value">{{ coin.year }}</span>
       </div>
 
-      <div class="info-item">
-        <span class="info-item_label">Material</span>
-        <span class="info-item_value">{{ coin.material }}</span>
+      <div class="info-item detail-item">
+        <span class="info-item_label detail-item_label">Material</span>
+        <span class="info-item_value detail-item_value">{{ coin.material }}</span>
       </div>
 
-      <div class="info-item">
+      <div class="info-item detail-item">
         <span class="info-item_label">Condição</span>
-        <span class="info-item_value">
-          <span class="condition-badge">{{ coin.condition }}</span>
+        <span class="info-item_value detail-item_value">
+          <span class="condition-badge detail-badge">{{ coin.condition }}</span>
         </span>
       </div>
 
       @if (coin.available_for_sale && coin.price) {
-      <div class="info-item">
+      <div class="info-item detail-item">
         <span class="info-item_label">Preço</span>
-        <span class="info-item_value price-value">{{ getPrecoFormatado() }}</span>
+        <span class="info-item_value detail-item_value price-value detail-price">{{ getPrecoFormatado() }}</span>
       </div>
       }
 
       @if (coin.trade_preference) {
-      <div class="info-item info-item--full">
+      <div class="info-item info-item--full detail-item detail-item--full">
         <span class="info-item_label">Preferência de Troca</span>
-        <span class="info-item_value">{{ coin.trade_preference }}</span>
+        <span class="info-item_value detail-item_value">{{ coin.trade_preference }}</span>
       </div>
       }
     </div>
 
     @if (coin.description) {
-    <div class="description-divider"></div>
+    <div class="description-divider detail-divider"></div>
     <p class="section-label">Descrição</p>
-    <p class="modal-description">{{ coin.description }}</p>
+    <p class="modal-description detail-description">{{ coin.description }}</p>
     }
   </div>
 
-  <div class="modal-card seller-card">
+  <div class="modal-card detail-card seller-card">
     <p class="section-label">Vendedor</p>
 
     <div class="seller-row">

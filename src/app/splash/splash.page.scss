@@ -1,5 +1,5 @@
 .splash-content {
-  --background: #fafaf9;
+  --background: var(--ac-bg);
 }
 
 .splash-page {
@@ -18,5 +18,5 @@
 }
 
 .splash-page ion-spinner {
-  color: #f57b25;
+  color: var(--ac-accent);
 }
