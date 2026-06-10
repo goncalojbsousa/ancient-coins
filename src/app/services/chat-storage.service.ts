@@ -29,7 +29,7 @@ export class ChatStorageService {
     await this.init();
 
     const readMessageIds = await this.storage.get(`readMessages.${userId}`);
-    return readMessageIds;
+    return readMessageIds || {};
   }
 
 
