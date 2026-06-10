@@ -7,8 +7,6 @@ Implementar e consolidar as áreas de Mercado e Perfil da aplicação Ancient Co
 ## Atividades realizadas
 
 * Reestruturei a página Mercado (`Tab3`) para funcionar com os dados armazenados na base de dados Supabase;
-* Integrei o `MarketService`, `CoinsService`, `UsersService` e `AuthService` na camada de apresentação;
-* Implementei o carregamento dinâmico das moedas disponíveis para venda e troca;
 * Desenvolvi a pesquisa de moedas por nome, origem, material e descrição;
 * Implementei filtros de mercado:
 
@@ -16,22 +14,6 @@ Implementar e consolidar as áreas de Mercado e Perfil da aplicação Ancient Co
   * À Venda;
   * Para Troca;
 * Adicionei ordenação por data de publicação e preço;
-* Desenvolvi a página de detalhe da moeda diretamente integrada com os modelos de dados existentes;
-* Estruturei a página de detalhe com:
-
-  * imagem principal;
-  * nome da moeda;
-  * preço;
-  * origem;
-  * ano;
-  * material;
-  * estado de conservação;
-  * descrição;
-  * preferências de troca;
-  * informações do vendedor;
-  * botão de negociação;
-* Integrei a obtenção automática dos dados do vendedor através do `UsersService`;
-* Desenvolvi a navegação entre a listagem do mercado e o detalhe da moeda;
 * Reformulei completamente a página Perfil (`Tab5`);
 * Integrei os dados reais do utilizador autenticado através do `AuthService`;
 * Desenvolvi um dashboard de perfil com:
