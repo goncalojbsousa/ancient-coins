@@ -13,7 +13,7 @@ export class SplashPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.authService.init();
